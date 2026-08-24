@@ -202,6 +202,7 @@ mecanismos de denúncia e moderação.
 
 
 Estrutura inicial do projeto
+
 GoSafe/
 │
 ├── mobile/
