@@ -204,16 +204,27 @@ mecanismos de denúncia e moderação.
 Estrutura inicial do projeto
 
 GoSafe/
+
 │
+
 ├── mobile/
+
 │   └── Aplicação React Native
+
 │
+
 ├── backend/
+
 │   └── API Java + Spring Boot
+
 │
+
 ├── docs/
+
 │   └── Documentação do projeto
+
 │
+
 └── README.md
 
 
