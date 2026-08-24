@@ -169,6 +169,8 @@ geolocalização;
 Informação Geográfica Voluntária (VGI);
 privacidade;
 anonimato.
+
+
 Trabalhos relacionados
 
 O projeto possui relação com aplicações e pesquisas que utilizam tecnologia e participação colaborativa para abordar questões relacionadas à segurança feminina.
@@ -180,6 +182,8 @@ HarassMap — plataforma de mapeamento colaborativo de relatos de assédio;
 Safecity — plataforma de relatos anônimos e georreferenciados relacionados a assédio e violência.
 
 O GoSafe busca combinar conceitos presentes nessas soluções, com foco na avaliação de locais públicos e privados e no compartilhamento de experiências entre mulheres.
+
+
 
 Privacidade e segurança
 
@@ -194,6 +198,9 @@ controle de acesso às informações;
 anonimato público em determinados relatos;
 prevenção da exposição indevida de dados de terceiros;
 mecanismos de denúncia e moderação.
+
+
+
 Estrutura inicial do projeto
 GoSafe/
 │
@@ -207,6 +214,9 @@ GoSafe/
 │   └── Documentação do projeto
 │
 └── README.md
+
+
+
 Contexto acadêmico
 
 O GoSafe está sendo desenvolvido como parte de um Trabalho de Conclusão de Curso (TCC).
