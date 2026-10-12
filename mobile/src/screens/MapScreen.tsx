@@ -9,7 +9,7 @@ import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 
 import { PlaceThumb } from '../components/PlaceRow';
 import { AlertBanner, Avatar, Button, RatingBadge, styles as ui } from '../components/ui';
-import { generateForBounds } from '../data/generator';
+import { generateForBounds, generationLimitReached } from '../data/generator';
 import { isFavorite, toggleFavorite } from '../data/repository';
 import { commitChanges, currentUser, getDatabase, mutate, useDatabase } from '../data/store';
 import { CATEGORY_LABEL } from '../domain/labels';
@@ -155,7 +155,7 @@ export function MapScreen({ navigation }: Props) {
                 ? 'Sem internet para o mapa'
                 : zoomedOut
                   ? 'Aproxime o mapa para ver e gerar locais'
-                  : `${visible.length} locais nesta área`}
+                  : `${visible.length} locais nesta área${db && generationLimitReached(db) ? ' · limite de locais de teste atingido' : ''}`}
             </Text>
           </View>
         ) : null}

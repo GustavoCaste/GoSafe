@@ -11,15 +11,25 @@ import { createComment, createNotice, createPlace, recalculatePlace, registerUse
 import { reviewFor, textFor } from './seed';
 
 const CELL_DEGREES = 0.01;
-const MIN_ZOOM = 13;
+export const MIN_ZOOM = 13;
 const MAX_CELLS_PER_PASS = 120;
+/** Limites para o banco local não crescer sem fim com a navegação. */
+export const MAX_GENERATED_PLACES = 2500;
+const MAX_TEST_USERS = 150;
 const DAY = 24 * 60 * 60 * 1000;
 const CATEGORIES = Object.keys(CATEGORY_LABEL) as PlaceCategory[];
 
+const testUserPool = new WeakMap<Database, User[]>();
+
 function randomTestUser(db: Database, random: Random): User {
-  // reaproveita usuárias de teste já criadas em parte das vezes
-  const existing = Object.values(db.users).filter((user) => user.username.startsWith('teste.'));
-  if (existing.length > 10 && random.chance(0.4)) return random.pick(existing);
+  let pool = testUserPool.get(db);
+  if (!pool) {
+    pool = Object.values(db.users).filter((user) => user.username.startsWith('teste.usuaria'));
+    testUserPool.set(db, pool);
+  }
+
+  // reaproveita usuárias já criadas; acima do limite, só reaproveita
+  if (pool.length >= MAX_TEST_USERS || (pool.length > 10 && random.chance(0.4))) return random.pick(pool);
 
   db.counters.testUser += 1;
   const n = db.counters.testUser;
@@ -35,12 +45,17 @@ function randomTestUser(db: Database, random: Random): User {
     { createdAt: Date.now() - random.int(0, 300) * DAY, generated: true },
   );
   user.verified = random.chance(0.3);
+  pool.push(user);
   return user;
+}
+
+export function generationLimitReached(db: Database): boolean {
+  return db.counters.testPlace >= MAX_GENERATED_PLACES;
 }
 
 /** Gera locais nas células visíveis ainda não geradas. Devolve quantos locais foram criados. */
 export function generateForBounds(db: Database, bounds: Bounds, zoom: number): number {
-  if (zoom < MIN_ZOOM) return 0;
+  if (zoom < MIN_ZOOM || generationLimitReached(db)) return 0;
 
   const x0 = Math.floor(bounds.west / CELL_DEGREES);
   const x1 = Math.floor(bounds.east / CELL_DEGREES);
@@ -61,6 +76,7 @@ export function generateForBounds(db: Database, bounds: Bounds, zoom: number): n
       const count = random.int(0, 2);
 
       for (let i = 0; i < count; i++) {
+        if (generationLimitReached(db)) return created;
         created += 1;
         generatePlace(db, random, {
           latitude: (y + random.next()) * CELL_DEGREES,

@@ -5,7 +5,7 @@
  */
 import assert from 'node:assert/strict';
 
-import { generateForBounds } from '../src/data/generator';
+import { MAX_GENERATED_PLACES, generateForBounds } from '../src/data/generator';
 import {
   DomainError,
   authenticate,
@@ -173,6 +173,26 @@ test('gera "Local Teste N" ao navegar, sem repetir a área e sem gerar com zoom 
   const generated = Object.values(db.places).filter((p) => p.generated);
   assert.ok(generated.some((p) => p.ratingCount > 0));
   assert.ok(generated.every((p) => p.notRecommended === (p.ratingCount >= 5 && (p.weightedRating ?? 5) <= 1.5)));
+});
+
+console.log('Estresse — navegação intensa no mapa');
+test('banco não cresce sem limite: até 150 usuárias de teste e 2.500 locais gerados', () => {
+  const db = seedDatabase(SAO_PAULO, false);
+  for (let x = 0; x < 60; x++) {
+    for (let y = 0; y < 60; y++) {
+      const west = -47.2 + x * 0.02;
+      const south = -24.1 + y * 0.02;
+      generateForBounds(db, { west, south, east: west + 0.04, north: south + 0.06 }, 14);
+    }
+  }
+  const generated = Object.values(db.places).filter((p) => p.generated).length;
+  const testUsers = Object.values(db.users).filter((u) => u.username.startsWith('teste.usuaria')).length;
+  const megabytes = JSON.stringify(db).length / 1024 / 1024;
+  console.log(`      ${generated} locais gerados, ${testUsers} usuárias de teste, ${megabytes.toFixed(2)} MB`);
+  assert.equal(generated, MAX_GENERATED_PLACES);
+  assert.ok(testUsers <= 150);
+  assert.equal(generateForBounds(db, { west: -40, south: -20, east: -39.9, north: -19.9 }, 15), 0);
+  assert.ok(megabytes < 8, 'banco grande demais para salvar com segurança');
 });
 
 console.log(`\n${passed} testes passaram.`);

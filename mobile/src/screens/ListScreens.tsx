@@ -14,6 +14,7 @@ import { CATEGORY_LABEL, SEX_LABEL } from '../domain/labels';
 import { distanceMeters } from '../domain/rules';
 import type { LatLng, Place, PlaceCategory } from '../domain/types';
 import { currentFix, useLastKnownPosition } from '../hooks/location';
+import { useSubmitOnce } from '../hooks/useSubmitOnce';
 import type { RootStackParamList, ScreenProps, TabParamList } from '../navigation/types';
 import { colors } from '../theme';
 
@@ -207,6 +208,7 @@ export function CreatePlaceScreen({ navigation, route }: ScreenProps<'CreatePlac
   const [district, setDistrict] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('SP');
+  const once = useSubmitOnce();
 
   const useMyLocation = async () => {
     const fix = await currentFix().catch(() => null);
@@ -214,20 +216,23 @@ export function CreatePlaceScreen({ navigation, route }: ScreenProps<'CreatePlac
     else Alert.alert('Localização indisponível', 'Permita o acesso à localização nas configurações do aparelho.');
   };
 
-  const submit = () => {
-    if (!point) {
-      Alert.alert('Defina o local', 'Use sua localização ou abra o cadastro a partir do mapa.');
-      return;
-    }
-    try {
-      const place = mutate((db) =>
-        createPlace(db, requireUser(), { name, category, description, postalCode, street, number, district, city, state }, point),
-      );
-      navigation.replace('Place', { placeId: place.id });
-    } catch (error) {
-      Alert.alert('Não foi possível cadastrar', errorMessage(error));
-    }
-  };
+  const submit = () =>
+    once(() => {
+      if (!point) {
+        Alert.alert('Defina o local', 'Use sua localização ou abra o cadastro a partir do mapa.');
+        return false;
+      }
+      try {
+        const place = mutate((db) =>
+          createPlace(db, requireUser(), { name, category, description, postalCode, street, number, district, city, state }, point),
+        );
+        navigation.replace('Place', { placeId: place.id });
+        return true;
+      } catch (error) {
+        Alert.alert('Não foi possível cadastrar', errorMessage(error));
+        return false;
+      }
+    });
 
   return (
     <Screen title="Cadastrar local" footer={<Button label="Cadastrar local" onPress={submit} />}>

@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { ReactNode } from 'react';
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -55,14 +56,17 @@ export function Screen({
           {right}
         </View>
       )}
-      {scroll ? (
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-          {children}
-        </ScrollView>
-      ) : (
-        <View style={{ flex: 1 }}>{children}</View>
-      )}
-      {footer ? <View style={styles.footer}>{footer}</View> : null}
+      {/* Android 15 é edge-to-edge: sem isto o teclado cobre campos e o botão do rodapé */}
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+        {scroll ? (
+          <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+            {children}
+          </ScrollView>
+        ) : (
+          <View style={{ flex: 1 }}>{children}</View>
+        )}
+        {footer ? <View style={styles.footer}>{footer}</View> : null}
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

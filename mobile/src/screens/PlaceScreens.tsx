@@ -27,6 +27,7 @@ import { CATEGORY_LABEL, NOTICE_TYPE_LABEL, REVIEW_PARAMS, timeAgo } from '../do
 import { ALERT_MIN_REVIEWS, distanceMeters, formatDistance, formatRating, voteWeight } from '../domain/rules';
 import type { Comment, Database, NoticeType, ReviewInput as Review } from '../domain/types';
 import { currentFix, useLastKnownPosition } from '../hooks/location';
+import { useSubmitOnce } from '../hooks/useSubmitOnce';
 import type { ScreenProps } from '../navigation/types';
 import { colors } from '../theme';
 
@@ -318,19 +319,23 @@ export function NewNoticeScreen({ navigation, route }: ScreenProps<'NewNotice'>)
   const [anonymous, setAnonymous] = useState(false);
   const [withReview, setWithReview] = useState(true);
   const [review, setReview] = useState<Review>(DEFAULT_REVIEW);
+  const once = useSubmitOnce();
 
   if (!place) return <Screen title="Novo aviso"><Empty text="Local não encontrado." /></Screen>;
 
-  const submit = () => {
-    try {
-      const notice = mutate((database) =>
-        createNotice(database, requireUser(), database.places[place.id], { title, type, body, anonymous, review: withReview ? review : null }),
-      );
-      navigation.replace('Notice', { noticeId: notice.id });
-    } catch (error) {
-      Alert.alert('Não foi possível publicar', errorMessage(error));
-    }
-  };
+  const submit = () =>
+    once(() => {
+      try {
+        const notice = mutate((database) =>
+          createNotice(database, requireUser(), database.places[place.id], { title, type, body, anonymous, review: withReview ? review : null }),
+        );
+        navigation.replace('Notice', { noticeId: notice.id });
+        return true;
+      } catch (error) {
+        Alert.alert('Não foi possível publicar', errorMessage(error));
+        return false;
+      }
+    });
 
   return (
     <Screen title="Novo aviso" footer={<Button label="Publicar aviso" onPress={submit} />}>
@@ -368,17 +373,21 @@ export function CommentScreen({ navigation, route }: ScreenProps<'Comment'>) {
   const [anonymous, setAnonymous] = useState(false);
   const [withReview, setWithReview] = useState(true);
   const [review, setReview] = useState<Review>(DEFAULT_REVIEW);
+  const once = useSubmitOnce();
 
   if (!db || !notice) return <Screen title="Comentar"><Empty text="Aviso não encontrado." /></Screen>;
 
-  const submit = () => {
-    try {
-      mutate((database) => createComment(database, requireUser(), database.notices[notice.id], { body, anonymous, review: withReview ? review : null }));
-      navigation.goBack();
-    } catch (error) {
-      Alert.alert('Não foi possível comentar', errorMessage(error));
-    }
-  };
+  const submit = () =>
+    once(() => {
+      try {
+        mutate((database) => createComment(database, requireUser(), database.notices[notice.id], { body, anonymous, review: withReview ? review : null }));
+        navigation.goBack();
+        return true;
+      } catch (error) {
+        Alert.alert('Não foi possível comentar', errorMessage(error));
+        return false;
+      }
+    });
 
   return (
     <Screen title="Comentar" footer={<Button label="Enviar comentário" onPress={submit} />}>

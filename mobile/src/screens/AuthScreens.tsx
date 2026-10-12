@@ -13,6 +13,7 @@ import { createSeededDatabase, currentUser, errorMessage, mutate } from '../data
 import { SEX_LABEL } from '../domain/labels';
 import type { Sex } from '../domain/types';
 import { currentFix, requestLocationPermission } from '../hooks/location';
+import { useSubmitOnce } from '../hooks/useSubmitOnce';
 import type { ScreenProps } from '../navigation/types';
 import { colors } from '../theme';
 
@@ -254,20 +255,24 @@ export function RegisterScreen({ navigation }: ScreenProps<'Register'>) {
   const [password, setPassword] = useState('');
   const [sex, setSex] = useState<Sex>('FEMALE');
   const [terms, setTerms] = useState(false);
+  const once = useSubmitOnce();
 
-  const submit = () => {
-    if (!terms) {
-      Alert.alert('Termos de uso', 'Aceite os termos de uso e a política de privacidade para continuar.');
-      return;
-    }
-    try {
-      mutate((db) => {
-        db.sessionUserId = registerUser(db, { name, username, email, password, sex }).id;
-      });
-    } catch (error) {
-      Alert.alert('Não foi possível criar a conta', errorMessage(error));
-    }
-  };
+  const submit = () =>
+    once(() => {
+      if (!terms) {
+        Alert.alert('Termos de uso', 'Aceite os termos de uso e a política de privacidade para continuar.');
+        return false;
+      }
+      try {
+        mutate((db) => {
+          db.sessionUserId = registerUser(db, { name, username, email, password, sex }).id;
+        });
+        return true;
+      } catch (error) {
+        Alert.alert('Não foi possível criar a conta', errorMessage(error));
+        return false;
+      }
+    });
 
   return (
     <Screen title="Criar conta" footer={<Button label="Continuar" onPress={submit} />}>
