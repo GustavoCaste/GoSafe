@@ -78,9 +78,32 @@ Expo + React Native + TypeScript, com mapa MapLibre/OpenStreetMap. Roda sem serv
 - alertas padrão do Android → diálogos com a identidade do app;
 - envio duplicado com toque duplo, GPS travando e limite de armazenamento.
 
+Instalável atual: `releases/mobile-teste-v0.1.1/GoSafe-Teste-v0.1.1.apk` na branch `test/mobile-offline`.
+
 ### Protótipo e marca
 
 Protótipo navegável com todas as telas, regras de negócio, modelo de dados, relação com a fundamentação teórica e a marca: **escudo com o símbolo feminino sobre um mapa dobrado** (violeta `#5B2A86`, noite `#2B1446`, coral `#F2A28F`, lavanda `#E9DFF5`).
+
+## Como foi feito
+
+| Etapa | O que aconteceu |
+|---|---|
+| 1. Análise | Levantamento das telas e das regras a partir da descrição do sistema e da fundamentação teórica; análise do backend inicial (`develop`) com as lacunas encontradas. |
+| 2. Protótipo | Todas as telas desenhadas e navegáveis (24 quadros), com responsividade, regras de negócio (RN01–RN19), modelo de dados e marca. Decisões tomadas junto com a equipe: check-in de 100 m, verificação facial simulada (sem custo), autoria pelo token, alerta de local não aconselhado. |
+| 3. Backend | Estrutura completa em Spring Boot por funcionalidade (`controller → service → repository`), PostGIS para as consultas geográficas e Flyway para o banco. |
+| 4. Testes da API | 73 testes de todos os endpoints contra um PostgreSQL + PostGIS real (Testcontainers). Encontraram 2 bugs reais (entre eles a busca com filtros vazios), já corrigidos. |
+| 5. App de teste | App Expo/React Native que roda sem servidor, com as mesmas regras do backend, massa de demonstração e gerador de locais no mapa; 17 testes da lógica. |
+| 6. Testes no celular | Roteiros automatizados num Android real (via USB/adb) cobrindo cadastro, login, mapa, busca, cadastro de local, check-in, avisos, comentários, alerta, perfil e casos de erro (campos vazios, duplicados, toque duplo). |
+| 7. Correções | Bugs encontrados no aparelho e corrigidos: locais na água, botões do Android ilegíveis, **+** escondido atrás do cartão, menu sobre a barra do Android, ícone padrão na abertura, alertas sem a identidade do app e campos sem rótulo para leitor de tela. |
+| 8. Entrega | Instalável `GoSafe-Teste-v0.1.1.apk` em `releases/` (branch `test/mobile-offline`), protótipo e documentação atualizados. |
+
+### O que das correções vale para o backend
+
+As correções da etapa 7 são de **interface do app** (mapa, barra do Android, diálogos, acessibilidade), por isso o código delas está em `mobile/`. Para o backend ficam as regras e decisões:
+
+- **RN19 — local nunca na água:** a conferência é feita no app, contra a camada de água do mapa, antes de mostrar o pin.
+- **Toque duplo / envio repetido:** o backend já recusa local duplicado a menos de 50 m; o app também bloqueia o segundo envio.
+- **Carga de demonstração:** mínima no backend (perfil `dev`), completa só no app de teste.
 
 ## Arquitetura
 
