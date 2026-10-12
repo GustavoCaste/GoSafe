@@ -213,8 +213,8 @@ GoSafe/
 | Branch | Conteúdo |
 |---|---|
 | `develop` | Base inicial do backend |
-| `feature/estrutura-backend` | Backend completo: JWT, PostGIS, endereço estruturado, check-in, reputação ponderada, avisos, comentários, favoritos, denúncias, verificação facial simulada, alerta de local não aconselhado e 73 testes. Só o necessário para produção: sem carga de dados nem geradores de teste |
-| `test/mobile-offline` | Backend + carga de demonstração (perfil `dev`) + app de teste que roda 100% no aparelho, com carga de dados e gerador de locais no mapa |
+| `feature/estrutura-backend` | Backend completo: JWT, PostGIS, endereço estruturado, check-in, reputação ponderada, avisos, comentários, favoritos, denúncias, verificação facial simulada, alerta de local não aconselhado e 73 testes |
+| `test/mobile-offline` | Tudo acima + app de teste que roda 100% no aparelho, com carga de dados e gerador de locais no mapa |
 
 ## Como rodar
 
@@ -223,7 +223,7 @@ GoSafe/
 ```bash
 cd gosafe-backend
 ./mvnw test                                              # 73 testes, incluindo PostGIS real
-./mvnw spring-boot:run                                   # API (banco começa vazio)
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev    # API + carga mínima (2 usuárias, 5 locais)
 ```
 
 **App de teste** (Node 20 + Android SDK, celular em modo desenvolvedor):
@@ -249,7 +249,7 @@ adb install -r app/build/outputs/apk/release/app-release.apk
 
 ## Dados de demonstração
 
-Todos os dados de demonstração do projeto — locais, usuárias, notas e comentários, tanto no protótipo quanto no app de teste (branch `test/mobile-offline`) — **foram criados por IA para exemplificar um cenário real**. Não representam pessoas nem estabelecimentos reais.
+Todos os dados de demonstração do projeto — locais, usuárias, notas e comentários, tanto no protótipo quanto no app de teste e na carga do backend — **foram criados por IA para exemplificar um cenário real**. Não representam pessoas nem estabelecimentos reais.
 
 ## Marca
 

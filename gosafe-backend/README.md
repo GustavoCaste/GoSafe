@@ -19,6 +19,14 @@ Variáveis úteis:
 | `GOSAFE_JWT_SECRET` | Segredo do JWT (mínimo 32 bytes). Obrigatório fora do ambiente de desenvolvimento. |
 | `GOSAFE_ADMIN_EMAILS` | E-mails (separados por vírgula) que recebem papel `ADMIN` ao se cadastrar. |
 
+### Carga mínima de desenvolvimento (perfil `dev`)
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+Cria 2 usuárias — `dev@gosafe.dev` (conta de desenvolvimento, verificada) e `usuaria@gosafe.dev`, ambas com senha `gosafe123` — e 5 locais em São Paulo, cada um com um aviso e um comentário avaliando (notas de 1 a 5). A carga passa pelas próprias regras de negócio (pesos e nota ponderada). Sem o perfil `dev` o banco começa vazio. **Dados fictícios, criados por IA.**
+
 ## Testes
 
 ```bash
@@ -54,6 +62,7 @@ Um pacote por funcionalidade (`controller → service → repository`):
 | `reputation` | Peso do perfil (0,1–1,0) e do voto — ver `ReputationFormula`. |
 | `favorite` | Favoritos. |
 | `report` | Denúncias e moderação; denúncia procedente oculta o conteúdo e reduz a reputação. |
+| `dev` | Carga mínima de desenvolvimento (só no perfil `dev`): 2 usuárias e 5 locais. |
 
 ## Endpoints
 
