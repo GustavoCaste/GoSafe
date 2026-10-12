@@ -1,12 +1,18 @@
 package com.gosafe.gosafe_backend.user;
 
+import com.gosafe.gosafe_backend.common.Errors;
+import com.gosafe.gosafe_backend.common.PageResponse;
+import com.gosafe.gosafe_backend.common.Pages;
+import com.gosafe.gosafe_backend.reputation.ReputationService;
+import com.gosafe.gosafe_backend.user.dto.ChangePasswordRequest;
+import com.gosafe.gosafe_backend.user.dto.UpdateProfileRequest;
 import com.gosafe.gosafe_backend.user.dto.UserDto;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 @Service
@@ -14,150 +20,84 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReputationService reputationService;
 
     public UserService(
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            ReputationService reputationService
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-    }
-     private void validarCampos(UserDto dto) {
-        if (dto == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Dados do usuário são obrigatórios"
-            );
-        }
-
-        if (dto.name() == null || dto.name().isBlank()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Nome é obrigatório"
-            );
-        }
-
-        if (dto.name().length() < 3 || dto.name().length() > 100) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Nome deve possuir entre 3 e 100 caracteres"
-            );
-        }
-
-        if (dto.email() == null || dto.email().isBlank()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "E-mail é obrigatório"
-            );
-        }
-
-        if (dto.email().length() > 150) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "E-mail deve possuir no máximo 150 caracteres"
-            );
-        }
-
-        if (dto.password() == null || dto.password().isBlank()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Senha é obrigatória"
-            );
-        }
-
-        if (dto.password().length() < 6 || dto.password().length() > 72) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Senha deve possuir entre 6 e 72 caracteres"
-            );
-        }
+        this.reputationService = reputationService;
     }
 
-    public List<UserDto> findAll() {
-        return userRepository.findAll()
-                .stream()
-                .map(this::toDto)
-                .toList();
+    public User getActive(UUID id) {
+        return userRepository.findById(id)
+                .filter(User::getActive)
+                .orElseThrow(() -> Errors.notFound("Usuária não encontrada"));
     }
 
-    public UserDto findById(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Usuário não encontrado"
-                ));
+    @Transactional(readOnly = true)
+    public UserDto me(UUID id) {
+        return toDto(getActive(id));
+    }
+
+    @Transactional
+    public UserDto updateProfile(UUID id, UpdateProfileRequest request) {
+        User user = getActive(id);
+        String username = request.username().trim().toLowerCase(Locale.ROOT);
+
+        userRepository.findByUsernameIgnoreCase(username)
+                .filter(found -> !found.getId().equals(id))
+                .ifPresent(found -> {
+                    throw Errors.conflict("Nome de usuária já está em uso");
+                });
+
+        user.setName(request.name().trim());
+        user.setUsername(username);
+        user.setPhotoUrl(request.photoUrl());
 
         return toDto(user);
     }
 
-    public UserDto create(UserDto dto) {
-        validarCampos(dto);
+    @Transactional
+    public void changePassword(UUID id, ChangePasswordRequest request) {
+        User user = getActive(id);
 
-        if (userRepository.existsByEmail(dto.email())) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "E-mail já cadastrado"
-            );
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPasswordHash())) {
+            throw Errors.badRequest("Senha atual incorreta");
         }
 
-        User user = new User();
-
-        user.setName(dto.name());
-        user.setEmail(dto.email());
-        user.setPasswordHash(passwordEncoder.encode(dto.password()));
-        user.setActive(true);
-
-        return toDto(userRepository.save(user));
+        user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
     }
 
-    public UserDto update(UUID id, UserDto dto) {
-        validarCampos(dto);
-
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Usuário não encontrado"
-                ));
-
-        userRepository.findByEmail(dto.email())
-                .filter(foundUser -> !foundUser.getId().equals(id))
-                .ifPresent(foundUser -> {
-                    throw new ResponseStatusException(
-                            HttpStatus.CONFLICT,
-                            "E-mail já cadastrado"
-                    );
-                });
-
-        user.setName(dto.name());
-        user.setEmail(dto.email());
-        user.setPasswordHash(passwordEncoder.encode(dto.password()));
-
-        if (dto.active() != null) {
-            user.setActive(dto.active());
-        }
-
-        return toDto(userRepository.save(user));
+    @Transactional
+    public void deactivate(UUID id) {
+        getActive(id).setActive(false);
     }
 
-    public void delete(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Usuário não encontrado"
-                ));
-
-        userRepository.delete(user);
+    @Transactional(readOnly = true)
+    public PageResponse<UserDto> list(int page, int size) {
+        return PageResponse.of(
+                userRepository.findAll(Pages.of(page, size, Sort.by("createdAt").descending()))
+                        .map(this::toDto)
+        );
     }
 
-   
-
-    private UserDto toDto(User user) {
+    public UserDto toDto(User user) {
         return new UserDto(
                 user.getId(),
                 user.getName(),
+                user.getUsername(),
                 user.getEmail(),
-                null,
-                user.getActive()
+                user.getSex(),
+                user.getPhotoUrl(),
+                user.getVerified(),
+                user.getRole(),
+                user.getValidContributions(),
+                reputationService.profileWeight(user),
+                user.getCreatedAt()
         );
     }
 }
