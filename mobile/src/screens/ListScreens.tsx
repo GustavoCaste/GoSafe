@@ -3,11 +3,12 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useMemo, useState } from 'react';
-import { Alert, FlatList, Pressable, Text, TextInput, View } from 'react-native';
+import { FlatList, Pressable, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PlaceRow } from '../components/PlaceRow';
 import { Avatar, Button, Card, Chip, DemoDataNotice, Empty, Field, Screen, styles as ui } from '../components/ui';
+import { appAlert } from '../components/AppDialog';
 import { createPlace, userWeight } from '../data/repository';
 import { currentUser, errorMessage, mutate, requireUser, resetDatabase, useDatabase } from '../data/store';
 import { CATEGORY_LABEL, SEX_LABEL } from '../domain/labels';
@@ -213,13 +214,13 @@ export function CreatePlaceScreen({ navigation, route }: ScreenProps<'CreatePlac
   const useMyLocation = async () => {
     const fix = await currentFix().catch(() => null);
     if (fix) setPoint(fix);
-    else Alert.alert('Localização indisponível', 'Permita o acesso à localização nas configurações do aparelho.');
+    else appAlert('Localização indisponível', 'Permita o acesso à localização nas configurações do aparelho.');
   };
 
   const submit = () =>
     once(() => {
       if (!point) {
-        Alert.alert('Defina o local', 'Use sua localização ou abra o cadastro a partir do mapa.');
+        appAlert('Defina o local', 'Use sua localização ou abra o cadastro a partir do mapa.');
         return false;
       }
       try {
@@ -229,7 +230,7 @@ export function CreatePlaceScreen({ navigation, route }: ScreenProps<'CreatePlac
         navigation.replace('Place', { placeId: place.id });
         return true;
       } catch (error) {
-        Alert.alert('Não foi possível cadastrar', errorMessage(error));
+        appAlert('Não foi possível cadastrar', errorMessage(error));
         return false;
       }
     });
@@ -298,7 +299,7 @@ export function ProfileScreen({ navigation }: ScreenProps<'Profile'>) {
   const weight = userWeight(user);
 
   const reset = () =>
-    Alert.alert('Recriar dados de teste?', 'Apaga tudo deste aparelho (locais, usuárias, comentários) e volta ao primeiro acesso.', [
+    appAlert('Recriar dados de teste?', 'Apaga tudo deste aparelho (locais, usuárias, comentários) e volta ao primeiro acesso.', [
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Apagar e recriar', style: 'destructive', onPress: () => resetDatabase() },
     ]);
@@ -348,11 +349,11 @@ export function ProfileScreen({ navigation }: ScreenProps<'Profile'>) {
           label="Salvar nome"
           variant="secondary"
           onPress={() => {
-            if (name.trim().length < 3) return Alert.alert('Nome inválido', 'Use pelo menos 3 caracteres.');
+            if (name.trim().length < 3) return appAlert('Nome inválido', 'Use pelo menos 3 caracteres.');
             mutate((database) => {
               database.users[user.id].name = name.trim();
             });
-            Alert.alert('Pronto', 'Nome atualizado.');
+            appAlert('Pronto', 'Nome atualizado.');
           }}
         />
       </Card>

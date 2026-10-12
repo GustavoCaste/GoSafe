@@ -8,6 +8,7 @@ import assert from 'node:assert/strict';
 import { MAX_GENERATED_PLACES, generateForBounds } from '../src/data/generator';
 import {
   DomainError,
+  applyWaterCheck,
   authenticate,
   checkIn,
   createComment,
@@ -173,6 +174,25 @@ test('gera "Local Teste N" ao navegar, sem repetir a área e sem gerar com zoom 
   const generated = Object.values(db.places).filter((p) => p.generated);
   assert.ok(generated.some((p) => p.ratingCount > 0));
   assert.ok(generated.every((p) => p.notRecommended === (p.ratingCount >= 5 && (p.weightedRating ?? 5) <= 1.5)));
+});
+
+test('local na água: gerado é apagado com seus dados, da carga é movido para a terra', () => {
+  const db = seedDatabase(SAO_PAULO, false);
+  generateForBounds(db, { west: -46.66, south: -23.57, east: -46.62, north: -23.53 }, 14);
+  const generated = Object.values(db.places).find((p) => p.generated && p.ratingCount > 0)!;
+  const seeded = Object.values(db.places).find((p) => !p.generated)!;
+  assert.ok(!generated.landChecked && !seeded.landChecked, 'carga e gerador precisam ser conferidos');
+  const typed = createPlace(db, Object.values(db.users)[0], { name: 'Marcado pela usuária', category: 'CAFE', description: '', postalCode: '01310100', street: 'Rua A', number: '1', district: 'Centro', city: 'São Paulo', state: 'SP' }, SAO_PAULO);
+  assert.ok(typed.landChecked, 'local marcado pela usuária não é movido');
+  const changed = applyWaterCheck(db, [
+    { id: generated.id, water: true, lat: -23.5, lng: -46.6 },
+    { id: seeded.id, water: true, lat: -23.51, lng: -46.61 },
+  ]);
+  assert.equal(changed, 2);
+  assert.equal(db.places[generated.id], undefined);
+  assert.ok(!Object.values(db.notices).some((n) => n.placeId === generated.id));
+  assert.ok(!Object.values(db.reviews).some((r) => r.placeId === generated.id));
+  assert.deepEqual([db.places[seeded.id].latitude, db.places[seeded.id].longitude, db.places[seeded.id].landChecked], [-23.51, -46.61, true]);
 });
 
 console.log('Estresse — navegação intensa no mapa');

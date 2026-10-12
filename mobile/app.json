@@ -30,6 +30,12 @@
         {
           "locationWhenInUsePermission": "O GoSafe usa sua localização para mostrar locais avaliados perto de você e para o check-in."
         }
+      ],
+      [
+        "expo-navigation-bar",
+        {
+          "enforceContrast": false
+        }
       ]
     ]
   }

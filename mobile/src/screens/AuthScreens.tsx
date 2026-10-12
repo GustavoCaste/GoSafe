@@ -1,12 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState, type ReactNode } from 'react';
-import { ActivityIndicator, Alert, Image, Pressable, Switch, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, Switch, Text, View } from 'react-native';
 
 /** Marca: mapa dobrado + escudo + símbolo feminino (assets/splash-icon.png). */
 const BRAND_MARK = require('../../assets/splash-icon.png');
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AlertBanner, Avatar, Button, Card, Chip, DemoDataNotice, Field, RatingBadge, Screen, styles as ui, type IconName } from '../components/ui';
+import { appAlert } from '../components/AppDialog';
 import { authenticate, registerUser } from '../data/repository';
 import { SAO_PAULO, TEST_ACCOUNT } from '../data/seed';
 import { createSeededDatabase, currentUser, errorMessage, mutate } from '../data/store';
@@ -167,7 +168,7 @@ export function PermissionScreen() {
       createSeededDatabase(center, aroundDevice);
     } catch (error) {
       setBusy(null);
-      Alert.alert('Não foi possível preparar o app', errorMessage(error));
+      appAlert('Não foi possível preparar o app', errorMessage(error));
     }
   };
 
@@ -212,7 +213,7 @@ export function LoginScreen({ navigation }: ScreenProps<'Login'>) {
         db.sessionUserId = authenticate(db, value, secret).id;
       });
     } catch (error) {
-      Alert.alert('Não foi possível entrar', errorMessage(error));
+      appAlert('Não foi possível entrar', errorMessage(error));
     }
   };
 
@@ -260,7 +261,7 @@ export function RegisterScreen({ navigation }: ScreenProps<'Register'>) {
   const submit = () =>
     once(() => {
       if (!terms) {
-        Alert.alert('Termos de uso', 'Aceite os termos de uso e a política de privacidade para continuar.');
+        appAlert('Termos de uso', 'Aceite os termos de uso e a política de privacidade para continuar.');
         return false;
       }
       try {
@@ -269,7 +270,7 @@ export function RegisterScreen({ navigation }: ScreenProps<'Register'>) {
         });
         return true;
       } catch (error) {
-        Alert.alert('Não foi possível criar a conta', errorMessage(error));
+        appAlert('Não foi possível criar a conta', errorMessage(error));
         return false;
       }
     });
@@ -305,7 +306,7 @@ export function VerificationScreen({ navigation }: ScreenProps<'Verification'>) 
 
   const start = () => {
     if (!consent) {
-      Alert.alert('Consentimento', 'É necessário autorizar o uso da imagem para a verificação.');
+      appAlert('Consentimento', 'É necessário autorizar o uso da imagem para a verificação.');
       return;
     }
     setRunning(true);
@@ -315,7 +316,7 @@ export function VerificationScreen({ navigation }: ScreenProps<'Verification'>) 
         db.users[user.id].verified = true;
       });
       setRunning(false);
-      Alert.alert('Identidade verificada', `Prova de vida aprovada · facematch ${score.toFixed(2)} (simulado).`, [
+      appAlert('Identidade verificada', `Prova de vida aprovada · facematch ${score.toFixed(2)} (simulado).`, [
         { text: 'Ok', onPress: () => navigation.goBack() },
       ]);
     }, 1800);

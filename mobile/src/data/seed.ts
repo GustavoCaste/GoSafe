@@ -134,7 +134,7 @@ export function seedDatabase(center: LatLng, placedAroundDevice: boolean): Datab
         state: 'SP',
       },
       point,
-      { createdAt: now - 90 * DAY, skipDuplicateCheck: true },
+      { createdAt: now - 90 * DAY, skipDuplicateCheck: true, needsLandCheck: true },
     );
 
     const reviewers = seed.profile === 'TOP' ? 12 : seed.profile === 'LOW' ? 10 : random.int(3, 8);

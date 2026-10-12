@@ -1,12 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo, useState } from 'react';
-import { Alert, Pressable, Switch, Text, View } from 'react-native';
+import { Pressable, Switch, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native';
 
 import { placeThumbColor } from '../components/PlaceRow';
 import { DEFAULT_REVIEW, ReviewInput, ReviewSummary } from '../components/ReviewInput';
 import { AlertBanner, Button, Card, Chip, DemoDataNotice, Empty, Field, IconButton, RatingBadge, Screen, SectionTitle, styles as ui } from '../components/ui';
+import { appAlert } from '../components/AppDialog';
 import {
   checkIn,
   checkInValidUntil,
@@ -84,9 +85,9 @@ export function PlaceScreen({ navigation, route }: ScreenProps<'Place'>) {
         fix = real;
       }
       const record = mutate((database) => checkIn(database, requireUser(), database.places[place.id], fix, fix.accuracy));
-      Alert.alert('Check-in feito', `Você estava a ${record.distanceMeters} m. Suas avaliações deste local nas próximas 4 h contam com peso maior.`);
+      appAlert('Check-in feito', `Você estava a ${record.distanceMeters} m. Suas avaliações deste local nas próximas 4 h contam com peso maior.`);
     } catch (error) {
-      Alert.alert('Check-in não realizado', errorMessage(error));
+      appAlert('Check-in não realizado', errorMessage(error));
     } finally {
       setBusy(false);
     }
@@ -217,7 +218,7 @@ export function NoticeScreen({ navigation, route }: ScreenProps<'Notice'>) {
   const canModerate = user.role !== 'USER';
 
   const remove = (comment: Comment) =>
-    Alert.alert('Remover comentário?', 'A avaliação ligada a ele deixa de contar na nota do local.', [
+    appAlert('Remover comentário?', 'A avaliação ligada a ele deixa de contar na nota do local.', [
       { text: 'Cancelar', style: 'cancel' },
       {
         text: 'Remover',
@@ -226,14 +227,14 @@ export function NoticeScreen({ navigation, route }: ScreenProps<'Notice'>) {
           try {
             mutate((database) => removeComment(database, requireUser(), database.comments[comment.id]));
           } catch (error) {
-            Alert.alert('Não foi possível remover', errorMessage(error));
+            appAlert('Não foi possível remover', errorMessage(error));
           }
         },
       },
     ]);
 
   const removeWhole = () =>
-    Alert.alert('Remover aviso?', 'O aviso e as avaliações dele deixam de aparecer.', [
+    appAlert('Remover aviso?', 'O aviso e as avaliações dele deixam de aparecer.', [
       { text: 'Cancelar', style: 'cancel' },
       {
         text: 'Remover',
@@ -332,7 +333,7 @@ export function NewNoticeScreen({ navigation, route }: ScreenProps<'NewNotice'>)
         navigation.replace('Notice', { noticeId: notice.id });
         return true;
       } catch (error) {
-        Alert.alert('Não foi possível publicar', errorMessage(error));
+        appAlert('Não foi possível publicar', errorMessage(error));
         return false;
       }
     });
@@ -384,7 +385,7 @@ export function CommentScreen({ navigation, route }: ScreenProps<'Comment'>) {
         navigation.goBack();
         return true;
       } catch (error) {
-        Alert.alert('Não foi possível comentar', errorMessage(error));
+        appAlert('Não foi possível comentar', errorMessage(error));
         return false;
       }
     });

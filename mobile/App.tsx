@@ -5,8 +5,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import * as NavigationBar from 'expo-navigation-bar';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { DialogHost } from './src/components/AppDialog';
 import { currentUser, hasDatabase, loadDatabase, useDatabase } from './src/data/store';
 import type { RootStackParamList, TabParamList } from './src/navigation/types';
 import { BenefitsScreen, LoginScreen, PermissionScreen, RegisterScreen, VerificationScreen, WelcomeScreen } from './src/screens/AuthScreens';
@@ -20,6 +22,23 @@ const Tabs = createBottomTabNavigator<TabParamList>();
 
 const theme = { ...DefaultTheme, colors: { ...DefaultTheme.colors, background: colors.background, primary: colors.primary } };
 
+/**
+ * Faixa sólida no roxo dos botões do app (Todos, +) atrás dos botões do Android (voltar/início/recentes).
+ * Com o app em tela cheia (edge-to-edge) a barra é transparente e alguns
+ * aparelhos (ex.: Xiaomi/MIUI) ignoram o estilo pedido, deixando ícones
+ * claros sobre fundo claro. Fundo escuro + ícones claros fica legível sempre.
+ */
+function SystemNavigationStrip() {
+  const insets = useSafeAreaInsets();
+  if (insets.bottom === 0) return null;
+  return (
+    <View
+      pointerEvents="none"
+      style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: insets.bottom, backgroundColor: colors.primary }}
+    />
+  );
+}
+
 function MainTabs() {
   return (
     <Tabs.Navigator
@@ -28,6 +47,7 @@ function MainTabs() {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.muted,
         tabBarLabelStyle: { fontSize: 12, fontWeight: '600' },
+        // Faixa levemente tingida atrás dos botões do Android, para eles não sumirem no branco
         tabBarIcon: ({ color, size, focused }) => {
           const icons = { Map: 'map', Places: 'list', Favorites: 'heart' } as const;
           const name = icons[route.name];
@@ -47,6 +67,8 @@ export default function App() {
   useDatabase();
 
   useEffect(() => {
+    // ícones claros sobre a faixa escura de SystemNavigationStrip
+    NavigationBar.setStyle('light');
     loadDatabase().finally(() => setLoaded(true));
   }, []);
 
@@ -93,6 +115,8 @@ export default function App() {
           )}
         </Stack.Navigator>
       </NavigationContainer>
+      <SystemNavigationStrip />
+      <DialogHost />
     </SafeAreaProvider>
   );
 }

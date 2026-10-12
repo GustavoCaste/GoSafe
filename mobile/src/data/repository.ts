@@ -137,7 +137,7 @@ export function createPlace(
   creator: User,
   input: PlaceInput,
   point: LatLng,
-  options: { createdAt?: number; generated?: boolean; skipDuplicateCheck?: boolean } = {},
+  options: { createdAt?: number; generated?: boolean; skipDuplicateCheck?: boolean; needsLandCheck?: boolean } = {},
 ): Place {
   const name = input.name.trim();
   const postalDigits = input.postalCode.replace(/\D/g, '');
@@ -182,6 +182,8 @@ export function createPlace(
     active: true,
     createdAt: options.createdAt ?? Date.now(),
     generated: options.generated,
+    // local marcado pela usuária é confiável; carga e gerador são conferidos contra a água no mapa
+    landChecked: !options.needsLandCheck,
   };
 
   db.places[place.id] = place;
@@ -419,6 +421,53 @@ export function displayAuthor(db: Database, authorId: string, anonymous: boolean
     return { name: 'Anônima', username: null as string | null, verified: author?.verified ?? false, anonymous: true, mine };
   }
   return { name: author.name, username: author.username, verified: author.verified, anonymous: false, mine };
+}
+
+// ---------------------------------------------------------------- locais na água
+
+export interface WaterResult {
+  id: string;
+  water: boolean;
+  lat?: number | null;
+  lng?: number | null;
+}
+
+/** Apaga um local e tudo o que pertence a ele (usado só para locais de teste gerados). */
+export function deletePlaceCascade(db: Database, placeId: string): void {
+  const noticeIds = new Set(Object.values(db.notices).filter((n) => n.placeId === placeId).map((n) => n.id));
+  for (const comment of Object.values(db.comments)) if (noticeIds.has(comment.noticeId)) delete db.comments[comment.id];
+  for (const review of Object.values(db.reviews)) if (review.placeId === placeId) delete db.reviews[review.id];
+  for (const checkIn of Object.values(db.checkIns)) if (checkIn.placeId === placeId) delete db.checkIns[checkIn.id];
+  for (const key of Object.keys(db.favorites)) if (key.endsWith(`:${placeId}`)) delete db.favorites[key];
+  noticeIds.forEach((id) => delete db.notices[id]);
+  delete db.places[placeId];
+}
+
+/**
+ * Resultado da checagem de água feita pelo mapa: local de teste gerado na
+ * água é apagado; local da carga é movido para a terra mais próxima.
+ */
+export function applyWaterCheck(db: Database, results: WaterResult[]): number {
+  let changed = 0;
+  for (const result of results) {
+    const place = db.places[result.id];
+    if (!place) continue;
+    if (result.water) {
+      changed += 1;
+      if (place.generated) {
+        deletePlaceCascade(db, place.id);
+        continue;
+      }
+      if (result.lat != null && result.lng != null) {
+        place.latitude = result.lat;
+        place.longitude = result.lng;
+      } else {
+        place.active = false; // sem terra por perto (ex.: alto-mar): some do mapa
+      }
+    }
+    place.landChecked = true;
+  }
+  return changed;
 }
 
 // ---------------------------------------------------------------- favoritos

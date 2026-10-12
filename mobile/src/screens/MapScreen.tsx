@@ -10,7 +10,7 @@ import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 import { PlaceThumb } from '../components/PlaceRow';
 import { AlertBanner, Avatar, Button, RatingBadge, styles as ui } from '../components/ui';
 import { generateForBounds, generationLimitReached } from '../data/generator';
-import { isFavorite, toggleFavorite } from '../data/repository';
+import { applyWaterCheck, isFavorite, toggleFavorite } from '../data/repository';
 import { commitChanges, currentUser, getDatabase, mutate, useDatabase } from '../data/store';
 import { CATEGORY_LABEL } from '../domain/labels';
 import { distanceMeters, formatDistance, formatRating, insideBounds, ratingTone } from '../domain/rules';
@@ -61,7 +61,13 @@ export function MapScreen({ navigation }: Props) {
 
   useEffect(() => {
     if (!ready) return;
-    const pins = visible.map((place) => ({
+    // locais ainda não conferidos não viram pin até o mapa confirmar que não estão na água
+    const unchecked = visible.filter((place) => !place.landChecked);
+    if (unchecked.length > 0 && !offline) {
+      const points = unchecked.map((place) => ({ id: place.id, lat: place.latitude, lng: place.longitude }));
+      inject(`window.gosafe && window.gosafe.checkWater(${JSON.stringify(points)})`);
+    }
+    const pins = visible.filter((place) => place.landChecked || offline).map((place) => ({
       id: place.id,
       lat: place.latitude,
       lng: place.longitude,
@@ -95,6 +101,9 @@ export function MapScreen({ navigation }: Props) {
         break;
       case 'mapclick':
         setSelectedId(null);
+        break;
+      case 'water':
+        if (message.results.length > 0) mutate((database) => applyWaterCheck(database, message.results));
         break;
       case 'bounds': {
         const bounds: Bounds = { west: message.west, south: message.south, east: message.east, north: message.north };
@@ -268,7 +277,7 @@ const styles = StyleSheet.create({
   filter: { minHeight: 40, paddingHorizontal: 14, borderRadius: 20, backgroundColor: colors.surface, justifyContent: 'center', ...shadow, elevation: 3 },
   pill: { alignSelf: 'center', backgroundColor: 'rgba(29,23,38,0.82)', borderRadius: 15, paddingHorizontal: 12, paddingVertical: 6 },
   pillText: { color: '#FFF', fontSize: 13, fontWeight: '600' },
-  fabColumn: { position: 'absolute', right: 16, bottom: 16, gap: 12, alignItems: 'center' },
+  fabColumn: { position: 'absolute', right: 16, bottom: 44, gap: 12, alignItems: 'center' },
   locate: { width: 52, height: 52, borderRadius: 26, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', ...shadow },
   fab: { width: 62, height: 62, borderRadius: 20, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', ...shadow },
   sheet: { position: 'absolute', left: 12, right: 12, bottom: 12, backgroundColor: colors.surface, borderRadius: radius.xl, padding: 16, gap: 12, maxWidth: 560, alignSelf: 'center', ...shadow },

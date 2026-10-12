@@ -109,7 +109,7 @@ function generatePlace(db: Database, random: Random, point: { latitude: number; 
       state: 'SP',
     },
     point,
-    { generated: true, skipDuplicateCheck: true },
+    { generated: true, skipDuplicateCheck: true, needsLandCheck: true },
   );
 
   const roll = random.next();

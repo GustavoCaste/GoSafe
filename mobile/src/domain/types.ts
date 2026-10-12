@@ -55,6 +55,8 @@ export interface Place {
   active: boolean;
   createdAt: number;
   generated?: boolean;
+  /** Já conferido contra a camada de água do mapa (não está no mar/rio). */
+  landChecked?: boolean;
 }
 
 export interface Notice {

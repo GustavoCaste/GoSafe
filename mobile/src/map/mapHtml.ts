@@ -4,8 +4,8 @@ import type { LatLng } from '../domain/types';
  * Página do mapa (MapLibre GL + tiles OpenFreeMap/OpenStreetMap) carregada
  * numa WebView. Só os tiles do mapa usam internet; os dados vêm do app.
  *
- * Mensagens mapa → app: ready | bounds | select | mapclick | offline
- * Chamadas app → mapa: gosafe.setPins, gosafe.select, gosafe.setUser, gosafe.flyTo
+ * Mensagens mapa → app: ready | bounds | select | mapclick | offline | water
+ * Chamadas app → mapa: gosafe.setPins, gosafe.select, gosafe.setUser, gosafe.flyTo, gosafe.checkWater
  */
 export function mapHtml(center: LatLng, zoom: number): string {
   return `<!doctype html>
@@ -109,6 +109,43 @@ export function mapHtml(center: LatLng, zoom: number): string {
       },
       flyTo: function (lat, lng, zoom) {
         map.flyTo({ center: [lng, lat], zoom: zoom || Math.max(map.getZoom(), 14) });
+      },
+
+      // Confere se os locais caíram na água (camada "water" do OpenStreetMap).
+      // Só os locais dentro da área visível são conferidos; os demais ficam para quando aparecerem.
+      checkWater: function (points) {
+        if (!points.length) return;
+        var canvas = map.getCanvas();
+        var inside = function (px) {
+          return px.x >= 0 && px.y >= 0 && px.x <= canvas.clientWidth && px.y <= canvas.clientHeight;
+        };
+        var isWater = function (x, y) {
+          return map.queryRenderedFeatures([x, y]).some(function (f) { return f.sourceLayer === 'water'; });
+        };
+        var run = function () {
+          var results = [];
+          points.forEach(function (p) {
+            var px = map.project([p.lng, p.lat]);
+            if (!inside(px)) return;
+            if (!isWater(px.x, px.y)) { results.push({ id: p.id, water: false }); return; }
+            var found = null;
+            for (var r = 12; r <= 360 && !found; r += 12) {
+              for (var a = 0; a < 16 && !found; a++) {
+                var x = px.x + r * Math.cos(a * Math.PI / 8);
+                var y = px.y + r * Math.sin(a * Math.PI / 8);
+                if (inside({ x: x, y: y }) && !isWater(x, y)) {
+                  var ll = map.unproject([x, y]);
+                  found = { lat: ll.lat, lng: ll.lng };
+                }
+              }
+            }
+            results.push({ id: p.id, water: true, lat: found ? found.lat : null, lng: found ? found.lng : null });
+          });
+          post({ type: 'water', results: results });
+        };
+        // Só confere com os tiles desenhados e com zoom suficiente para ver rios e lagos.
+        if (map.getZoom() < 12) return;
+        if (map.loaded() && map.areTilesLoaded()) run(); else map.once('idle', run);
       }
     };
   }
