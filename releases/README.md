@@ -2,17 +2,28 @@
 
 Arquivos instaláveis do app, separados do código do projeto (`gosafe-backend/` e `mobile/`).
 
-## mobile-teste-v0.1.0 — app offline para Android
+## mobile-teste-v0.1.1 — app offline para Android (atual)
 
 | | |
 |---|---|
-| Arquivo | [`mobile-teste-v0.1.0/GoSafe-Teste-v0.1.0.apk`](mobile-teste-v0.1.0/GoSafe-Teste-v0.1.0.apk) |
+| Arquivo | [`mobile-teste-v0.1.1/GoSafe-Teste-v0.1.1.apk`](mobile-teste-v0.1.1/GoSafe-Teste-v0.1.1.apk) |
 | Tamanho | 32 MB |
-| SHA-256 | `e915f9d33d8cb817eaad5a5382ff1c3f38fd22ea18e5854f04f3347dc8995b8f` |
+| SHA-256 | `a0cdd8ae490a8cd7a1a5df0399baa4556f6eae36f63839b6b398fbe969cd1b21` |
 | Plataforma | Android, arm64 (celulares atuais) |
 | Pacote | `com.gosafe.test` — nome no aparelho: **GoSafe Teste** |
 | Código-fonte | branch `test/mobile-offline`, pasta `mobile/` |
 | Gerado em | 12/10/2026, build release (Expo SDK 57, React Native 0.86) |
+
+### Novidades da v0.1.1 (correções dos testes no aparelho)
+
+- Locais nunca aparecem na água: o mapa confere cada ponto contra a camada de água antes de mostrar o pin.
+- Botões do Android legíveis: faixa roxa com ícones claros em todas as telas.
+- Abertura com a marca GoSafe (antes aparecia o ícone padrão do React Native).
+- Diálogos de erro e confirmação com a identidade do app.
+- Menu do **+** acima da barra do Android; **+** e centralizar sobem quando o cartão de um local está aberto (antes o toque no + abria o local).
+- Leitor de tela anuncia o nome de cada campo e se o local já é favorito.
+
+Versão anterior: v0.1.0 (disponível no histórico do Git).
 
 > **Todos os dados deste app de teste — locais, usuárias, notas e comentários — foram criados por IA para exemplificar um cenário real.** Não representam pessoas nem estabelecimentos reais.
 
@@ -23,7 +34,7 @@ Arquivos instaláveis do app, separados do código do projeto (`gosafe-backend/`
 **Pelo computador** (celular com depuração USB ativa):
 
 ```bash
-adb install -r releases/mobile-teste-v0.1.0/GoSafe-Teste-v0.1.0.apk
+adb install -r releases/mobile-teste-v0.1.1/GoSafe-Teste-v0.1.1.apk
 ```
 
 Em Xiaomi/POCO, ative também **"Instalar via USB"** nas opções do desenvolvedor.
