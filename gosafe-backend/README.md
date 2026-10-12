@@ -19,13 +19,31 @@ Variáveis úteis:
 | `GOSAFE_JWT_SECRET` | Segredo do JWT (mínimo 32 bytes). Obrigatório fora do ambiente de desenvolvimento. |
 | `GOSAFE_ADMIN_EMAILS` | E-mails (separados por vírgula) que recebem papel `ADMIN` ao se cadastrar. |
 
-Testes (H2 em memória, sem Docker):
+### Carga de dados para demonstração (perfil `dev`)
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+Cria 50 usuárias (`seed01@gosafe.dev` … `seed50@gosafe.dev`, senha `gosafe123`, 1 em cada 5 verificada) e 20 locais em São Paulo: 2 quase perfeitos (~5,0), 5 com nota ~1,0 que disparam o alerta de local não aconselhado e 13 com notas variadas. A carga passa pelas próprias regras de negócio (pesos, nota ponderada, alerta). **Todos esses dados foram criados por IA para exemplificar um cenário real.**
+
+## Testes
 
 ```bash
 ./mvnw test
 ```
 
-As consultas espaciais (mapa, busca por distância, check-in, duplicidade) usam PostGIS e só rodam no Postgres.
+73 testes: unitários (fórmula de reputação, distância) e de integração de **todos os endpoints** contra um PostgreSQL + PostGIS real via Testcontainers (sobe a imagem `postgis/postgis:16-3.4`; o Flyway aplica as migrações e o Hibernate valida o schema). Cobrem sucesso, validação, permissão e regras de negócio. Sem Docker, os testes de integração com PostGIS são ignorados e os demais rodam em H2.
+
+## Regras de negócio configuráveis
+
+| Propriedade | Padrão | Regra |
+|---|---|---|
+| `gosafe.alert.min-reviews` | 100 (5 no perfil `dev` e nos testes) | RN18: mínimo de usuárias avaliando para o alerta |
+| `gosafe.alert.max-rating` | 1,5 | RN18: nota ponderada a partir da qual o local é não aconselhado |
+| `gosafe.checkin.radius-meters` | 100 | raio do check-in (descontada a precisão do GPS) |
+| `gosafe.checkin.max-accuracy-meters` | 100 | precisão mínima aceita do GPS |
+| `gosafe.checkin.window-hours` | 4 | intervalo entre check-ins no mesmo local |
 
 ## Estrutura
 
@@ -37,13 +55,14 @@ Um pacote por funcionalidade (`controller → service → repository`):
 | `user` | Perfil (`/me`) e listagem para admin. |
 | `verification` | Verificação facial **opcional** e **simulada** (`SimulatedVerificationProvider`); guarda só resultado e data, nunca imagem. |
 | `geo` | ViaCEP (CEP → endereço) e Nominatim/OpenStreetMap (endereço → coordenadas), com cache e limite de 1 req/s. |
-| `place` | Locais com endereço estruturado, mapa por área visível, busca, fotos. |
+| `place` | Locais com endereço estruturado, mapa por área visível, busca, fotos e o alerta de local não aconselhado (RN18). |
 | `checkin` | Check-in a até 100 m (descontada a precisão do GPS), 1 por local a cada 4 h; guarda só a distância. |
 | `notice`, `comment` | Avisos (fórum) com comentário inicial e comentários; anonimato opcional. |
 | `review` | Avaliação com 5 parâmetros (banheiro pode ser "não há") e nota ponderada do local. |
 | `reputation` | Peso do perfil (0,1–1,0) e do voto — ver `ReputationFormula`. |
 | `favorite` | Favoritos. |
 | `report` | Denúncias e moderação; denúncia procedente oculta o conteúdo e reduz a reputação. |
+| `dev` | Carga de dados de demonstração (só no perfil `dev`). |
 
 ## Endpoints
 

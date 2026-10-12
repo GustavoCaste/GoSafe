@@ -201,33 +201,59 @@ mecanismos de denúncia e moderação.
 
 
 
-Estrutura inicial do projeto
+## Estrutura do projeto
 
+```
 GoSafe/
-
-│
-
-├── mobile/
-
-│   └── Aplicação React Native
-
-│
-
-├── backend/
-
-│   └── API Java + Spring Boot
-
-│
-
-├── docs/
-
-│   └── Documentação do projeto
-
-│
-
+├── gosafe-backend/   API Java 21 + Spring Boot 4, PostgreSQL + PostGIS (ver gosafe-backend/README.md)
+├── mobile/           App Expo + React Native + TypeScript (branch test/mobile-offline, ver mobile/README.md)
 └── README.md
+```
 
+| Branch | Conteúdo |
+|---|---|
+| `develop` | Base inicial do backend |
+| `feature/estrutura-backend` | Backend completo: JWT, PostGIS, endereço estruturado, check-in, reputação ponderada, avisos, comentários, favoritos, denúncias, verificação facial simulada, alerta de local não aconselhado e 73 testes |
+| `test/mobile-offline` | Tudo acima + app de teste que roda 100% no aparelho, com carga de dados e gerador de locais no mapa |
 
+## Como rodar
+
+**Backend** (Java 21 + Docker):
+
+```bash
+cd gosafe-backend
+./mvnw test                                              # 73 testes, incluindo PostGIS real
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev    # API + carga de demonstração
+```
+
+**App de teste** (Node 20 + Android SDK, celular em modo desenvolvedor):
+
+```bash
+cd mobile
+npm install
+npm run test:data                                        # 15 testes da lógica offline
+npx expo prebuild --platform android
+cd android && ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a
+adb install -r app/build/outputs/apk/release/app-release.apk
+```
+
+## Regras de negócio implementadas
+
+- Avaliação com 5 parâmetros de 1 a 5: segurança, iluminação, movimento, acolhimento e banheiro (banheiro aceita "não há").
+- Nota do local = média ponderada pelo peso de cada voto; vale só a avaliação mais recente de cada usuária.
+- Peso do perfil de 0,1 a 1,0 (tempo de conta, contribuições válidas, verificação, denúncias procedentes), com bônus para quem avalia com check-in.
+- Check-in a até 100 m do local, descontada a precisão do GPS, um por local a cada 4 h; só a distância é guardada.
+- Comentários existem apenas dentro de avisos, e avisos apenas dentro de locais; publicação anônima opcional.
+- **Local não aconselhado (RN18):** com 100 usuárias ou mais avaliando (5 na versão de teste) e nota ponderada até 1,5, o local recebe alerta no mapa, na lista e na página.
+- Verificação facial opcional e simulada, sem guardar imagem (LGPD art. 11).
+
+## Dados de demonstração
+
+Todos os dados de demonstração do projeto — locais, usuárias, notas e comentários, tanto no protótipo quanto no app de teste e na carga do backend — **foram criados por IA para exemplificar um cenário real**. Não representam pessoas nem estabelecimentos reais.
+
+## Marca
+
+Escudo com o símbolo feminino sobre um mapa dobrado: proteção, mulheres e lugares. Cores: noite `#2B1446`, violeta `#5B2A86`, coral `#F2A28F`, lavanda `#E9DFF5`. Os ícones do app ficam em `mobile/assets`.
 
 Contexto acadêmico
 
@@ -246,7 +272,10 @@ Status
 
 🚧 Em desenvolvimento
 
-Atualmente o projeto encontra-se em fase de pesquisa, definição de requisitos e planejamento da arquitetura.
+- Backend implementado e testado (73 testes contra PostgreSQL + PostGIS).
+- Protótipo de telas completo, incluindo responsividade, vantagens e alerta de local não aconselhado.
+- App de teste offline instalável no Android, com dados de demonstração gerados por IA.
+- Próximos passos: integrar o app ao backend, armazenamento de fotos, documentação OpenAPI e notificações.
 
 Licença
 
