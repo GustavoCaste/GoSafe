@@ -1,6 +1,6 @@
 # GoSafe — app mobile (versão de teste offline)
 
-Expo (SDK 57) + React Native + TypeScript. Nesta branch (`test/mobile-offline`) o app **não fala com o backend**: tudo fica salvo no aparelho (AsyncStorage) e as regras de negócio são as mesmas do backend (`src/domain/rules.ts`). A internet é usada **apenas** para desenhar o mapa (MapLibre GL + tiles OpenFreeMap/OpenStreetMap).
+Expo (SDK 57) + React Native + TypeScript. Nesta branch (`test/mobile-offline`) o app **não fala com o backend**: tudo fica salvo no aparelho (arquivo `gosafe-test-db.json` na pasta do app) e as regras de negócio são as mesmas do backend (`src/domain/rules.ts`). A internet é usada **apenas** para desenhar o mapa (MapLibre GL + tiles OpenFreeMap/OpenStreetMap).
 
 > **Todos os dados deste app de teste — locais, usuárias, notas e comentários — foram criados por IA para exemplificar um cenário real.** O app avisa isso nas boas-vindas, no login, na tela de vantagens, no perfil e na página de cada local.
 
@@ -8,7 +8,7 @@ Expo (SDK 57) + React Native + TypeScript. Nesta branch (`test/mobile-offline`) 
 
 ```bash
 npm run typecheck   # tipagem
-npm run test:data   # 15 testes: carga de dados, RN18, nota ponderada, check-in, duplicidade, anonimato, gerador do mapa
+npm run test:data   # 17 testes: carga de dados, RN18, nota ponderada, check-in, duplicidade, anonimato, gerador do mapa, locais na água, estresse
 ```
 
 ## Instalar no celular (USB, modo desenvolvedor)
@@ -36,6 +36,8 @@ Criada no primeiro acesso, em volta da sua localização (ou do centro de São P
 | 13 locais variados | notas de ~2,1 a ~4,6 |
 
 **Locais ilustrativos:** ao navegar pelo mapa (zoom de bairro), cada área nova de ~1 km ganha de 0 a 2 locais `Local Teste N`, com notas, comentários e usuárias aleatórias — alguns já nascem com alerta. Afaste o zoom e o gerador para.
+
+**Nunca na água (RN19):** antes de mostrar um pin, o mapa confere o ponto contra a camada de água do OpenStreetMap. Local gerado que cai no mar, rio ou lago é descartado (com seus avisos e avaliações); local da carga é movido para a terra mais próxima. Locais cadastrados pela usuária não são alterados.
 
 Para recomeçar do zero: **Meus dados → Recriar dados de teste**.
 
