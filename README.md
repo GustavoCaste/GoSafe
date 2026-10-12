@@ -39,10 +39,10 @@ Pré-requisitos: **Java 21** e **Docker** em execução.
 ```bash
 cd gosafe-backend
 ./mvnw test                                              # 73 testes (sobe PostGIS via Testcontainers)
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev    # API + carga mínima
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev    # API + carga de demonstração
 ```
 
-A carga mínima cria 2 usuárias — `dev@gosafe.dev` (conta de desenvolvimento) e `usuaria@gosafe.dev`, senha `gosafe123` — e 5 locais com avisos e avaliações. Sem o perfil `dev`, o banco começa vazio.
+Nesta branch o perfil `dev` carrega a massa de demonstração completa: 50 usuárias (`seed01@gosafe.dev` … `seed50@gosafe.dev`, senha `gosafe123`) e 20 locais. Na branch `feature/estrutura-backend` a carga é mínima (2 usuárias e 5 locais).
 
 Detalhes da API, endpoints e configurações: [`gosafe-backend/README.md`](gosafe-backend/README.md).
 
