@@ -207,6 +207,7 @@ mecanismos de denúncia e moderação.
 GoSafe/
 ├── gosafe-backend/   API Java 21 + Spring Boot 4, PostgreSQL + PostGIS (ver gosafe-backend/README.md)
 ├── mobile/           App Expo + React Native + TypeScript (branch test/mobile-offline, ver mobile/README.md)
+├── releases/         APKs de teste prontos para instalar (ver releases/README.md)
 └── README.md
 ```
 
@@ -226,7 +227,9 @@ cd gosafe-backend
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev    # API + carga de demonstração
 ```
 
-**App de teste** (Node 20 + Android SDK, celular em modo desenvolvedor):
+**App de teste já compilado:** baixe [`releases/mobile-teste-v0.1.0/GoSafe-Teste-v0.1.0.apk`](releases/mobile-teste-v0.1.0/GoSafe-Teste-v0.1.0.apk) e veja contas e instruções em [`releases/README.md`](releases/README.md).
+
+**App de teste a partir do código** (Node 20 + Android SDK, celular em modo desenvolvedor):
 
 ```bash
 cd mobile
