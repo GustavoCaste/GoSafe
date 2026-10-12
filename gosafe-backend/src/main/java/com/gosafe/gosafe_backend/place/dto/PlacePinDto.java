@@ -12,6 +12,7 @@ public record PlacePinDto(
         double latitude,
         double longitude,
         Double weightedRating,
-        int ratingCount
+        int ratingCount,
+        boolean notRecommended
 ) {
 }

@@ -134,7 +134,10 @@ public class PlaceService {
                     : Sort.by(Sort.Order.desc("weightedRating").nullsLast(), Sort.Order.asc("name"));
             Pageable pageable = Pages.of(page, size, order);
 
-            places = placeRepository.search(query, category, blankToNull(district), blankToNull(city), pageable);
+            places = placeRepository.findAll(
+                    PlaceSpecifications.search(query, category, blankToNull(district), blankToNull(city)),
+                    pageable
+            );
         }
 
         return PageResponse.of(places.map(place -> PlaceMapper.toSummary(place, lat, lng)));
@@ -293,6 +296,8 @@ public class PlaceService {
                 place.getLongitude(),
                 place.getGeocodeSource(),
                 placeRatingService.stats(place.getId()),
+                place.getNotRecommended(),
+                SafetyAlert.messageFor(place),
                 photos,
                 PlaceMapper.distance(place, lat, lng),
                 favorite,

@@ -68,6 +68,9 @@ public class Place {
     @Column(name = "rating_count", nullable = false)
     private Integer ratingCount = 0;
 
+    @Column(name = "not_recommended", nullable = false)
+    private Boolean notRecommended = false;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
@@ -227,6 +230,14 @@ public class Place {
 
     public void setRatingCount(Integer ratingCount) {
         this.ratingCount = ratingCount;
+    }
+
+    public Boolean getNotRecommended() {
+        return notRecommended;
+    }
+
+    public void setNotRecommended(Boolean notRecommended) {
+        this.notRecommended = notRecommended;
     }
 
     public User getCreatedBy() {

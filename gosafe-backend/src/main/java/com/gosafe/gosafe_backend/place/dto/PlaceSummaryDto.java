@@ -17,6 +17,8 @@ public record PlaceSummaryDto(
         double longitude,
         Double weightedRating,
         int ratingCount,
-        Double distanceMeters
+        Double distanceMeters,
+        boolean notRecommended,
+        String alertMessage
 ) {
 }
