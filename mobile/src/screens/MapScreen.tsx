@@ -45,6 +45,7 @@ export function MapScreen({ navigation }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [category, setCategory] = useState<PlaceCategory | null>(null);
   const [menu, setMenu] = useState<'none' | 'plus' | 'user'>('none');
+  const [sheetHeight, setSheetHeight] = useState(0);
   const position = useLastKnownPosition();
   const user = currentUser();
 
@@ -170,7 +171,8 @@ export function MapScreen({ navigation }: Props) {
         ) : null}
       </View>
 
-      <View style={styles.fabColumn} pointerEvents="box-none">
+      {/* com o cartão do local aberto, os botões sobem para não ficarem atrás dele */}
+      <View style={[styles.fabColumn, selected && sheetHeight > 0 && { bottom: sheetHeight + 24 }]} pointerEvents="box-none">
         <Pressable accessibilityRole="button" accessibilityLabel="Centralizar na minha localização" onPress={centerOnMe} style={styles.locate}>
           <Ionicons name="locate" size={24} color="#2F6FDB" />
         </Pressable>
@@ -180,7 +182,7 @@ export function MapScreen({ navigation }: Props) {
       </View>
 
       {selected ? (
-        <View style={styles.sheet}>
+        <View style={styles.sheet} onLayout={(event) => setSheetHeight(event.nativeEvent.layout.height)}>
           <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
             <PlaceThumb place={selected} size={60} />
             <View style={{ flex: 1, minWidth: 0 }}>
@@ -200,7 +202,7 @@ export function MapScreen({ navigation }: Props) {
             {user ? (
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Favoritar"
+                accessibilityLabel={db && isFavorite(db, user.id, selected.id) ? 'Remover dos favoritos' : 'Favoritar'}
                 onPress={() => mutate((database) => toggleFavorite(database, user.id, selected.id))}
                 style={styles.heart}
               >
@@ -216,7 +218,7 @@ export function MapScreen({ navigation }: Props) {
       <Modal visible={menu !== 'none'} transparent animationType="fade" onRequestClose={() => setMenu('none')}>
         <Pressable style={styles.backdrop} onPress={() => setMenu('none')} accessibilityLabel="Fechar menu" />
         {menu === 'plus' ? (
-          <View style={[styles.menu, { bottom: 24 }]}>
+          <View style={[styles.menu, { bottom: insets.bottom + 24 }]}>
             <MenuItem icon="location" title="Cadastrar local" subtitle="Marca no centro do mapa que você está vendo" onPress={() => { setMenu('none'); navigation.navigate('CreatePlace', { point: view?.center }); }} />
             <MenuItem icon="search" title="Buscar local" subtitle="Por nome, categoria ou bairro" onPress={() => { setMenu('none'); navigation.navigate('Search'); }} />
             <MenuItem icon="megaphone" title="Novo aviso" subtitle="Primeiro escolha o local" onPress={() => { setMenu('none'); navigation.navigate('Search', { mode: 'notice' }); }} />

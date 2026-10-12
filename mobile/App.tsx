@@ -4,8 +4,9 @@ import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
+import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DialogHost } from './src/components/AppDialog';
@@ -16,6 +17,9 @@ import { CreatePlaceScreen, FavoritesScreen, PlacesScreen, ProfileScreen, Search
 import { MapScreen } from './src/screens/MapScreen';
 import { CommentScreen, NewNoticeScreen, NoticeScreen, PlaceScreen } from './src/screens/PlaceScreens';
 import { colors } from './src/theme';
+
+// a abertura com a marca fica na tela até o banco local terminar de carregar
+SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tabs = createBottomTabNavigator<TabParamList>();
@@ -67,18 +71,15 @@ export default function App() {
   useDatabase();
 
   useEffect(() => {
-    // ícones claros sobre a faixa escura de SystemNavigationStrip
+    // ícones claros sobre a faixa roxa de SystemNavigationStrip
     NavigationBar.setStyle('light');
-    loadDatabase().finally(() => setLoaded(true));
+    loadDatabase().finally(() => {
+      setLoaded(true);
+      SplashScreen.hideAsync().catch(() => undefined);
+    });
   }, []);
 
-  if (!loaded) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primaryDark }}>
-        <ActivityIndicator color={colors.coral} size="large" />
-      </View>
-    );
-  }
+  if (!loaded) return null;
 
   const seeded = hasDatabase();
   const signedIn = seeded && currentUser() !== null;
