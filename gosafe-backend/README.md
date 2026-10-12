@@ -19,14 +19,6 @@ Variáveis úteis:
 | `GOSAFE_JWT_SECRET` | Segredo do JWT (mínimo 32 bytes). Obrigatório fora do ambiente de desenvolvimento. |
 | `GOSAFE_ADMIN_EMAILS` | E-mails (separados por vírgula) que recebem papel `ADMIN` ao se cadastrar. |
 
-### Carga de dados para demonstração (perfil `dev`)
-
-```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
-```
-
-Cria 50 usuárias (`seed01@gosafe.dev` … `seed50@gosafe.dev`, senha `gosafe123`, 1 em cada 5 verificada) e 20 locais em São Paulo: 2 quase perfeitos (~5,0), 5 com nota ~1,0 que disparam o alerta de local não aconselhado e 13 com notas variadas. A carga passa pelas próprias regras de negócio (pesos, nota ponderada, alerta). **Todos esses dados foram criados por IA para exemplificar um cenário real.**
-
 ## Testes
 
 ```bash
@@ -39,7 +31,7 @@ Cria 50 usuárias (`seed01@gosafe.dev` … `seed50@gosafe.dev`, senha `gosafe123
 
 | Propriedade | Padrão | Regra |
 |---|---|---|
-| `gosafe.alert.min-reviews` | 100 (5 no perfil `dev` e nos testes) | RN18: mínimo de usuárias avaliando para o alerta |
+| `gosafe.alert.min-reviews` | 100 (5 nos testes automatizados) | RN18: mínimo de usuárias avaliando para o alerta |
 | `gosafe.alert.max-rating` | 1,5 | RN18: nota ponderada a partir da qual o local é não aconselhado |
 | `gosafe.checkin.radius-meters` | 100 | raio do check-in (descontada a precisão do GPS) |
 | `gosafe.checkin.max-accuracy-meters` | 100 | precisão mínima aceita do GPS |
@@ -62,7 +54,6 @@ Um pacote por funcionalidade (`controller → service → repository`):
 | `reputation` | Peso do perfil (0,1–1,0) e do voto — ver `ReputationFormula`. |
 | `favorite` | Favoritos. |
 | `report` | Denúncias e moderação; denúncia procedente oculta o conteúdo e reduz a reputação. |
-| `dev` | Carga de dados de demonstração (só no perfil `dev`). |
 
 ## Endpoints
 
