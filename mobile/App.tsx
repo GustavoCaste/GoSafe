@@ -9,7 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { currentUser, hasDatabase, loadDatabase, useDatabase } from './src/data/store';
 import type { RootStackParamList, TabParamList } from './src/navigation/types';
-import { LoginScreen, PermissionScreen, RegisterScreen, VerificationScreen, WelcomeScreen } from './src/screens/AuthScreens';
+import { BenefitsScreen, LoginScreen, PermissionScreen, RegisterScreen, VerificationScreen, WelcomeScreen } from './src/screens/AuthScreens';
 import { CreatePlaceScreen, FavoritesScreen, PlacesScreen, ProfileScreen, SearchScreen } from './src/screens/ListScreens';
 import { MapScreen } from './src/screens/MapScreen';
 import { CommentScreen, NewNoticeScreen, NoticeScreen, PlaceScreen } from './src/screens/PlaceScreens';
@@ -69,6 +69,7 @@ export default function App() {
           {!seeded ? (
             <>
               <Stack.Screen name="Welcome" component={WelcomeScreen} />
+              <Stack.Screen name="Benefits" component={BenefitsScreen} />
               <Stack.Screen name="Permission" component={PermissionScreen} />
             </>
           ) : !signedIn ? (
@@ -87,6 +88,7 @@ export default function App() {
               <Stack.Screen name="CreatePlace" component={CreatePlaceScreen} />
               <Stack.Screen name="Profile" component={ProfileScreen} />
               <Stack.Screen name="Verification" component={VerificationScreen} />
+              <Stack.Screen name="Benefits" component={BenefitsScreen} />
             </>
           )}
         </Stack.Navigator>

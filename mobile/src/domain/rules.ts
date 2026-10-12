@@ -78,7 +78,13 @@ function weightedAverage(reviews: Review[], pick: (review: Review) => number | n
 export function computeStats(visibleReviews: Review[]): PlaceStats {
   const latestByUser = new Map<string, Review>();
 
-  for (const review of [...visibleReviews].sort((a, b) => b.createdAt - a.createdAt)) {
+  // mais recente primeiro; no empate de horário vale a registrada por último
+  const ordered = visibleReviews
+    .map((review, index) => ({ review, index }))
+    .sort((a, b) => b.review.createdAt - a.review.createdAt || b.index - a.index)
+    .map((entry) => entry.review);
+
+  for (const review of ordered) {
     if (!latestByUser.has(review.userId)) {
       latestByUser.set(review.userId, review);
     }

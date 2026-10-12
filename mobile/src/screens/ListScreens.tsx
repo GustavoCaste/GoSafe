@@ -7,7 +7,7 @@ import { Alert, FlatList, Pressable, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PlaceRow } from '../components/PlaceRow';
-import { Avatar, Button, Card, Chip, Empty, Field, Screen, styles as ui } from '../components/ui';
+import { Avatar, Button, Card, Chip, DemoDataNotice, Empty, Field, Screen, styles as ui } from '../components/ui';
 import { createPlace, userWeight } from '../data/repository';
 import { currentUser, errorMessage, mutate, requireUser, resetDatabase, useDatabase } from '../data/store';
 import { CATEGORY_LABEL, SEX_LABEL } from '../domain/labels';
@@ -361,6 +361,8 @@ export function ProfileScreen({ navigation }: ScreenProps<'Profile'>) {
           })
         }
       />
+      <Button label="Por que usar o GoSafe" variant="ghost" icon="sparkles" onPress={() => navigation.navigate('Benefits')} />
+      <DemoDataNotice />
       <Button label="Recriar dados de teste" variant="ghost" icon="refresh" onPress={reset} />
       <Text style={[ui.muted, { textAlign: 'center', fontSize: 12 }]}>
         {db ? `${Object.keys(db.places).length} locais · ${Object.keys(db.users).length} usuárias · ${Object.keys(db.reviews).length} avaliações no aparelho` : ''}

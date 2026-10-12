@@ -1,9 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, Switch, Text, View } from 'react-native';
+import { useState, type ReactNode } from 'react';
+import { ActivityIndicator, Alert, Image, Pressable, Switch, Text, View } from 'react-native';
+
+/** Marca: mapa dobrado + escudo + símbolo feminino (assets/splash-icon.png). */
+const BRAND_MARK = require('../../assets/splash-icon.png');
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Button, Card, Chip, Field, Screen, styles as ui } from '../components/ui';
+import { AlertBanner, Avatar, Button, Card, Chip, DemoDataNotice, Field, RatingBadge, Screen, styles as ui, type IconName } from '../components/ui';
 import { authenticate, registerUser } from '../data/repository';
 import { SAO_PAULO, TEST_ACCOUNT } from '../data/seed';
 import { createSeededDatabase, currentUser, errorMessage, mutate } from '../data/store';
@@ -17,9 +20,7 @@ export function WelcomeScreen({ navigation }: ScreenProps<'Welcome'>) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.primaryDark }}>
       <View style={{ flex: 1, padding: 24, justifyContent: 'center', gap: 20, maxWidth: 520, width: '100%', alignSelf: 'center' }}>
-        <View style={{ width: 80, height: 80, borderRadius: 24, backgroundColor: colors.coral, alignItems: 'center', justifyContent: 'center' }}>
-          <Ionicons name="shield-checkmark" size={44} color={colors.primaryDark} />
-        </View>
+        <Image source={BRAND_MARK} style={{ width: 120, height: 120, marginLeft: -12 }} accessibilityLabel="Marca GoSafe: escudo com símbolo feminino sobre um mapa" />
         <Text style={{ fontSize: 50, fontWeight: '800', color: '#FFF' }}>GoSafe</Text>
         <Text style={{ fontSize: 19, lineHeight: 27, color: '#E9DFF5' }}>
           Locais avaliados por mulheres, para mulheres. Veja relatos antes de sair de casa.
@@ -34,16 +35,15 @@ export function WelcomeScreen({ navigation }: ScreenProps<'Welcome'>) {
             <Text style={{ color: '#E9DFF5', fontSize: 15, flex: 1 }}>{text}</Text>
           </View>
         ))}
-        <View style={{ backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 14, padding: 12 }}>
-          <Text style={{ color: '#E9DFF5', fontSize: 13, lineHeight: 19 }}>
-            Versão de teste: todos os dados ficam salvos só neste aparelho. A internet é usada apenas para desenhar o mapa.
-          </Text>
-        </View>
+        <DemoDataNotice dark />
+        <Text style={{ color: '#CFC2E0', fontSize: 13, lineHeight: 19 }}>
+          Versão de teste: os dados ficam salvos só neste aparelho. A internet é usada apenas para desenhar o mapa.
+        </Text>
       </View>
       <View style={{ padding: 24, gap: 12, maxWidth: 520, width: '100%', alignSelf: 'center' }}>
         <Pressable
           accessibilityRole="button"
-          onPress={() => navigation.navigate('Permission')}
+          onPress={() => navigation.navigate('Benefits')}
           style={{ minHeight: 56, borderRadius: 16, backgroundColor: '#FFF', alignItems: 'center', justifyContent: 'center' }}
         >
           <Text style={{ color: colors.primaryDark, fontWeight: '800', fontSize: 17 }}>Começar</Text>
@@ -53,6 +53,90 @@ export function WelcomeScreen({ navigation }: ScreenProps<'Welcome'>) {
         </Text>
       </View>
     </SafeAreaView>
+  );
+}
+
+function Benefit({ icon, title, text, children }: { icon: IconName; title: string; text: string; children: ReactNode }) {
+  return (
+    <Card style={{ gap: 10 }}>
+      <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
+        <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' }}>
+          <Ionicons name={icon} size={22} color={colors.primary} />
+        </View>
+        <Text style={{ flex: 1, fontWeight: '700', fontSize: 17, color: colors.ink }}>{title}</Text>
+      </View>
+      <Text style={[ui.muted, { lineHeight: 20 }]}>{text}</Text>
+      <View style={{ backgroundColor: colors.background, borderRadius: 14, padding: 12, gap: 8 }}>
+        <Text style={{ fontSize: 11, fontWeight: '700', color: colors.muted, letterSpacing: 0.5 }}>EXEMPLO NO APP</Text>
+        {children}
+      </View>
+    </Card>
+  );
+}
+
+const pill = (background: string, color: string) => ({
+  alignSelf: 'flex-start' as const,
+  fontSize: 13,
+  fontWeight: '700' as const,
+  paddingHorizontal: 10,
+  paddingVertical: 6,
+  borderRadius: 999,
+  backgroundColor: background,
+  color,
+  overflow: 'hidden' as const,
+});
+
+/** Vantagens do GoSafe, cada uma com um exemplo visível do que o app faz. */
+export function BenefitsScreen({ navigation }: ScreenProps<'Benefits'>) {
+  const signedIn = currentUser() !== null;
+
+  return (
+    <Screen
+      title="Por que usar o GoSafe"
+      footer={signedIn ? undefined : <Button label="Continuar" onPress={() => navigation.navigate('Permission')} />}
+    >
+      <Benefit icon="warning" title="Saiba antes de ir" text="Quando muitas usuárias avaliam um lugar como inseguro, ele recebe um alerta visível no mapa, na lista e na página do local.">
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: colors.bad, borderRadius: 15, paddingHorizontal: 10, height: 30, borderWidth: 2, borderColor: '#FFF' }}>
+            <Text style={{ color: colors.bad, backgroundColor: '#FFF', borderRadius: 8, width: 16, textAlign: 'center', fontWeight: '800', fontSize: 12 }}>!</Text>
+            <Text style={{ color: '#FFF', fontWeight: '700' }}>1,0</Text>
+          </View>
+          <Text style={{ flex: 1, color: colors.ink, fontSize: 13 }}>Terminal Leste · 10 avaliações</Text>
+        </View>
+        <AlertBanner compact />
+      </Benefit>
+
+      <Benefit icon="star" title="Encontre lugares acolhedores" text="A nota geral mostra onde as mulheres se sentem seguras, com detalhes de iluminação, movimento, acolhimento e banheiro.">
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <RatingBadge rating={4.98} />
+          <Text style={{ flex: 1, color: colors.ink, fontSize: 13 }}>Café Aurora · Segurança 5,0 · Banheiro 4,8</Text>
+        </View>
+      </Benefit>
+
+      <Benefit icon="location" title="Notas mais confiáveis" text="Quem está no local (check-in) e contas antigas, ativas e verificadas pesam mais na nota. Perfis recém-criados pesam menos.">
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+          <Text style={pill(colors.goodSoft, '#155E50')}>Check-in confirmado · 40 m</Text>
+          <Text style={pill(colors.primarySoft, colors.primary)}>Peso do voto 0,25</Text>
+          <Text style={pill(colors.lineSoft, colors.muted)}>Sem check-in: 0,20</Text>
+        </View>
+      </Benefit>
+
+      <Benefit icon="eye-off" title="Relate sem se expor" text="Avisos e comentários podem ser publicados como anônima. O nome fica oculto para as outras usuárias.">
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <Avatar name="?" size={34} color="#DCD5CC" />
+          <Text style={{ flex: 1, fontSize: 13, color: colors.muted }}>
+            <Text style={{ fontWeight: '700', color: colors.ink }}>Anônima</Text>
+            <Text style={{ color: colors.good, fontWeight: '700' }}> · verificada</Text> · há 2 h
+          </Text>
+        </View>
+      </Benefit>
+
+      <Benefit icon="shield-checkmark" title="Contas reais" text="A verificação facial (opcional, simulada nesta versão) confirma que existe uma pessoa real por trás do perfil, sem guardar a imagem.">
+        <Text style={pill(colors.goodSoft, '#155E50')}>Identidade verificada</Text>
+      </Benefit>
+
+      <DemoDataNotice />
+    </Screen>
   );
 }
 
@@ -142,8 +226,8 @@ export function LoginScreen({ navigation }: ScreenProps<'Login'>) {
       }
     >
       <View style={{ gap: 8, marginTop: 24 }}>
-        <View style={{ width: 56, height: 56, borderRadius: 18, backgroundColor: colors.primaryDark, alignItems: 'center', justifyContent: 'center' }}>
-          <Ionicons name="shield-checkmark" size={30} color={colors.coral} />
+        <View style={{ width: 72, height: 72, borderRadius: 20, backgroundColor: colors.primaryDark, alignItems: 'center', justifyContent: 'center' }}>
+          <Image source={BRAND_MARK} style={{ width: 66, height: 66 }} accessibilityLabel="Marca GoSafe" />
         </View>
         <Text style={[ui.title, { marginTop: 12 }]}>Entrar</Text>
         <Text style={ui.muted}>Bom te ver de novo.</Text>
@@ -158,6 +242,7 @@ export function LoginScreen({ navigation }: ScreenProps<'Login'>) {
         </Text>
         <Button label="Entrar com a conta de teste" variant="secondary" onPress={() => submit(TEST_ACCOUNT.login, TEST_ACCOUNT.password)} />
       </Card>
+      <DemoDataNotice />
     </Screen>
   );
 }

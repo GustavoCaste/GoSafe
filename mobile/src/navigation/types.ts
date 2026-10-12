@@ -4,6 +4,7 @@ import type { LatLng } from '../domain/types';
 
 export type RootStackParamList = {
   Welcome: undefined;
+  Benefits: undefined;
   Permission: undefined;
   Login: undefined;
   Register: undefined;

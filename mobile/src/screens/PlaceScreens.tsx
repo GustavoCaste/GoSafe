@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native';
 
 import { placeThumbColor } from '../components/PlaceRow';
 import { DEFAULT_REVIEW, ReviewInput, ReviewSummary } from '../components/ReviewInput';
-import { AlertBanner, Button, Card, Chip, Empty, Field, IconButton, RatingBadge, Screen, SectionTitle, styles as ui } from '../components/ui';
+import { AlertBanner, Button, Card, Chip, DemoDataNotice, Empty, Field, IconButton, RatingBadge, Screen, SectionTitle, styles as ui } from '../components/ui';
 import {
   checkIn,
   checkInValidUntil,
@@ -182,6 +182,7 @@ export function PlaceScreen({ navigation, route }: ScreenProps<'Place'>) {
               </Card>
             </Pressable>
           ))}
+          <DemoDataNotice />
         </View>
       </ScrollView>
     </SafeAreaView>

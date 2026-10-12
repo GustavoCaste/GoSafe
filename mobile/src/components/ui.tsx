@@ -207,6 +207,31 @@ export function Avatar({ name, size = 44, color = colors.coral }: { name: string
   );
 }
 
+export const DEMO_DATA_TEXT =
+  'Todos os dados deste app de teste — locais, usuárias, notas e comentários — foram criados por IA para exemplificar um cenário real.';
+
+/** Aviso de que a massa de dados é fictícia, gerada por IA. */
+export function DemoDataNotice({ dark = false }: { dark?: boolean }) {
+  return (
+    <View
+      accessibilityRole="text"
+      style={{
+        flexDirection: 'row',
+        gap: 10,
+        alignItems: 'flex-start',
+        padding: 12,
+        borderRadius: radius.md,
+        backgroundColor: dark ? 'rgba(255,255,255,0.1)' : '#FFF7E6',
+        borderWidth: dark ? 0 : 1,
+        borderColor: '#F1D9A6',
+      }}
+    >
+      <Ionicons name="sparkles" size={18} color={dark ? colors.coral : colors.medium} style={{ marginTop: 1 }} />
+      <Text style={{ flex: 1, fontSize: 13, lineHeight: 19, color: dark ? '#E9DFF5' : '#5C3B06' }}>{DEMO_DATA_TEXT}</Text>
+    </View>
+  );
+}
+
 export function Empty({ text }: { text: string }) {
   return (
     <View style={styles.empty}>
