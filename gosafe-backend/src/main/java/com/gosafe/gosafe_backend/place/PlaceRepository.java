@@ -3,13 +3,14 @@ package com.gosafe.gosafe_backend.place;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface PlaceRepository extends JpaRepository<Place, UUID> {
+public interface PlaceRepository extends JpaRepository<Place, UUID>, JpaSpecificationExecutor<Place> {
 
     /** Locais dentro da área visível do mapa (PostGIS). */
     @Query(value = """
@@ -55,22 +56,6 @@ public interface PlaceRepository extends JpaRepository<Place, UUID> {
             @Param("city") String city,
             @Param("lat") double lat,
             @Param("lng") double lng,
-            Pageable pageable
-    );
-
-    @Query("""
-            SELECT p FROM Place p
-            WHERE p.active = TRUE
-              AND (:q IS NULL OR lower(p.name) LIKE lower(concat('%', :q, '%')))
-              AND (:category IS NULL OR p.category = :category)
-              AND (:district IS NULL OR lower(p.district) = lower(:district))
-              AND (:city IS NULL OR lower(p.city) = lower(:city))
-            """)
-    Page<Place> search(
-            @Param("q") String q,
-            @Param("category") PlaceCategory category,
-            @Param("district") String district,
-            @Param("city") String city,
             Pageable pageable
     );
 
