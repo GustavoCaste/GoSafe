@@ -3,6 +3,7 @@ package com.gosafe.gosafe_backend.review;
 import com.gosafe.gosafe_backend.common.ContentStatus;
 import com.gosafe.gosafe_backend.place.Place;
 import com.gosafe.gosafe_backend.place.dto.PlaceStatsDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -14,14 +15,24 @@ import java.util.function.Function;
 /**
  * RN07: nota do local = média ponderada pelo peso de cada voto, considerando
  * só a avaliação mais recente de cada usuária.
+ * RN18: o local fica "não aconselhado" quando pelo menos {@code minReviews}
+ * usuárias o avaliaram e a nota ponderada caiu a {@code maxRating} ou menos.
  */
 @Service
 public class PlaceRatingService {
 
     private final ReviewRepository reviewRepository;
+    private final int alertMinReviews;
+    private final double alertMaxRating;
 
-    public PlaceRatingService(ReviewRepository reviewRepository) {
+    public PlaceRatingService(
+            ReviewRepository reviewRepository,
+            @Value("${gosafe.alert.min-reviews:100}") int alertMinReviews,
+            @Value("${gosafe.alert.max-rating:1.5}") double alertMaxRating
+    ) {
         this.reviewRepository = reviewRepository;
+        this.alertMinReviews = alertMinReviews;
+        this.alertMaxRating = alertMaxRating;
     }
 
     public PlaceStatsDto stats(UUID placeId) {
@@ -49,6 +60,11 @@ public class PlaceRatingService {
 
         place.setWeightedRating(stats.rating());
         place.setRatingCount(stats.ratingCount());
+        place.setNotRecommended(isNotRecommended(stats.rating(), stats.ratingCount()));
+    }
+
+    boolean isNotRecommended(Double rating, int ratingCount) {
+        return rating != null && ratingCount >= alertMinReviews && rating <= alertMaxRating;
     }
 
     static Double weightedAverage(Collection<Review> reviews, Function<Review, Double> value) {

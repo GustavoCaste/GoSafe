@@ -24,6 +24,8 @@ public record PlaceDetailDto(
         double longitude,
         GeocodeSource geocodeSource,
         PlaceStatsDto stats,
+        boolean notRecommended,
+        String alertMessage,
         List<PhotoDto> photos,
         Double distanceMeters,
         boolean favorite,

@@ -23,7 +23,9 @@ public final class PlaceMapper {
                 place.getLongitude(),
                 place.getWeightedRating(),
                 place.getRatingCount(),
-                distance(place, lat, lng)
+                distance(place, lat, lng),
+                place.getNotRecommended(),
+                SafetyAlert.messageFor(place)
         );
     }
 
@@ -35,7 +37,8 @@ public final class PlaceMapper {
                 place.getLatitude(),
                 place.getLongitude(),
                 place.getWeightedRating(),
-                place.getRatingCount()
+                place.getRatingCount(),
+                place.getNotRecommended()
         );
     }
 
