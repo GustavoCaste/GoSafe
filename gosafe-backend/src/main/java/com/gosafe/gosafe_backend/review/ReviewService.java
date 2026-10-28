@@ -1,164 +1,94 @@
 package com.gosafe.gosafe_backend.review;
 
+import com.gosafe.gosafe_backend.checkin.CheckIn;
+import com.gosafe.gosafe_backend.checkin.CheckInService;
+import com.gosafe.gosafe_backend.comment.Comment;
 import com.gosafe.gosafe_backend.place.Place;
-import com.gosafe.gosafe_backend.place.PlaceRepository;
+import com.gosafe.gosafe_backend.reputation.ReputationFormula;
+import com.gosafe.gosafe_backend.reputation.ReputationService;
 import com.gosafe.gosafe_backend.review.dto.ReviewDto;
+import com.gosafe.gosafe_backend.review.dto.ReviewRequest;
 import com.gosafe.gosafe_backend.user.User;
-import com.gosafe.gosafe_backend.user.UserRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final UserRepository userRepository;
-    private final PlaceRepository placeRepository;
+    private final CheckInService checkInService;
+    private final ReputationService reputationService;
+    private final PlaceRatingService placeRatingService;
 
     public ReviewService(
             ReviewRepository reviewRepository,
-            UserRepository userRepository,
-            PlaceRepository placeRepository
+            CheckInService checkInService,
+            ReputationService reputationService,
+            PlaceRatingService placeRatingService
     ) {
         this.reviewRepository = reviewRepository;
-        this.userRepository = userRepository;
-        this.placeRepository = placeRepository;
+        this.checkInService = checkInService;
+        this.reputationService = reputationService;
+        this.placeRatingService = placeRatingService;
     }
 
-    private void validarCampos(ReviewDto dto) {
-        if (dto == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Dados da avaliacao sao obrigatorios"
-            );
-        }
-
-        if (dto.userId() == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Usuario e obrigatorio"
-            );
-        }
-
-        if (dto.placeId() == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Local e obrigatorio"
-            );
-        }
-
-        if (dto.safetyPerception() == null || dto.safetyPerception().isBlank()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Percepcao de seguranca e obrigatoria"
-            );
-        }
-
-        if (dto.safetyPerception().length() < 3 || dto.safetyPerception().length() > 50) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Percepcao de seguranca deve possuir entre 3 e 50 caracteres"
-            );
-        }
-
-        if (dto.comment() != null && dto.comment().length() > 1000) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Comentario deve possuir no maximo 1000 caracteres"
-            );
-        }
-    }
-
-    public List<ReviewDto> findAll() {
-        return reviewRepository.findAll()
-                .stream()
-                .map(this::toDto)
-                .toList();
-    }
-
-    public ReviewDto findById(UUID id) {
-        Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Avaliacao nao encontrada"
-                ));
-
-        return toDto(review);
-    }
-
-    public ReviewDto create(ReviewDto dto) {
-        validarCampos(dto);
-
-        User user = findUser(dto.userId());
-        Place place = findPlace(dto.placeId());
+    /** Cria a avaliação de um comentário e recalcula a nota do local. */
+    public Review create(User user, Place place, Comment comment, ReviewRequest request) {
+        CheckIn checkIn = checkInService.findValidRecent(user.getId(), place.getId()).orElse(null);
 
         Review review = new Review();
 
         review.setUser(user);
         review.setPlace(place);
-        review.setSafetyPerception(dto.safetyPerception());
-        review.setComment(dto.comment());
+        review.setComment(comment);
+        review.setCheckIn(checkIn);
+        review.setSafety(request.safety());
+        review.setLighting(request.lighting());
+        review.setMovement(request.movement());
+        review.setWelcoming(request.welcoming());
+        review.setRestroom(request.restroom());
+        review.setScore(ReputationFormula.averageScore(
+                request.safety(),
+                request.lighting(),
+                request.movement(),
+                request.welcoming(),
+                request.restroom()
+        ));
+        review.setAppliedWeight(reputationService.voteWeight(user, checkIn != null));
 
-        return toDto(reviewRepository.save(review));
+        Review saved = reviewRepository.saveAndFlush(review);
+        placeRatingService.recalculate(place);
+        return saved;
     }
 
-    public ReviewDto update(UUID id, ReviewDto dto) {
-        validarCampos(dto);
+    public Map<UUID, Review> byCommentIds(Collection<UUID> commentIds) {
+        if (commentIds.isEmpty()) {
+            return Map.of();
+        }
 
-        Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Avaliacao nao encontrada"
-                ));
-
-        User user = findUser(dto.userId());
-        Place place = findPlace(dto.placeId());
-
-        review.setUser(user);
-        review.setPlace(place);
-        review.setSafetyPerception(dto.safetyPerception());
-        review.setComment(dto.comment());
-
-        return toDto(reviewRepository.save(review));
+        return reviewRepository.findByComment_IdIn(commentIds)
+                .stream()
+                .collect(Collectors.toMap(review -> review.getComment().getId(), Function.identity()));
     }
 
-    public void delete(UUID id) {
-        Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Avaliacao nao encontrada"
-                ));
+    public static ReviewDto toDto(Review review) {
+        if (review == null) {
+            return null;
+        }
 
-        reviewRepository.delete(review);
-    }
-
-    private User findUser(UUID id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Usuario nao encontrado"
-                ));
-    }
-
-    private Place findPlace(UUID id) {
-        return placeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Local nao encontrado"
-                ));
-    }
-
-    private ReviewDto toDto(Review review) {
         return new ReviewDto(
-                review.getId(),
-                review.getUser().getId(),
-                review.getPlace().getId(),
-                review.getSafetyPerception(),
-                review.getComment()
+                review.getSafety(),
+                review.getLighting(),
+                review.getMovement(),
+                review.getWelcoming(),
+                review.getRestroom(),
+                review.getScore(),
+                review.getCheckIn() != null
         );
     }
 }
