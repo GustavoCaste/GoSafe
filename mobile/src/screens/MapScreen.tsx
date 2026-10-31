@@ -9,12 +9,10 @@ import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 
 import { PlaceThumb } from '../components/PlaceRow';
 import { AlertBanner, Avatar, Button, RatingBadge, styles as ui } from '../components/ui';
-import { API_MODE } from '../config';
 import { logout, setFavorite } from '../data/actions';
 import { syncMap } from '../data/api';
-import { generateForBounds, generationLimitReached } from '../data/generator';
-import { applyWaterCheck, isFavorite } from '../data/repository';
-import { commitChanges, currentUser, errorMessage, getDatabase, mutate, useDatabase } from '../data/store';
+import { isFavorite } from '../data/repository';
+import { currentUser, errorMessage, getDatabase, useDatabase } from '../data/store';
 import { CATEGORY_LABEL } from '../domain/labels';
 import { distanceMeters, formatDistance, formatRating, insideBounds, ratingTone } from '../domain/rules';
 import type { Bounds, LatLng, Place, PlaceCategory } from '../domain/types';
@@ -66,13 +64,7 @@ export function MapScreen({ navigation }: Props) {
 
   useEffect(() => {
     if (!ready) return;
-    // locais ainda não conferidos não viram pin até o mapa confirmar que não estão na água
-    const unchecked = visible.filter((place) => !place.landChecked);
-    if (unchecked.length > 0 && !offline) {
-      const points = unchecked.map((place) => ({ id: place.id, lat: place.latitude, lng: place.longitude }));
-      inject(`window.gosafe && window.gosafe.checkWater(${JSON.stringify(points)})`);
-    }
-    const pins = visible.filter((place) => place.landChecked || offline).map((place) => ({
+    const pins = visible.map((place) => ({
       id: place.id,
       lat: place.latitude,
       lng: place.longitude,
@@ -107,18 +99,10 @@ export function MapScreen({ navigation }: Props) {
       case 'mapclick':
         setSelectedId(null);
         break;
-      case 'water':
-        if (message.results.length > 0) mutate((database) => applyWaterCheck(database, message.results));
-        break;
       case 'bounds': {
         const bounds: Bounds = { west: message.west, south: message.south, east: message.east, north: message.north };
-        if (API_MODE) {
-          // modo API: o servidor devolve só os locais da área visível
-          if (message.zoom >= MIN_ZOOM_FOR_PLACES) syncMap(bounds, category).then(() => setMapError(null), (error) => setMapError(errorMessage(error)));
-        } else if (generateForBounds(getDatabase(), bounds, message.zoom) > 0) {
-          // Locais ilustrativos surgem nas áreas novas conforme o mapa se move
-          commitChanges();
-        }
+        // o servidor devolve só os locais da área visível
+        if (message.zoom >= MIN_ZOOM_FOR_PLACES) syncMap(bounds, category).then(() => setMapError(null), (error) => setMapError(errorMessage(error)));
         setView({ bounds, zoom: message.zoom, center: message.center });
         break;
       }
@@ -175,8 +159,8 @@ export function MapScreen({ navigation }: Props) {
                 : mapError
                   ? mapError
                 : zoomedOut
-                  ? 'Aproxime o mapa para ver e gerar locais'
-                  : `${visible.length} locais nesta área${db && generationLimitReached(db) ? ' · limite de locais de teste atingido' : ''}`}
+                  ? 'Aproxime o mapa para ver os locais'
+                  : `${visible.length} locais nesta área`}
             </Text>
           </View>
         ) : null}

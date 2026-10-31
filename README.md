@@ -13,9 +13,9 @@ Projeto de Trabalho de Conclusão de Curso (TCC) — 🚧 em desenvolvimento.
 | | Situação |
 |---|---|
 | **Backend** | ✅ Implementado e testado — 73 testes contra PostgreSQL + PostGIS real |
-| **App mobile de teste** (esta branch) | ✅ Instalável no Android, funciona offline — instalável em [`releases/`](releases/README.md) |
+| **App mobile** | ✅ Conversa com a API; validado em emulador Android |
 | **Protótipo de telas** | ✅ 24 quadros: todas as telas, regras, modelo de dados e marca |
-| **Integração app ↔ backend** | ⏳ Próximo passo |
+| **Publicação** (Neon, Render e Vercel) | ⏳ Próximo passo |
 
 ## Como o app funciona
 
@@ -39,24 +39,24 @@ Pré-requisitos: **Java 21** e **Docker** em execução.
 ```bash
 cd gosafe-backend
 ./mvnw test                                              # 73 testes (sobe PostGIS via Testcontainers)
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev    # API + carga de demonstração
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev    # API local (banco começa vazio)
 ```
 
-Nesta branch o perfil `dev` carrega a massa de demonstração completa: 50 usuárias (`seed01@gosafe.dev` … `seed50@gosafe.dev`, senha `gosafe123`) e 20 locais. Na branch `feature/estrutura-backend` a carga é mínima (2 usuárias e 5 locais).
+Fora do computador local, `GOSAFE_JWT_SECRET` é obrigatório.
 
 Detalhes da API, endpoints e configurações: [`gosafe-backend/README.md`](gosafe-backend/README.md).
 
-## App de teste (esta branch)
+## App
 
-Baixe o instalável em [`releases/`](releases/README.md) ou gere pelo código em [`mobile/`](mobile/README.md). Entre com a conta `teste` / `gosafe123`.
+O código e as instruções de build estão em [`mobile/`](mobile/README.md). A landing page está em [`landing/`](landing/README.md).
 
 ## Branches
 
 | Branch | O que tem |
 |---|---|
-| `develop` | Base inicial do backend |
-| **`feature/estrutura-backend`** | **Backend completo**, só com o que vai para produção (+ carga mínima no perfil `dev`) |
-| `test/mobile-offline` | Backend + **app mobile de teste** (dados só no aparelho, 50 usuárias e 20 locais de demonstração, gerador de locais no mapa) + instalável em `releases/` |
+| `main` e `develop` | Bases do projeto |
+| `feature/backend-core` | Backend em commits organizados e um início de app |
+| **`feature/page`** | **Versão completa:** backend, app conectado à API e landing page |
 
 ## O que foi feito
 
@@ -71,9 +71,9 @@ Baixe o instalável em [`releases/`](releases/README.md) ou gere pelo código em
 - **Migrações Flyway** e erros padronizados.
 - **73 testes** de todos os endpoints contra banco real; os testes encontraram e corrigiram 2 bugs.
 
-### App mobile de teste (branch `test/mobile-offline`)
+### App mobile
 
-Expo + React Native + TypeScript, com mapa MapLibre/OpenStreetMap. Roda sem servidor — os dados ficam no aparelho — e foi validado num celular Android real com roteiros automatizados, que encontraram e corrigiram bugs como:
+Expo + React Native + TypeScript, com mapa MapLibre/OpenStreetMap. Começou como versão de teste sem servidor e hoje conversa com a API. A versão de teste foi validada num celular Android real com roteiros automatizados, que encontraram e corrigiram bugs como:
 
 - locais gerados aparecendo **na água** → o mapa agora confere cada ponto contra a camada de água antes de mostrar o pin;
 - botões do Android ilegíveis → faixa roxa com ícones claros;
@@ -94,18 +94,17 @@ Protótipo navegável com todas as telas, regras de negócio, modelo de dados, r
 | 2. Protótipo | Todas as telas desenhadas e navegáveis (24 quadros), com responsividade, regras de negócio (RN01–RN19), modelo de dados e marca. Decisões tomadas junto com a equipe: check-in de 100 m, verificação facial simulada (sem custo), autoria pelo token, alerta de local não aconselhado. |
 | 3. Backend | Estrutura completa em Spring Boot por funcionalidade (`controller → service → repository`), PostGIS para as consultas geográficas e Flyway para o banco. |
 | 4. Testes da API | 73 testes de todos os endpoints contra um PostgreSQL + PostGIS real (Testcontainers). Encontraram 2 bugs reais (entre eles a busca com filtros vazios), já corrigidos. |
-| 5. App de teste | App Expo/React Native que roda sem servidor, com as mesmas regras do backend, massa de demonstração e gerador de locais no mapa; 17 testes da lógica. |
+| 5. App de teste | Primeira versão do app em Expo/React Native, sem servidor, com dados de demonstração. Serviu para avaliar telas e fluxos e depois foi substituída pela versão conectada à API. |
 | 6. Testes no celular | Roteiros automatizados num Android real (via USB/adb) cobrindo cadastro, login, mapa, busca, cadastro de local, check-in, avisos, comentários, alerta, perfil e casos de erro (campos vazios, duplicados, toque duplo). |
 | 7. Correções | Bugs encontrados no aparelho e corrigidos: locais na água, botões do Android ilegíveis, **+** escondido atrás do cartão, menu sobre a barra do Android, ícone padrão na abertura, alertas sem a identidade do app e campos sem rótulo para leitor de tela. |
-| 8. Entrega | Instalável `GoSafe-Teste-v0.1.1.apk` em `releases/` (branch `test/mobile-offline`), protótipo e documentação atualizados. |
+| 8. Integração | App conectado à API, sem carga automática de dados: o banco começa vazio e os registros vêm do uso real. Publicação em Neon, Render e Vercel em andamento. |
 
 ### O que das correções vale para o backend
 
 As correções da etapa 7 são de **interface do app** (mapa, barra do Android, diálogos, acessibilidade), por isso o código delas está em `mobile/`. Para o backend ficam as regras e decisões:
 
-- **RN19 — local nunca na água:** a conferência é feita no app, contra a camada de água do mapa, antes de mostrar o pin.
 - **Toque duplo / envio repetido:** o backend já recusa local duplicado a menos de 50 m; o app também bloqueia o segundo envio.
-- **Carga de demonstração:** mínima no backend (perfil `dev`), completa só no app de teste.
+- **Sem carga automática:** nem o backend nem o app geram registros sozinhos.
 
 ## Arquitetura
 
@@ -137,7 +136,7 @@ As correções da etapa 7 são de **interface do app** (mapa, barra do Android, 
 
 ## Próximos passos
 
-1. Integrar o app ao backend (hoje o app de teste usa dados locais).
+1. Publicar a API e a landing page e testar o app em celulares.
 2. Armazenamento de fotos (MinIO/S3/Cloudinary).
 3. Documentação OpenAPI da API.
 4. Notificações push e moderação assistida por NLP.
@@ -147,9 +146,9 @@ As correções da etapa 7 são de **interface do app** (mapa, barra do Android, 
 
 Conceitos estudados: segurança feminina, percepção de segurança, crowdsourcing, sistemas colaborativos, Informação Geográfica Voluntária (VGI), geolocalização, privacidade e anonimato. Trabalhos relacionados: **Safetipin**, **HarassMap** e **Safecity**.
 
-## Dados de demonstração
+## Imagens de exemplo
 
-Todos os dados de demonstração — locais, usuárias, notas e comentários, no protótipo, no app de teste e na carga do backend — **foram criados por IA para exemplificar um cenário real**. Não representam pessoas nem estabelecimentos reais.
+Os dados que aparecem no protótipo e nos prints da landing page — locais, usuárias, notas e comentários — **foram criados por IA para exemplificar um cenário real**. Não representam pessoas nem estabelecimentos reais.
 
 ## Licença
 

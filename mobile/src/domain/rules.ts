@@ -1,11 +1,11 @@
 /**
- * Regras de negócio do GoSafe — espelho fiel do backend (Spring Boot),
- * para o app de teste funcionar 100% offline com o mesmo comportamento.
+ * Regras de negócio do GoSafe — espelho do backend (Spring Boot), usado para
+ * exibir informações na tela. Quem decide é sempre o servidor.
  */
 import type { Bounds, LatLng, PlaceStats, Review, ReviewInput } from './types';
 
-// RN18 — local não aconselhado. Teste: 5 usuárias; produção: 100.
-export const ALERT_MIN_REVIEWS = 5;
+// RN18 — local não aconselhado.
+export const ALERT_MIN_REVIEWS = 100;
 export const ALERT_MAX_RATING = 1.5;
 export const ALERT_MESSAGE =
   'Local não aconselhado: as avaliações da comunidade indicam baixo nível de segurança.';

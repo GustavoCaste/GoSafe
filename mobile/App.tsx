@@ -81,15 +81,15 @@ export default function App() {
 
   if (!loaded) return null;
 
-  const seeded = hasDatabase();
-  const signedIn = seeded && currentUser() !== null;
+  const started = hasDatabase();
+  const signedIn = started && currentUser() !== null;
 
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
       <NavigationContainer theme={theme}>
         <Stack.Navigator screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}>
-          {!seeded ? (
+          {!started ? (
             <>
               <Stack.Screen name="Welcome" component={WelcomeScreen} />
               <Stack.Screen name="Benefits" component={BenefitsScreen} />

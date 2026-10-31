@@ -1,14 +1,11 @@
 /**
  * Testes da lógica do app offline (sem aparelho): npm run test:data
- * Cobrem a carga de dados, as regras de negócio espelhadas do backend e o
- * gerador de locais do mapa.
+ * Cobrem as regras de negócio espelhadas do backend.
  */
 import assert from 'node:assert/strict';
 
-import { MAX_GENERATED_PLACES, generateForBounds } from '../src/data/generator';
 import {
   DomainError,
-  applyWaterCheck,
   authenticate,
   checkIn,
   createComment,
@@ -20,8 +17,8 @@ import {
   registerUser,
   removeComment,
 } from '../src/data/repository';
-import { SAO_PAULO, seedDatabase } from '../src/data/seed';
-import { ALERT_MESSAGE } from '../src/domain/rules';
+import { DEFAULT_CENTER as SAO_PAULO } from '../src/config';
+import { ALERT_MESSAGE, ALERT_MIN_REVIEWS } from '../src/domain/rules';
 import type { Database, LatLng, ReviewInput } from '../src/domain/types';
 
 let passed = 0;
@@ -50,56 +47,28 @@ function newPlace(db: Database, point: LatLng = SAO_PAULO, name = 'Local de test
   }, point);
 }
 
-console.log('Carga inicial');
-const seeded = seedDatabase(SAO_PAULO, false);
-const places = Object.values(seeded.places);
-
-test('50 usuárias da carga + conta de teste', () => {
-  assert.equal(Object.values(seeded.users).filter((user) => user.username.startsWith('seed')).length, 50);
-  assert.ok(authenticate(seeded, 'teste', 'gosafe123'));
-});
-test('20 locais', () => assert.equal(places.length, 20));
-test('2 locais quase perfeitos (≥ 4,9)', () => assert.equal(places.filter((p) => (p.weightedRating ?? 0) >= 4.9).length, 2));
-test('5 locais não aconselhados com alerta', () => {
-  const alerts = places.filter((p) => p.notRecommended);
-  assert.equal(alerts.length, 5);
-  assert.ok(alerts.every((p) => (p.weightedRating ?? 5) <= 1.5 && p.ratingCount >= 5));
-});
-test('13 locais com notas variadas, sem alerta', () => {
-  const mid = places.filter((p) => !p.notRecommended && (p.weightedRating ?? 0) < 4.9);
-  assert.equal(mid.length, 13);
-  assert.ok(new Set(mid.map((p) => Math.round(p.weightedRating ?? 0))).size >= 3);
-});
-test('a carga é sempre igual (determinística)', () => {
-  const again = seedDatabase(SAO_PAULO, false);
-  assert.deepEqual(
-    Object.values(again.places).map((p) => p.weightedRating),
-    places.map((p) => p.weightedRating),
-  );
-});
-
 console.log('RN18 — local não aconselhado');
-test('só alerta a partir de 5 usuárias e nota ≤ 1,5; some quando sai uma avaliação', () => {
+test('só alerta a partir de 100 usuárias e nota ≤ 1,5; some quando sai uma avaliação', () => {
   const db = emptyDatabase(SAO_PAULO);
   const place = newPlace(db);
   const notice = createNotice(db, newUser(db, 'a1'), place, { title: 'Local perigoso', type: 'HARASSMENT', body: 'x', anonymous: false, review: allOnes });
-  for (const name of ['a2', 'a3', 'a4']) createComment(db, newUser(db, name), notice, { body: 'y', anonymous: false, review: allOnes });
-  assert.equal(place.ratingCount, 4);
+  for (let i = 2; i < ALERT_MIN_REVIEWS; i++) createComment(db, newUser(db, `a${i}`), notice, { body: 'y', anonymous: false, review: allOnes });
+  assert.equal(place.ratingCount, ALERT_MIN_REVIEWS - 1);
   assert.equal(place.notRecommended, false);
 
-  const fifth = newUser(db, 'a5');
-  const comment = createComment(db, fifth, notice, { body: 'z', anonymous: false, review: allOnes });
+  const last = newUser(db, 'aultima');
+  const comment = createComment(db, last, notice, { body: 'z', anonymous: false, review: allOnes });
   assert.equal(place.notRecommended, true);
   assert.ok(ALERT_MESSAGE.startsWith('Local não aconselhado'));
 
-  removeComment(db, fifth, comment);
+  removeComment(db, last, comment);
   assert.equal(place.notRecommended, false);
 });
 test('nota média com muitas avaliações não dispara alerta', () => {
   const db = emptyDatabase(SAO_PAULO);
   const place = newPlace(db);
   const notice = createNotice(db, newUser(db, 'm0'), place, { title: 'Avaliação mediana', type: 'GENERAL', body: 'x', anonymous: false, review: { safety: 2, lighting: 2, movement: 2, welcoming: 2, restroom: 2 } });
-  for (let i = 1; i <= 6; i++) createComment(db, newUser(db, `m${i}`), notice, { body: 'y', anonymous: false, review: { safety: 2, lighting: 2, movement: 2, welcoming: 2, restroom: null } });
+  for (let i = 1; i < ALERT_MIN_REVIEWS + 5; i++) createComment(db, newUser(db, `m${i}`), notice, { body: 'y', anonymous: false, review: { safety: 2, lighting: 2, movement: 2, welcoming: 2, restroom: null } });
   assert.equal(place.notRecommended, false);
 });
 
@@ -160,59 +129,6 @@ test('anônima esconde nome e usuário, mas a autora se reconhece', () => {
   assert.equal(displayAuthor(db, author.id, true, null).name, 'Anônima');
   assert.equal(displayAuthor(db, author.id, true, null).username, null);
   assert.equal(displayAuthor(db, author.id, true, author.id).mine, true);
-});
-
-console.log('Gerador de locais do mapa');
-test('gera "Local Teste N" ao navegar, sem repetir a área e sem gerar com zoom afastado', () => {
-  const db = seedDatabase(SAO_PAULO, false);
-  const area = { west: -46.7, south: -23.6, east: -46.62, north: -23.54 };
-  const created = generateForBounds(db, area, 14);
-  assert.ok(created > 20, `esperava vários locais, gerou ${created}`);
-  assert.ok(Object.values(db.places).some((p) => p.name === 'Local Teste 1'));
-  assert.equal(generateForBounds(db, area, 14), 0);
-  assert.equal(generateForBounds(db, { west: -48, south: -25, east: -47, north: -24 }, 10), 0);
-  const generated = Object.values(db.places).filter((p) => p.generated);
-  assert.ok(generated.some((p) => p.ratingCount > 0));
-  assert.ok(generated.every((p) => p.notRecommended === (p.ratingCount >= 5 && (p.weightedRating ?? 5) <= 1.5)));
-});
-
-test('local na água: gerado é apagado com seus dados, da carga é movido para a terra', () => {
-  const db = seedDatabase(SAO_PAULO, false);
-  generateForBounds(db, { west: -46.66, south: -23.57, east: -46.62, north: -23.53 }, 14);
-  const generated = Object.values(db.places).find((p) => p.generated && p.ratingCount > 0)!;
-  const seeded = Object.values(db.places).find((p) => !p.generated)!;
-  assert.ok(!generated.landChecked && !seeded.landChecked, 'carga e gerador precisam ser conferidos');
-  const typed = createPlace(db, Object.values(db.users)[0], { name: 'Marcado pela usuária', category: 'CAFE', description: '', postalCode: '01310100', street: 'Rua A', number: '1', district: 'Centro', city: 'São Paulo', state: 'SP' }, SAO_PAULO);
-  assert.ok(typed.landChecked, 'local marcado pela usuária não é movido');
-  const changed = applyWaterCheck(db, [
-    { id: generated.id, water: true, lat: -23.5, lng: -46.6 },
-    { id: seeded.id, water: true, lat: -23.51, lng: -46.61 },
-  ]);
-  assert.equal(changed, 2);
-  assert.equal(db.places[generated.id], undefined);
-  assert.ok(!Object.values(db.notices).some((n) => n.placeId === generated.id));
-  assert.ok(!Object.values(db.reviews).some((r) => r.placeId === generated.id));
-  assert.deepEqual([db.places[seeded.id].latitude, db.places[seeded.id].longitude, db.places[seeded.id].landChecked], [-23.51, -46.61, true]);
-});
-
-console.log('Estresse — navegação intensa no mapa');
-test('banco não cresce sem limite: até 150 usuárias de teste e 2.500 locais gerados', () => {
-  const db = seedDatabase(SAO_PAULO, false);
-  for (let x = 0; x < 60; x++) {
-    for (let y = 0; y < 60; y++) {
-      const west = -47.2 + x * 0.02;
-      const south = -24.1 + y * 0.02;
-      generateForBounds(db, { west, south, east: west + 0.04, north: south + 0.06 }, 14);
-    }
-  }
-  const generated = Object.values(db.places).filter((p) => p.generated).length;
-  const testUsers = Object.values(db.users).filter((u) => u.username.startsWith('teste.usuaria')).length;
-  const megabytes = JSON.stringify(db).length / 1024 / 1024;
-  console.log(`      ${generated} locais gerados, ${testUsers} usuárias de teste, ${megabytes.toFixed(2)} MB`);
-  assert.equal(generated, MAX_GENERATED_PLACES);
-  assert.ok(testUsers <= 150);
-  assert.equal(generateForBounds(db, { west: -40, south: -20, east: -39.9, north: -19.9 }, 15), 0);
-  assert.ok(megabytes < 8, 'banco grande demais para salvar com segurança');
 });
 
 console.log(`\n${passed} testes passaram.`);

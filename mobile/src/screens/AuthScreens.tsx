@@ -6,13 +6,12 @@ import { ActivityIndicator, Image, Pressable, Switch, Text, View } from 'react-n
 const BRAND_MARK = require('../../assets/splash-icon.png');
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AlertBanner, Avatar, Button, Card, Chip, DemoDataNotice, Field, RatingBadge, Screen, styles as ui, type IconName } from '../components/ui';
+import { AlertBanner, Avatar, Button, Card, Chip, Field, RatingBadge, Screen, styles as ui, type IconName } from '../components/ui';
 import { appAlert } from '../components/AppDialog';
-import { API_DEMO_ACCOUNT, API_MODE, SHOW_SERVER_SETTINGS } from '../config';
+import { DEFAULT_CENTER, SHOW_SERVER_SETTINGS } from '../config';
 import { login as loginAction, register, verifyIdentity } from '../data/actions';
 import { apiUrl, testConnection } from '../data/api';
-import { SAO_PAULO, TEST_ACCOUNT } from '../data/seed';
-import { commitChanges, createEmptyDatabase, createSeededDatabase, currentUser, errorMessage, getDatabase } from '../data/store';
+import { commitChanges, createEmptyDatabase, currentUser, errorMessage, getDatabase } from '../data/store';
 import { SEX_LABEL } from '../domain/labels';
 import type { Sex } from '../domain/types';
 import { currentFix, requestLocationPermission } from '../hooks/location';
@@ -39,10 +38,6 @@ export function WelcomeScreen({ navigation }: ScreenProps<'Welcome'>) {
             <Text style={{ color: '#E9DFF5', fontSize: 15, flex: 1 }}>{text}</Text>
           </View>
         ))}
-        <DemoDataNotice dark />
-        <Text style={{ color: '#CFC2E0', fontSize: 13, lineHeight: 19 }}>
-          Versão de teste: os dados ficam salvos só neste aparelho. A internet é usada apenas para desenhar o mapa.
-        </Text>
       </View>
       <View style={{ padding: 24, gap: 12, maxWidth: 520, width: '100%', alignSelf: 'center' }}>
         <Pressable
@@ -139,19 +134,17 @@ export function BenefitsScreen({ navigation }: ScreenProps<'Benefits'>) {
         <Text style={pill(colors.goodSoft, '#155E50')}>Identidade verificada</Text>
       </Benefit>
 
-      <DemoDataNotice />
     </Screen>
   );
 }
 
-/** RN01: pede a localização no 1º acesso e monta a carga de teste em volta dela. */
+/** RN01: pede a localização no 1º acesso. */
 export function PermissionScreen() {
   const [busy, setBusy] = useState<string | null>(null);
 
   const prepare = async (askPermission: boolean) => {
     try {
-      let center = SAO_PAULO;
-      let aroundDevice = false;
+      let center = DEFAULT_CENTER;
 
       if (askPermission) {
         setBusy('Pedindo permissão…');
@@ -160,18 +153,11 @@ export function PermissionScreen() {
           const fix = await currentFix().catch(() => null);
           if (fix) {
             center = fix;
-            aroundDevice = true;
           }
         }
       }
 
-      if (API_MODE) {
-        createEmptyDatabase(center);
-        return;
-      }
-      setBusy('Preparando 20 locais e 50 usuárias de teste…');
-      await new Promise((resolve) => setTimeout(resolve, 50));
-      createSeededDatabase(center, aroundDevice);
+      createEmptyDatabase(center);
     } catch (error) {
       setBusy(null);
       appAlert('Não foi possível preparar o app', errorMessage(error));
@@ -190,11 +176,6 @@ export function PermissionScreen() {
         <Text style={[ui.muted, { textAlign: 'center', fontSize: 16, lineHeight: 24 }]}>
           Usamos sua localização só para mostrar os locais avaliados perto de você e para o check-in. Ela nunca aparece para outras usuárias.
         </Text>
-        {API_MODE ? null : (
-          <Text style={[ui.muted, { textAlign: 'center' }]}>
-            Nesta versão de teste, os 20 locais de demonstração são criados em volta de onde você está.
-          </Text>
-        )}
       </View>
       {busy ? (
         <View style={{ alignItems: 'center', gap: 12 }}>
@@ -215,7 +196,6 @@ export function LoginScreen({ navigation }: ScreenProps<'Login'>) {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [once, sending] = useSubmitOnce();
-  const demo = API_MODE ? API_DEMO_ACCOUNT : TEST_ACCOUNT;
 
   const submit = (value = login, secret = password) =>
     once(async () => {
@@ -247,17 +227,7 @@ export function LoginScreen({ navigation }: ScreenProps<'Login'>) {
       </View>
       <Field label="E-mail ou usuária" value={login} onChangeText={setLogin} autoCapitalize="none" autoComplete="username" placeholder="voce@email.com" />
       <Field label="Senha" value={password} onChangeText={setPassword} secureTextEntry autoComplete="current-password" placeholder="Sua senha" />
-      <Card style={{ gap: 8, backgroundColor: colors.primarySoft, borderColor: colors.primarySoft }}>
-        <Text style={{ fontWeight: '700', color: colors.primaryDark }}>Contas de teste</Text>
-        <Text style={{ color: colors.primaryDark, fontSize: 13, lineHeight: 19 }}>
-          {API_MODE ? 'Conta de demonstração do servidor: ' : 'Sua conta: '}
-          <Text style={{ fontWeight: '700' }}>{demo.login}</Text> · senha <Text style={{ fontWeight: '700' }}>{demo.password}</Text>
-          {'\n'}As 50 usuárias da carga: <Text style={{ fontWeight: '700' }}>seed01</Text> a <Text style={{ fontWeight: '700' }}>seed50</Text>, mesma senha.
-        </Text>
-        <Button label="Entrar com a conta de teste" variant="secondary" onPress={() => submit(demo.login, demo.password)} />
-      </Card>
-      {API_MODE && SHOW_SERVER_SETTINGS ? <ServerCard /> : null}
-      <DemoDataNotice />
+      {SHOW_SERVER_SETTINGS ? <ServerCard /> : null}
     </Screen>
   );
 }
@@ -382,7 +352,7 @@ export function VerificationScreen({ navigation }: ScreenProps<'Verification'>) 
   );
 }
 
-/** Modo API: endereço do servidor (ex.: IP do computador que roda o back-end na mesma rede Wi-Fi). */
+/** Build interno: endereço do servidor (ex.: IP do computador que roda o back-end na mesma rede Wi-Fi). */
 function ServerCard() {
   const [url, setUrl] = useState(apiUrl());
   const [status, setStatus] = useState<string | null>(null);

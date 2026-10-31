@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native';
 
 import { placeThumbColor } from '../components/PlaceRow';
 import { DEFAULT_REVIEW, ReviewInput, ReviewSummary } from '../components/ReviewInput';
-import { AlertBanner, Button, Card, Chip, DemoDataNotice, Empty, Field, IconButton, RatingBadge, Screen, SectionTitle, styles as ui } from '../components/ui';
+import { AlertBanner, Button, Card, Chip, Empty, Field, IconButton, RatingBadge, Screen, SectionTitle, styles as ui } from '../components/ui';
 import { appAlert } from '../components/AppDialog';
 import { addComment, addNotice, deleteComment, deleteNotice, doCheckIn as checkInAction, setFavorite } from '../data/actions';
 import { syncNotice, syncPlace } from '../data/api';
@@ -108,7 +108,7 @@ export function PlaceScreen({ navigation, route }: ScreenProps<'Place'>) {
             />
           </SafeAreaView>
           <Text style={{ color: '#3B2A1E', fontWeight: '700', fontSize: 12 }}>
-            [Foto do local] {place.generated ? '· Local ilustrativo gerado para teste' : ''}
+            [Foto do local]
           </Text>
         </View>
 
@@ -146,7 +146,7 @@ export function PlaceScreen({ navigation, route }: ScreenProps<'Place'>) {
           </Card>
           {!place.notRecommended && (stats?.ratingCount ?? 0) < ALERT_MIN_REVIEWS ? (
             <Text style={[ui.muted, { fontSize: 12 }]}>
-              O alerta de local não aconselhado só é considerado a partir de {ALERT_MIN_REVIEWS} usuárias avaliando (versão de teste).
+              O alerta de local não aconselhado só é considerado a partir de {ALERT_MIN_REVIEWS} usuárias avaliando.
             </Text>
           ) : null}
 
@@ -183,7 +183,6 @@ export function PlaceScreen({ navigation, route }: ScreenProps<'Place'>) {
               </Card>
             </Pressable>
           ))}
-          <DemoDataNotice />
         </View>
       </ScrollView>
     </SafeAreaView>

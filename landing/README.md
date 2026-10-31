@@ -16,7 +16,7 @@ A seção **Experimente** baixa o app conectado à API em `downloads/GoSafe.apk`
 4. Notas confiáveis: o exemplo de nota ponderada da Tabela 31
 5. Privacidade e LGPD
 6. Arquitetura, tecnologias e números de testes
-7. Experimente: download do app, contas de demonstração e aviso de dados criados por IA
+7. Experimente: download do app e aviso sobre as imagens de exemplo
 
 ## Antes de publicar (se o grupo decidir)
 

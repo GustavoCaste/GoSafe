@@ -1,5 +1,5 @@
 /**
- * Cliente da API do GoSafe (modo API). As respostas do servidor são copiadas
+ * Cliente da API do GoSafe. As respostas do servidor são copiadas
  * para o mesmo formato do banco local (Database), que funciona como cache:
  * assim as telas continuam lendo com useDatabase() nos dois modos.
  */
@@ -161,7 +161,6 @@ function upsertPlace(db: Database, dto: PinDto | SummaryDto | DetailDto): Place 
     createdBy: summary.createdById ?? old?.createdBy ?? '',
     active: true,
     createdAt: old?.createdAt ?? Date.now(),
-    landChecked: true,
     stats: summary.stats ? toStats(summary.stats) : old?.stats,
   };
   db.places[place.id] = place;

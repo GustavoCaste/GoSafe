@@ -21,7 +21,6 @@ export interface User {
   name: string;
   username: string;
   email: string;
-  /** Banco local de teste: senha guardada só no aparelho, sem comunicação com rede. */
   password: string;
   sex: Sex;
   verified: boolean;
@@ -29,9 +28,7 @@ export interface User {
   validContributions: number;
   active: boolean;
   createdAt: number;
-  /** Usuária criada automaticamente pela carga ou pelo gerador de locais de teste. */
-  generated?: boolean;
-  /** Modo API: peso calculado pelo servidor. */
+  /** Peso calculado pelo servidor. */
   reputationWeight?: number;
 }
 
@@ -56,10 +53,7 @@ export interface Place {
   createdBy: string;
   active: boolean;
   createdAt: number;
-  generated?: boolean;
-  /** Já conferido contra a camada de água do mapa (não está no mar/rio). */
-  landChecked?: boolean;
-  /** Modo API: notas por parâmetro calculadas pelo servidor. */
+  /** Notas por parâmetro calculadas pelo servidor. */
   stats?: PlaceStats;
 }
 
@@ -158,9 +152,8 @@ export interface Database {
   checkIns: Record<string, CheckIn>;
   /** Chave: `${userId}:${placeId}` */
   favorites: Record<string, Favorite>;
-  generatedCells: Record<string, true>;
-  counters: { testPlace: number; testUser: number; id: number };
-  /** Modo API: endereço do servidor e token da sessão. */
+  counters: { id: number };
+  /** Endereço do servidor e token da sessão. */
   apiUrl?: string;
   token?: string | null;
 }

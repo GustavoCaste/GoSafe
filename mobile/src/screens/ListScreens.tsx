@@ -7,13 +7,12 @@ import { FlatList, Pressable, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { PlaceRow } from '../components/PlaceRow';
-import { Avatar, Button, Card, Chip, DemoDataNotice, Empty, Field, Screen, styles as ui } from '../components/ui';
+import { Avatar, Button, Card, Chip, Empty, Field, Screen, styles as ui } from '../components/ui';
 import { appAlert } from '../components/AppDialog';
-import { API_MODE } from '../config';
 import { addPlace, logout, updateName } from '../data/actions';
 import { apiUrl, syncCheckIns, syncFavorites, syncList, syncMe } from '../data/api';
 import { userWeight } from '../data/repository';
-import { currentUser, errorMessage, resetDatabase, useDatabase } from '../data/store';
+import { currentUser, errorMessage, useDatabase } from '../data/store';
 import { CATEGORY_LABEL, SEX_LABEL } from '../domain/labels';
 import { distanceMeters } from '../domain/rules';
 import type { LatLng, Place, PlaceCategory } from '../domain/types';
@@ -66,7 +65,7 @@ export function PlacesScreen({ navigation }: TabProps<'Places'>) {
           <View style={{ gap: 12, marginBottom: 4 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <View>
-                <Text style={ui.muted}>{position ? 'Perto de você' : 'Perto do centro de teste'}</Text>
+                <Text style={ui.muted}>{position ? 'Perto de você' : 'Perto do centro do mapa'}</Text>
                 <Text style={ui.title}>Locais</Text>
               </View>
               <Pressable accessibilityLabel="Meus dados" onPress={() => navigation.navigate('Profile')}>
@@ -278,7 +277,7 @@ export function CreatePlaceScreen({ navigation, route }: ScreenProps<'CreatePlac
         <Text style={{ fontWeight: '700' }}>Posição no mapa</Text>
         <Text style={ui.muted}>
           {point
-            ? `${point.latitude.toFixed(5)}, ${point.longitude.toFixed(5)}${API_MODE ? '' : ' — na versão de teste o endereço não é geocodificado; vale este ponto.'}`
+            ? `${point.latitude.toFixed(5)}, ${point.longitude.toFixed(5)}`
             : 'Nenhum ponto definido.'}
         </Text>
         <Button label="Usar minha localização" variant="secondary" icon="locate" onPress={useMyLocation} />
@@ -310,12 +309,6 @@ export function ProfileScreen({ navigation }: ScreenProps<'Profile'>) {
   const user = sessionUser;
   const weight = userWeight(user);
 
-  const reset = () =>
-    appAlert('Recriar dados de teste?', 'Apaga tudo deste aparelho (locais, usuárias, comentários) e volta ao primeiro acesso.', [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Apagar e recriar', style: 'destructive', onPress: () => resetDatabase() },
-    ]);
-
   return (
     <Screen title="Meus dados">
       <View style={{ alignItems: 'center', gap: 6 }}>
@@ -327,19 +320,11 @@ export function ProfileScreen({ navigation }: ScreenProps<'Profile'>) {
         </Text>
       </View>
       <View style={{ flexDirection: 'row', gap: 8 }}>
-        {(API_MODE
-          ? [
+        {[
               ['Contribuições', user.validContributions],
               ['Favoritos', counts.favorites],
               ['Check-ins', counts.checkIns],
-            ]
-          : [
-              ['Avisos', counts.notices],
-              ['Comentários', counts.comments],
-              ['Favoritos', counts.favorites],
-              ['Check-ins', counts.checkIns],
-            ]
-        ).map(([label, value]) => (
+            ].map(([label, value]) => (
           <Card key={label} style={{ flex: 1, alignItems: 'center', paddingHorizontal: 4 }}>
             <Text style={{ fontSize: 20, fontWeight: '800' }}>{value}</Text>
             <Text style={{ fontSize: 12, color: colors.muted }} numberOfLines={1} adjustsFontSizeToFit>
@@ -382,17 +367,7 @@ export function ProfileScreen({ navigation }: ScreenProps<'Profile'>) {
         onPress={() => logout()}
       />
       <Button label="Por que usar o GoSafe" variant="ghost" icon="sparkles" onPress={() => navigation.navigate('Benefits')} />
-      <DemoDataNotice />
-      {API_MODE ? (
-        <Text style={[ui.muted, { textAlign: 'center', fontSize: 12 }]}>Conectado a {apiUrl()}</Text>
-      ) : (
-        <>
-          <Button label="Recriar dados de teste" variant="ghost" icon="refresh" onPress={reset} />
-          <Text style={[ui.muted, { textAlign: 'center', fontSize: 12 }]}>
-            {db ? `${Object.keys(db.places).length} locais · ${Object.keys(db.users).length} usuárias · ${Object.keys(db.reviews).length} avaliações no aparelho` : ''}
-          </Text>
-        </>
-      )}
+      <Text style={[ui.muted, { textAlign: 'center', fontSize: 12 }]}>Conectado a {apiUrl()}</Text>
     </Screen>
   );
 }

@@ -1,17 +1,17 @@
 {
   "expo": {
-    "name": "GoSafe Teste",
+    "name": "GoSafe",
     "slug": "gosafe",
-    "version": "0.1.1",
+    "version": "0.3.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.gosafe.test"
+      "bundleIdentifier": "com.gosafe.app"
     },
     "android": {
-      "package": "com.gosafe.test",
+      "package": "com.gosafe.app",
       "adaptiveIcon": {
         "backgroundColor": "#2B1446",
         "foregroundImage": "./assets/android-icon-foreground.png",
