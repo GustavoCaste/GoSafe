@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GoSafe — segurança feminina colaborativa</title>
+<meta name="description" content="GoSafe: aplicativo colaborativo em que mulheres fazem check-in e avaliam locais pela percepção de segurança. Trabalho de Conclusão de Curso, 2026.">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --noite: #2B1446;
+    --violeta: #5B2A86;
+    --violeta-escuro: #3F1C60;
+    --coral: #F2A28F;
+    --lavanda: #E9DFF5;
+    --areia: #F7F4F0;
+    --tinta: #1D1726;
+    --cinza: #5E566A;
+    --linha: #E4DED6;
+    --verde: #1C7C68;
+    --ambar: #8F5A0E;
+    --vermelho: #B03A2E;
+    --titulo: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+    --texto: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box }
+  html { scroll-behavior: smooth }
+  body { margin: 0; background: var(--areia); color: var(--tinta); font-family: var(--texto); font-size: 17px; line-height: 1.6 }
+  img { max-width: 100%; display: block }
+  a { color: var(--violeta) }
+  a:hover { color: var(--violeta-escuro) }
+  .wrap { width: min(1120px, 100% - 32px); margin-inline: auto }
+  h1, h2, h3 { font-family: var(--titulo); line-height: 1.1; margin: 0; text-wrap: balance }
+  h2 { font-size: clamp(30px, 4.4vw, 44px) }
+  h3 { font-size: 21px }
+  p { margin: 0; text-wrap: pretty }
+  .eyebrow { font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--violeta) }
+  section { padding: 88px 0 }
+  .lead { font-size: 19px; color: var(--cinza); max-width: 640px }
+
+  /* topo */
+  .topo { position: sticky; top: 0; z-index: 10; background: rgba(43, 20, 70, .96); color: #fff }
+  .topo .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px }
+  .logo { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-family: var(--titulo); font-weight: 700; font-size: 22px }
+  .logo img { width: 36px; height: 36px; border-radius: 10px }
+  .topo nav { display: flex; gap: 22px; font-size: 15px; font-weight: 600 }
+  .topo nav a { color: var(--lavanda); text-decoration: none }
+  .topo nav a:hover { color: #fff }
+
+  /* hero */
+  .hero { background: var(--noite); color: #fff; padding: 72px 0 96px; overflow: hidden }
+  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 56px; align-items: center }
+  .hero h1 { font-size: clamp(40px, 6vw, 68px); letter-spacing: -.02em }
+  .hero h1 em { font-style: normal; color: var(--coral) }
+  .hero .lead { color: var(--lavanda); margin-top: 20px }
+  .acoes { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px }
+  .botao { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px; border-radius: 16px; font-weight: 700; text-decoration: none; font-size: 16px }
+  .botao.cheio { background: var(--coral); color: var(--noite) }
+  .botao.cheio:hover { background: #F6B8A9; color: var(--noite) }
+  .botao.vazado { border: 2px solid rgba(233, 223, 245, .5); color: #fff }
+  .botao.vazado:hover { border-color: #fff; color: #fff }
+  .botao svg { width: 20px; height: 20px; flex-shrink: 0 }
+  .selos { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 28px; font-size: 14px; color: var(--lavanda) }
+  .selos span { display: inline-flex; align-items: center; gap: 8px }
+  .selos span::before { content: ''; width: 8px; height: 8px; border-radius: 4px; background: var(--coral) }
+  .vitrine { position: relative; display: flex; justify-content: center }
+  .vitrine .tela { width: min(300px, 70vw); transform: rotate(-3deg) }
+  .vitrine .tela + .tela { position: absolute; width: min(220px, 50vw); right: 0; bottom: -40px; transform: rotate(5deg) }
+
+  /* moldura de celular */
+  .tela { border-radius: 34px; overflow: hidden; border: 8px solid #120A1F; background: #120A1F; box-shadow: 0 24px 48px rgba(18, 10, 31, .35) }
+  .tela img { width: 100% }
+
+  /* problema */
+  .problema .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: start }
+  .numeros { display: grid; gap: 16px }
+  .numero { background: #fff; border: 1px solid var(--linha); border-radius: 20px; padding: 24px }
+  .numero b { display: block; font-family: var(--titulo); font-size: 52px; line-height: 1; color: var(--violeta) }
+  .numero span { color: var(--cinza) }
+  .fonte { font-size: 13px; color: var(--cinza) }
+
+  /* como funciona */
+  .passos { display: grid; gap: 96px; margin-top: 56px }
+  .passo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: center }
+  .passo:nth-child(even) .passo-texto { order: 2 }
+  .passo-texto { display: grid; gap: 16px }
+  .passo-num { width: 44px; height: 44px; border-radius: 14px; background: var(--lavanda); color: var(--violeta); font-family: var(--titulo); font-weight: 700; font-size: 20px; display: flex; align-items: center; justify-content: center }
+  .passo h3 { font-size: clamp(24px, 3vw, 32px) }
+  .passo p { color: var(--cinza) }
+  .passo ul { margin: 0; padding-left: 20px; color: var(--cinza) }
+  .passo-telas { display: flex; gap: 20px; justify-content: center; align-items: flex-start }
+  .passo-telas .tela { width: min(260px, 44vw) }
+  .passo-telas .tela:nth-child(2) { margin-top: 48px }
+
+  /* nota ponderada */
+  .nota { background: #fff; border-block: 1px solid var(--linha) }
+  .nota .wrap { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 56px; align-items: center }
+  table { width: 100%; border-collapse: collapse; font-size: 16px }
+  th, td { padding: 12px 10px; border-bottom: 1px solid var(--linha); text-align: left }
+  th { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--cinza) }
+  td.n { text-align: right; font-variant-numeric: tabular-nums }
+  tfoot td { font-weight: 700; border-bottom: 0 }
+  .comparacao { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px }
+  .comparacao div { border-radius: 16px; padding: 16px 18px; background: var(--areia) }
+  .comparacao b { display: block; font-family: var(--titulo); font-size: 36px; line-height: 1.1 }
+  .comparacao .ponderada { background: var(--lavanda) }
+  .comparacao .ponderada b { color: var(--violeta) }
+  .comparacao span { font-size: 14px; color: var(--cinza) }
+
+  /* privacidade */
+  .cartoes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 40px }
+  .cartao { background: #fff; border: 1px solid var(--linha); border-radius: 20px; padding: 24px; display: grid; gap: 10px; align-content: start }
+  .cartao svg { width: 32px; height: 32px; color: var(--violeta) }
+  .cartao p { color: var(--cinza); font-size: 15px }
+
+  /* tecnologia */
+  .tecnologia { background: var(--noite); color: #fff }
+  .tecnologia .lead { color: var(--lavanda) }
+  .tecnologia .eyebrow { color: var(--coral) }
+  .pilha { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 40px }
+  .pilha div { border: 1px solid rgba(233, 223, 245, .25); border-radius: 20px; padding: 22px }
+  .pilha h3 { color: var(--coral); font-size: 17px; margin-bottom: 8px }
+  .pilha p { color: var(--lavanda); font-size: 15px }
+  .metricas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 16px }
+  .metricas div { background: rgba(233, 223, 245, .08); border-radius: 20px; padding: 22px }
+  .metricas b { display: block; font-family: var(--titulo); font-size: 44px; line-height: 1; color: #fff }
+  .metricas span { color: var(--lavanda); font-size: 14px }
+
+  /* experimente */
+  .experimente .caixa { background: #fff; border: 1px solid var(--linha); border-radius: 28px; padding: 40px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: center }
+  .experimente .botao.cheio { background: var(--violeta); color: #fff }
+  .experimente .botao.cheio:hover { background: var(--violeta-escuro); color: #fff }
+  .contas { background: var(--areia); border-radius: 16px; padding: 18px 20px; font-size: 15px; display: grid; gap: 6px }
+  .contas code { font-family: ui-monospace, Consolas, monospace; background: var(--lavanda); color: var(--violeta-escuro); padding: 1px 6px; border-radius: 6px }
+  .opcao { display: grid; gap: 10px; padding: 20px; border: 1px solid var(--linha); border-radius: 20px }
+  .opcao p { color: var(--cinza); font-size: 15px }
+  .opcao .botao { justify-self: start }
+  .aviso-ia { margin-top: 20px; border: 1px solid #EBD59B; background: #FDF6E3; border-radius: 16px; padding: 14px 18px; font-size: 14px; color: #6B4208 }
+
+  /* rodapé */
+  footer { background: var(--noite); color: var(--lavanda); padding: 48px 0; font-size: 15px }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px }
+  footer b { color: #fff }
+
+  /* telas menores */
+  @media (max-width: 880px) {
+    section { padding: 64px 0 }
+    .topo nav { display: none }
+    .hero .wrap, .problema .wrap, .passo, .nota .wrap, .experimente .caixa { grid-template-columns: 1fr }
+    .passo:nth-child(even) .passo-texto { order: 0 }
+    .vitrine { margin-top: 24px; padding-bottom: 40px }
+    .cartoes, .pilha { grid-template-columns: 1fr 1fr }
+    .metricas { grid-template-columns: 1fr 1fr }
+    .experimente .caixa { padding: 24px }
+  }
+  @media (max-width: 520px) {
+    .cartoes, .pilha { grid-template-columns: 1fr }
+    .passo-telas .tela:nth-child(2) { margin-top: 32px }
+    .vitrine .tela + .tela { display: none }
+  }
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="wrap">
+    <a class="logo" href="#inicio"><img src="assets/marca.png" alt="">GoSafe</a>
+    <nav aria-label="Seções">
+      <a href="#problema">O problema</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#confiabilidade">Notas confiáveis</a>
+      <a href="#privacidade">Privacidade</a>
+      <a href="#experimente">Experimente</a>
+    </nav>
+  </div>
+</header>
+
+<main id="inicio">
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow" style="color: var(--coral)">Trabalho de Conclusão de Curso · 2026</p>
+        <h1 style="margin-top: 14px">Saiba como outras mulheres se sentiram <em>antes de ir.</em></h1>
+        <p class="lead">O GoSafe é um aplicativo colaborativo em que mulheres fazem check-in e avaliam bares, praças, pontos de ônibus e outros locais pela percepção de segurança, com notas ponderadas pela confiabilidade de quem avaliou.</p>
+        <div class="acoes">
+          <a class="botao cheio" href="#experimente">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
+            Baixar para Android
+          </a>
+          <a class="botao vazado" href="#como-funciona">Ver como funciona</a>
+        </div>
+        <div class="selos">
+          <span>Avaliação em 5 parâmetros</span>
+          <span>Check-in a até 100 m</span>
+          <span>Publicação anônima</span>
+        </div>
+      </div>
+      <div class="vitrine">
+        <div class="tela"><img src="assets/tela-mapa.png" alt="Tela inicial do GoSafe: mapa com pins coloridos pela nota de cada local e um pin vermelho de alerta."></div>
+        <div class="tela"><img src="assets/tela-local.png" alt="Detalhe do Café Aurora com nota ponderada 5,0 e notas por parâmetro."></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="problema" id="problema">
+    <div class="wrap">
+      <div style="display: grid; gap: 18px">
+        <p class="eyebrow">O problema</p>
+        <h2>A informação existe, mas está espalhada.</h2>
+        <p class="lead">Para saber se um lugar é tranquilo, muitas mulheres perguntam a amigas, em grupos de mensagens e em redes sociais. Essa informação é dispersa, informal e difícil de verificar.</p>
+        <p class="lead">As ferramentas existentes focam no registro de ocorrências ou em rotas. Falta uma avaliação contínua e confiável de <b>estabelecimentos e espaços específicos</b>, feita por quem esteve lá.</p>
+      </div>
+      <div class="numeros">
+        <div class="numero"><b>49,6%</b><span>das brasileiras entrevistadas sofreram algum tipo de assédio no último ano, mais de 29 milhões de mulheres.</span></div>
+        <div class="numero"><b>37,5%</b><span>sofreram algum tipo de agressão nos 12 meses anteriores à pesquisa, cerca de 21,4 milhões.</span></div>
+        <p class="fonte">Fonte: Fórum Brasileiro de Segurança Pública e Instituto Datafolha, pesquisa Visível e Invisível, 5ª edição (2025).</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="como-funciona" style="background: #fff; border-top: 1px solid var(--linha)">
+    <div class="wrap">
+      <p class="eyebrow">Como funciona</p>
+      <h2 style="margin-top: 10px">Do mapa à avaliação em quatro passos.</h2>
+      <div class="passos">
+
+        <article class="passo">
+          <div class="passo-texto">
+            <span class="passo-num">1</span>
+            <h3>Encontre locais perto de você</h3>
+            <p>O mapa é a tela inicial, como em aplicativos de mobilidade. Ele carrega só os locais da área visível, e cada pin mostra a nota do lugar. Na lista, dá para buscar por nome, categoria ou bairro e ordenar por distância ou nota.</p>
+          </div>
+          <div class="passo-telas">
+            <div class="tela"><img src="assets/tela-mapa.png" alt="Mapa com os locais da área visível."></div>
+            <div class="tela"><img src="assets/tela-lista.png" alt="Lista de locais com categoria, distância e nota."></div>
+          </div>
+        </article>
+
+        <article class="passo">
+          <div class="passo-texto">
+            <span class="passo-num">2</span>
+            <h3>Confira a nota de cada parâmetro</h3>
+            <p>Cada local tem uma nota geral e notas separadas para o que mais pesa na sensação de segurança:</p>
+            <ul>
+              <li><b>Segurança</b>: como você se sentiu</li>
+              <li><b>Iluminação</b>: entrada, saída e arredores</li>
+              <li><b>Movimento</b>: pessoas por perto</li>
+              <li><b>Acolhimento</b>: como você foi recebida</li>
+              <li><b>Banheiro</b>: acesso e localização (aceita "não há")</li>
+            </ul>
+          </div>
+          <div class="passo-telas">
+            <div class="tela"><img src="assets/tela-local.png" alt="Detalhe do local com nota geral e notas por parâmetro."></div>
+          </div>
+        </article>
+
+        <article class="passo">
+          <div class="passo-texto">
+            <span class="passo-num">3</span>
+            <h3>Faça check-in e conte como foi</h3>
+            <p>No local, o check-in confirma que você está a até 100 metros, descontando a precisão do GPS. Depois, publique um aviso ou comente um aviso existente, com seu nome ou de forma anônima. A avaliação feita com check-in vale mais no cálculo da nota.</p>
+          </div>
+          <div class="passo-telas">
+            <div class="tela"><img src="assets/tela-checkin.png" alt="Confirmação de check-in feito no local."></div>
+            <div class="tela"><img src="assets/tela-avaliacao.png" alt="Novo aviso com check-in confirmado, peso do voto e avaliação em estrelas."></div>
+          </div>
+        </article>
+
+        <article class="passo">
+          <div class="passo-texto">
+            <span class="passo-num">4</span>
+            <h3>Fique sabendo dos locais não aconselhados</h3>
+            <p>Quando um local reúne muitas avaliações com nota muito baixa, ele passa a aparecer com alerta no mapa, na lista e na página do local. Na versão final, o alerta exige ao menos 100 avaliadoras e nota ponderada de até 1,5, um limite que protege contra campanhas de difamação.</p>
+          </div>
+          <div class="passo-telas">
+            <div class="tela"><img src="assets/tela-lista-alerta.png" alt="Lista filtrada com locais não aconselhados."></div>
+            <div class="tela"><img src="assets/tela-alerta.png" alt="Página do Terminal Leste com faixa de alerta de local não aconselhado."></div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="nota" id="confiabilidade">
+    <div class="wrap">
+      <div style="display: grid; gap: 18px">
+        <p class="eyebrow">Notas confiáveis</p>
+        <h2>Nem todo voto pesa igual.</h2>
+        <p class="lead">Cada avaliação recebe um peso de 0,1 a 1,0, que cresce com o tempo de conta, as contribuições válidas e a verificação de identidade, e cai com denúncias procedentes. Quem avalia estando no local ganha um bônus.</p>
+        <p class="lead">Assim, uma conta recém-criada, que poderia ser um perfil falso, influencia menos do que quem comprovadamente esteve lá.</p>
+      </div>
+      <div>
+        <table>
+          <caption style="text-align: left; font-weight: 700; padding-bottom: 8px">Exemplo: um local avaliado por três usuárias</caption>
+          <thead><tr><th scope="col">Avaliadora</th><th scope="col" style="text-align: right">Nota</th><th scope="col" style="text-align: right">Peso</th><th scope="col" style="text-align: right">Nota × peso</th></tr></thead>
+          <tbody>
+            <tr><td>Conta nova, sem check-in</td><td class="n">1,0</td><td class="n">0,2</td><td class="n">0,2</td></tr>
+            <tr><td>Conta com 90 dias, sem check-in</td><td class="n">4,0</td><td class="n">0,8</td><td class="n">3,2</td></tr>
+            <tr><td>Conta com 90 dias, com check-in</td><td class="n">4,5</td><td class="n">1,0</td><td class="n">4,5</td></tr>
+          </tbody>
+          <tfoot><tr><td>Total</td><td></td><td class="n">2,0</td><td class="n">7,9</td></tr></tfoot>
+        </table>
+        <div class="comparacao">
+          <div><span>Média simples</span><b>3,17</b></div>
+          <div class="ponderada"><span>Nota ponderada (7,9 ÷ 2,0)</span><b>3,95</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacidade">
+    <div class="wrap">
+      <p class="eyebrow">Privacidade</p>
+      <h2 style="margin-top: 10px">Pensado com a LGPD desde o início.</h2>
+      <div class="cartoes">
+        <div class="cartao">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"></path><path d="m9.5 9.5 5 5M14.5 9.5l-5 5"></path></svg>
+          <h3>Check-in sem rastreio</h3>
+          <p>Do check-in guarda-se só a distância até o local, nunca as coordenadas da usuária.</p>
+        </div>
+        <div class="cartao">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path><path d="M3 3l18 18"></path></svg>
+          <h3>Publicação anônima</h3>
+          <p>A autora pode esconder o nome publicamente; o vínculo fica guardado só para moderação.</p>
+        </div>
+        <div class="cartao">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"></path><path d="m9 12 2 2 4-4"></path></svg>
+          <h3>Verificação opcional</h3>
+          <p>A verificação de identidade é opcional, exige consentimento e não guarda imagens, só o resultado.</p>
+        </div>
+        <div class="cartao">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V4h11l-1.5 4L15 12H4"></path></svg>
+          <h3>Denúncia e moderação</h3>
+          <p>Conteúdo impróprio pode ser denunciado; denúncia procedente oculta o conteúdo e reduz o peso da autora.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tecnologia" id="tecnologia">
+    <div class="wrap">
+      <p class="eyebrow">Por dentro</p>
+      <h2 style="margin-top: 10px">Arquitetura e verificação.</h2>
+      <p class="lead" style="margin-top: 16px">Cliente-servidor com banco geoespacial: o mapa consulta só a área visível, e o check-in e a busca por proximidade usam consultas geográficas.</p>
+      <div class="pilha">
+        <div><h3>Aplicativo</h3><p>React Native com Expo e TypeScript; mapa com MapLibre e OpenStreetMap.</p></div>
+        <div><h3>Back-end</h3><p>API REST em Java 21 e Spring Boot 4, com autenticação JWT e migrações Flyway.</p></div>
+        <div><h3>Banco de dados</h3><p>PostgreSQL 16 com PostGIS 3.4; endereços geocodificados com ViaCEP e Nominatim.</p></div>
+      </div>
+      <div class="metricas">
+        <div><b>34</b><span>requisitos funcionais na primeira versão</span></div>
+        <div><b>73</b><span>testes automatizados no back-end, com PostGIS real</span></div>
+        <div><b>17</b><span>testes da lógica no aplicativo</span></div>
+        <div><b>5</b><span>parâmetros de avaliação por local</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="experimente" id="experimente">
+    <div class="wrap">
+      <div class="caixa">
+        <div style="display: grid; gap: 16px">
+          <p class="eyebrow">Experimente</p>
+          <h2>Teste o GoSafe.</h2>
+          <div class="opcao">
+            <h3>GoSafe — conectado à API</h3>
+            <p>O aplicativo completo: login, mapa, check-in validado pelo servidor, avisos, comentários, favoritos e a nota ponderada calculada no back-end.</p>
+            <a class="botao cheio" href="downloads/GoSafe.apk" download>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
+              Baixar GoSafe para Android (APK)
+            </a>
+          </div>
+        </div>
+        <div style="display: grid; gap: 16px">
+          <p class="aviso-ia" style="margin-top: 0">Todos os dados de demonstração — locais, usuárias, notas e comentários — foram criados por IA para exemplificar um cenário real. Não representam pessoas nem estabelecimentos reais.</p>
+          <p class="fonte">Instalação: abra o arquivo no celular e permita instalar apps desta fonte quando o Android pedir. O primeiro acesso pode levar até 1 minuto, enquanto o servidor inicia. Disponível apenas para Android nesta fase.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <b>GoSafe</b> · Trabalho de Conclusão de Curso, 2026<br>
+      [NOMES DOS AUTORES] · Engenharia de Software · Universidade Católica do Salvador (UCSal)
+    </div>
+    <div>Projeto acadêmico, sem fins comerciais.</div>
+  </div>
+</footer>
+
+</body>
+</html>
