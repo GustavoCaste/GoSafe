@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo, useState } from 'react';
-import { Pressable, Switch, Text, View } from 'react-native';
+import { Image, Pressable, Switch, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native';
 
@@ -8,7 +8,7 @@ import { placeThumbColor } from '../components/PlaceRow';
 import { DEFAULT_REVIEW, ReviewInput, ReviewSummary } from '../components/ReviewInput';
 import { AlertBanner, Button, Card, Chip, Empty, Field, IconButton, RatingBadge, Screen, SectionTitle, styles as ui } from '../components/ui';
 import { appAlert } from '../components/AppDialog';
-import { addComment, addNotice, deleteComment, deleteNotice, doCheckIn as checkInAction, setFavorite } from '../data/actions';
+import { addComment, addNotice, addReport, deleteComment, deleteNotice, doCheckIn as checkInAction, setFavorite } from '../data/actions';
 import { syncNotice, syncPlace } from '../data/api';
 import {
   checkInValidUntil,
@@ -23,8 +23,9 @@ import { currentUser, errorMessage, useDatabase } from '../data/store';
 import { useRemote } from '../hooks/useRemote';
 import { CATEGORY_LABEL, NOTICE_TYPE_LABEL, REVIEW_PARAMS, timeAgo } from '../domain/labels';
 import { ALERT_MIN_REVIEWS, distanceMeters, formatDistance, formatRating, voteWeight } from '../domain/rules';
-import type { Comment, Database, NoticeType, ReviewInput as Review } from '../domain/types';
+import type { Comment, Database, NoticeType, ReportTarget, ReviewInput as Review } from '../domain/types';
 import { currentFix, useLastKnownPosition } from '../hooks/location';
+import { useRequireLogin } from '../hooks/useRequireLogin';
 import { useSubmitOnce } from '../hooks/useSubmitOnce';
 import type { ScreenProps } from '../navigation/types';
 import { colors } from '../theme';
@@ -36,7 +37,6 @@ function Author({ db, authorId, anonymous, createdAt }: { db: Database; authorId
     <Text style={{ fontSize: 13, color: colors.muted }}>
       <Text style={{ fontWeight: '700', color: colors.ink }}>{author.name}</Text>
       {author.username ? ` @${author.username}` : ''}
-      {author.verified ? <Text style={{ color: colors.good, fontWeight: '700' }}> · verificada</Text> : null}
       {author.mine ? <Text style={{ color: colors.primary, fontWeight: '700' }}> · você</Text> : null}
       {` · ${timeAgo(createdAt)}`}
     </Text>
@@ -47,7 +47,9 @@ export function PlaceScreen({ navigation, route }: ScreenProps<'Place'>) {
   const { db, version } = useDatabase();
   const position = useLastKnownPosition();
   const [busy, setBusy] = useState(false);
+  const { width } = useWindowDimensions();
   const user = currentUser();
+  const requireLogin = useRequireLogin();
   const place = db?.places[route.params.placeId];
   const remote = useRemote(() => syncPlace(route.params.placeId, position), [route.params.placeId]);
 
@@ -62,7 +64,7 @@ export function PlaceScreen({ navigation, route }: ScreenProps<'Place'>) {
     [db, version, place],
   );
 
-  if (!db || !place || !place.active || !user) {
+  if (!db || !place || !place.active) {
     return (
       <Screen title="Local">
         <Empty text={remote.loading ? 'Carregando o local…' : remote.error ?? 'Local não encontrado.'} />
@@ -70,18 +72,15 @@ export function PlaceScreen({ navigation, route }: ScreenProps<'Place'>) {
     );
   }
 
-  const favorite = isFavorite(db, user.id, place.id);
-  const currentCheckIn = validCheckIn(db, user.id, place.id);
+  const favorite = user ? isFavorite(db, user.id, place.id) : false;
+  const currentCheckIn = user ? validCheckIn(db, user.id, place.id) : null;
 
-  const doCheckIn = async (simulate: boolean) => {
+  const doCheckIn = async () => {
+    if (!requireLogin('Para fazer check-in, entre na sua conta.')) return;
     try {
       setBusy(true);
-      let fix = { latitude: place.latitude, longitude: place.longitude, accuracy: 5 };
-      if (!simulate) {
-        const real = await currentFix();
-        if (!real) throw new Error('Permita o acesso à localização para fazer check-in.');
-        fix = real;
-      }
+      const fix = await currentFix();
+      if (!fix) throw new Error('Permita o acesso à localização para fazer check-in.');
       const record = await checkInAction(place.id, fix);
       appAlert('Check-in feito', `Você estava a ${record.distanceMeters} m. Suas avaliações deste local nas próximas 4 h contam com peso maior.`);
     } catch (error) {
@@ -91,25 +90,35 @@ export function PlaceScreen({ navigation, route }: ScreenProps<'Place'>) {
     }
   };
 
-  const address = [`${place.street}, ${place.number}`, place.district, `${place.city}/${place.state}`].join(' — ');
+  const photos = place.photos?.length ? place.photos : place.photoUrl ? [place.photoUrl] : [];
+  const address = [[`${place.street}, ${place.number}`, place.complement].filter(Boolean).join(', '), place.district, `${place.city}/${place.state}`].join(' — ');
   const distance = position ? formatDistance(distanceMeters(position, place)) : '';
 
   return (
     <SafeAreaView style={ui.screen} edges={['bottom']}>
       <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
         <View style={{ height: 200, backgroundColor: placeThumbColor(place), justifyContent: 'flex-end', padding: 14 }}>
+          {photos.length ? (
+            <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{ position: 'absolute', left: 0, top: 0, width, height: 200 }}>
+              {photos.map((url) => (
+                <Image key={url} source={{ uri: url }} accessibilityLabel={`Foto de ${place.name}`} style={{ width, height: 200 }} resizeMode="cover" />
+              ))}
+            </ScrollView>
+          ) : (
+            <Text style={{ color: '#3B2A1E', fontWeight: '700', fontSize: 12 }}>Sem foto cadastrada</Text>
+          )}
           <SafeAreaView edges={['top']} style={{ position: 'absolute', left: 16, right: 16, top: 0, flexDirection: 'row', justifyContent: 'space-between' }}>
             <IconButton icon="chevron-back" label="Voltar" onPress={() => navigation.goBack()} />
             <IconButton
               icon={favorite ? 'heart' : 'heart-outline'}
               label={favorite ? 'Remover dos favoritos' : 'Favoritar'}
               color="#C2410C"
-              onPress={() => setFavorite(place.id, !favorite).catch((error) => appAlert('Não foi possível favoritar', errorMessage(error)))}
+              onPress={() => {
+                if (!requireLogin('Para salvar este local nos favoritos, entre na sua conta.')) return;
+                setFavorite(place.id, !favorite).catch((error) => appAlert('Não foi possível favoritar', errorMessage(error)));
+              }}
             />
           </SafeAreaView>
-          <Text style={{ color: '#3B2A1E', fontWeight: '700', fontSize: 12 }}>
-            [Foto do local]
-          </Text>
         </View>
 
         <View style={{ padding: 16, gap: 14, maxWidth: 640, width: '100%', alignSelf: 'center' }}>
@@ -158,13 +167,10 @@ export function PlaceScreen({ navigation, route }: ScreenProps<'Place'>) {
               </Text>
             </View>
           ) : (
-            <View style={{ gap: 6 }}>
-              <Button label="Fazer check-in (estou aqui)" icon="location" variant="secondary" loading={busy} onPress={() => doCheckIn(false)} />
-              <Button label="Simular check-in no local (teste)" variant="ghost" onPress={() => doCheckIn(true)} />
-            </View>
+            <Button label="Fazer check-in (estou aqui)" icon="location" variant="secondary" loading={busy} onPress={doCheckIn} />
           )}
 
-          <SectionTitle right={<Button label="Novo aviso" icon="add" style={{ minHeight: 44 }} onPress={() => navigation.navigate('NewNotice', { placeId: place.id })} />}>
+          <SectionTitle right={<Button label="Novo aviso" icon="add" style={{ minHeight: 44 }} onPress={() => { if (requireLogin('Para publicar um aviso, entre na sua conta.')) navigation.navigate('NewNotice', { placeId: place.id }); }} />}>
             Avisos recentes
           </SectionTitle>
           {remote.error ? <Text style={{ color: colors.bad }}>{remote.error}</Text> : null}
@@ -183,6 +189,17 @@ export function PlaceScreen({ navigation, route }: ScreenProps<'Place'>) {
               </Card>
             </Pressable>
           ))}
+
+          {place.createdBy !== user?.id ? (
+            <Button
+              label="Denunciar este local"
+              icon="flag-outline"
+              variant="ghost"
+              onPress={() => {
+                if (requireLogin('Para denunciar, entre na sua conta.')) navigation.navigate('Report', { targetType: 'PLACE', targetId: place.id, label: place.name });
+              }}
+            />
+          ) : null}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -192,6 +209,7 @@ export function PlaceScreen({ navigation, route }: ScreenProps<'Place'>) {
 export function NoticeScreen({ navigation, route }: ScreenProps<'Notice'>) {
   const { db, version } = useDatabase();
   const user = currentUser();
+  const requireLogin = useRequireLogin();
   const notice = db?.notices[route.params.noticeId];
   const remote = useRemote(() => syncNotice(route.params.noticeId), [route.params.noticeId]);
 
@@ -205,7 +223,7 @@ export function NoticeScreen({ navigation, route }: ScreenProps<'Notice'>) {
     [db, version, notice],
   );
 
-  if (!db || !notice || notice.status !== 'ACTIVE' || !user) {
+  if (!db || !notice || notice.status !== 'ACTIVE') {
     return (
       <Screen title="Aviso">
         <Empty text={remote.loading ? 'Carregando o aviso…' : remote.error ?? 'Aviso não encontrado ou removido.'} />
@@ -214,7 +232,12 @@ export function NoticeScreen({ navigation, route }: ScreenProps<'Notice'>) {
   }
 
   const place = db.places[notice.placeId];
-  const canModerate = user.role !== 'USER';
+  const canModerate = user ? user.role !== 'USER' : false;
+  const mineNotice = notice.authorId === user?.id;
+
+  const report = (targetType: ReportTarget, targetId: string, label: string) => {
+    if (requireLogin('Para denunciar, entre na sua conta.')) navigation.navigate('Report', { targetType, targetId, label });
+  };
 
   const remove = (comment: Comment) =>
     appAlert('Remover comentário?', 'A avaliação ligada a ele deixa de contar na nota do local.', [
@@ -245,8 +268,13 @@ export function NoticeScreen({ navigation, route }: ScreenProps<'Notice'>) {
   return (
     <Screen
       title={notice.title}
-      right={notice.authorId === user.id || canModerate ? <IconButton icon="trash-outline" label="Remover aviso" color={colors.bad} onPress={removeWhole} /> : undefined}
-      footer={<Button label="Comentar e avaliar" icon="chatbubble-ellipses" onPress={() => navigation.navigate('Comment', { noticeId: notice.id })} />}
+      right={
+        <View style={{ flexDirection: 'row', gap: 8 }}>
+          {mineNotice ? null : <IconButton icon="flag-outline" label="Denunciar aviso" color={colors.muted} onPress={() => report('NOTICE', notice.id, notice.title)} />}
+          {mineNotice || canModerate ? <IconButton icon="trash-outline" label="Remover aviso" color={colors.bad} onPress={removeWhole} /> : null}
+        </View>
+      }
+      footer={<Button label="Comentar e avaliar" icon="chatbubble-ellipses" onPress={() => { if (requireLogin('Para comentar e avaliar, entre na sua conta.')) navigation.navigate('Comment', { noticeId: notice.id }); }} />}
     >
       <Pressable onPress={() => navigation.navigate('Place', { placeId: place.id })}>
         <Text style={{ color: colors.primary, fontWeight: '700' }}>
@@ -256,7 +284,7 @@ export function NoticeScreen({ navigation, route }: ScreenProps<'Notice'>) {
       {place.notRecommended ? <AlertBanner compact /> : null}
       {comments.map((comment) => {
         const review = reviewForComment(db, comment.id);
-        const mine = comment.authorId === user.id;
+        const mine = comment.authorId === user?.id;
         return (
           <Card key={comment.id} style={[{ gap: 8 }, comment.initial && { borderColor: colors.primary, borderWidth: 1.5 }]}>
             <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
@@ -265,6 +293,9 @@ export function NoticeScreen({ navigation, route }: ScreenProps<'Notice'>) {
                 {comment.initial ? <Text style={{ fontSize: 12, color: colors.primary, fontWeight: '700' }}>Relato inicial</Text> : null}
               </View>
               {review ? <RatingBadge rating={review.score} /> : null}
+              {!mine && !comment.initial ? (
+                <IconButton icon="flag-outline" label="Denunciar comentário" color={colors.muted} onPress={() => report('COMMENT', comment.id, comment.body.slice(0, 80))} />
+              ) : null}
               {(mine || canModerate) && !comment.initial ? (
                 <IconButton icon="trash-outline" label="Remover comentário" color={colors.bad} onPress={() => remove(comment)} />
               ) : null}
@@ -300,7 +331,7 @@ function VoteWeightInfo({ placeId }: { placeId: string }) {
           Peso do seu voto: {weight.toFixed(2).replace('.', ',')}
         </Text>
       </View>
-      <Text style={{ fontSize: 12, color: colors.muted }}>O peso cresce com o tempo de conta, contribuições válidas, verificação facial e check-in no local.</Text>
+      <Text style={{ fontSize: 12, color: colors.muted }}>O peso cresce com o tempo de conta, as contribuições válidas e o check-in no local.</Text>
     </View>
   );
 }
@@ -400,6 +431,54 @@ export function CommentScreen({ navigation, route }: ScreenProps<'Comment'>) {
         </>
       ) : null}
       <ToggleRow label="Comentar como anônima" value={anonymous} onChange={setAnonymous} />
+    </Screen>
+  );
+}
+
+const REPORT_REASONS = ['Informação falsa', 'Ofensa ou assédio', 'Expõe dados de alguém', 'Propaganda', 'Outro motivo'];
+const REPORT_TARGET_LABEL: Record<ReportTarget, string> = { NOTICE: 'aviso', COMMENT: 'comentário', PLACE: 'local' };
+
+/** RF30: denúncia de aviso, comentário ou local, analisada pela moderação. */
+export function ReportScreen({ navigation, route }: ScreenProps<'Report'>) {
+  const { targetType, targetId, label } = route.params;
+  const [reason, setReason] = useState<string | null>(null);
+  const [details, setDetails] = useState('');
+  const [once, sending] = useSubmitOnce();
+
+  const submit = () =>
+    once(async () => {
+      if (!reason) {
+        appAlert('Motivo', 'Escolha o motivo da denúncia.');
+        return false;
+      }
+      if (reason === REPORT_REASONS[REPORT_REASONS.length - 1] && !details.trim()) {
+        appAlert('Motivo', 'Conte em poucas palavras o que há de errado.');
+        return false;
+      }
+      try {
+        await addReport(targetType, targetId, details.trim() ? `${reason}: ${details.trim()}` : reason);
+        appAlert('Denúncia enviada', 'A moderação vai analisar. Obrigada por ajudar a manter o GoSafe confiável.');
+        navigation.goBack();
+        return true;
+      } catch (error) {
+        appAlert('Não foi possível denunciar', errorMessage(error));
+        return false;
+      }
+    });
+
+  return (
+    <Screen title={`Denunciar ${REPORT_TARGET_LABEL[targetType]}`} footer={<Button label="Enviar denúncia" loading={sending} onPress={submit} />}>
+      <Card>
+        <Text style={{ fontSize: 15, color: colors.ink }} numberOfLines={3}>{label}</Text>
+      </Card>
+      <Text style={ui.label}>Motivo</Text>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+        {REPORT_REASONS.map((item) => (
+          <Chip key={item} label={item} selected={reason === item} onPress={() => setReason(item)} />
+        ))}
+      </View>
+      <Field label="Detalhes" value={details} onChangeText={setDetails} multiline maxLength={450} placeholder="Opcional, exceto em Outro motivo" />
+      <Text style={ui.muted}>A autora não fica sabendo quem denunciou.</Text>
     </Screen>
   );
 }

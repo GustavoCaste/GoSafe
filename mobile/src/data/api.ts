@@ -16,6 +16,7 @@ import type {
   Place,
   PlaceCategory,
   PlaceStats,
+  ReportTarget,
   ReviewInput,
   Role,
   Sex,
@@ -34,10 +35,10 @@ interface TokenResponse { token: string; user: UserDto }
 interface AuthorDto { id: string | null; name: string; username: string | null; verified: boolean; anonymous: boolean; mine: boolean }
 interface StatsDto { rating: number | null; ratingCount: number; safety: number | null; lighting: number | null; movement: number | null; welcoming: number | null; restroom: number | null }
 interface PinDto { id: string; name: string; category: PlaceCategory; latitude: number; longitude: number; weightedRating: number | null; ratingCount: number; notRecommended: boolean }
-interface SummaryDto extends PinDto { description: string | null; district: string; city: string; distanceMeters: number | null }
+interface SummaryDto extends PinDto { description: string | null; profilePhotoUrl: string | null; district: string; city: string; distanceMeters: number | null }
 interface DetailDto extends SummaryDto {
   postalCode: string; street: string; number: string; complement: string | null; state: string;
-  stats: StatsDto; favorite: boolean; checkInValidUntil: string | null; createdById: string | null;
+  stats: StatsDto; photos: { url: string }[]; favorite: boolean; checkInValidUntil: string | null; createdById: string | null;
 }
 interface ReviewDto { safety: number; lighting: number; movement: number; welcoming: number; restroom: number | null; score: number; withCheckIn: boolean }
 interface NoticeDto { id: string; placeId: string; title: string; type: NoticeType; author: AuthorDto; commentCount: number; createdAt: string; lastActivityAt: string }
@@ -162,6 +163,8 @@ function upsertPlace(db: Database, dto: PinDto | SummaryDto | DetailDto): Place 
     active: true,
     createdAt: old?.createdAt ?? Date.now(),
     stats: summary.stats ? toStats(summary.stats) : old?.stats,
+    photoUrl: summary.profilePhotoUrl ?? old?.photoUrl,
+    photos: summary.photos ? summary.photos.map((photo) => photo.url) : old?.photos,
   };
   db.places[place.id] = place;
   return place;
@@ -246,6 +249,7 @@ export async function testConnection(url: string): Promise<void> {
 function startSession(response: TokenResponse) {
   const db = getDatabase();
   db.token = response.token;
+  db.guest = false;
   db.sessionUserId = upsertUser(db, response.user).id;
   commitChanges();
 }
@@ -258,10 +262,16 @@ export async function apiRegister(input: { name: string; username: string; email
   startSession(await request<TokenResponse>('POST', '/auth/register', { ...input, name: input.name.trim(), username: input.username.trim(), email: input.email.trim() }, { auth: false }));
 }
 
+export function apiEnterAsGuest() {
+  getDatabase().guest = true;
+  commitChanges();
+}
+
 export function apiLogout() {
   const db = getDatabase();
   db.token = null;
   db.sessionUserId = null;
+  db.guest = false;
   db.favorites = {};
   db.checkIns = {};
   commitChanges();
@@ -279,11 +289,6 @@ export async function apiUpdateName(name: string) {
   commitChanges();
 }
 
-export async function apiVerify() {
-  await request('POST', '/me/verification', { consent: true });
-  await syncMe();
-}
-
 // ---------------------------------------------------------------- locais
 
 export async function syncMap(bounds: Bounds, category: PlaceCategory | null) {
@@ -294,9 +299,13 @@ export async function syncMap(bounds: Bounds, category: PlaceCategory | null) {
   commitChanges();
 }
 
-export async function syncList(options: { query?: string; sort: 'DISTANCE' | 'RATING' | 'NAME'; position?: LatLng | null }) {
+export async function syncList(options: { query?: string; city?: string; category?: PlaceCategory; sort: 'DISTANCE' | 'RATING' | 'NAME'; position?: LatLng | null }) {
   const db = getDatabase();
-  const q = options.query?.trim() ? `&q=${encodeURIComponent(options.query.trim())}` : '';
+  const q = [
+    options.query?.trim() ? `&q=${encodeURIComponent(options.query.trim())}` : '',
+    options.city?.trim() ? `&city=${encodeURIComponent(options.city.trim())}` : '',
+    options.category ? `&category=${options.category}` : '',
+  ].join('');
   const sort = options.sort === 'DISTANCE' && !options.position ? 'NAME' : options.sort;
   const list = items(await request<SummaryDto[] | Page<SummaryDto>>('GET', `/places?sort=${sort}&size=50${q}${near(options.position)}`));
   list.forEach((item) => upsertPlace(db, item));
@@ -390,13 +399,23 @@ export async function apiToggleFavorite(placeId: string, favorite: boolean) {
 }
 
 export async function apiCreatePlace(input: {
-  name: string; category: PlaceCategory; description: string; postalCode: string; street: string; number: string; district: string; city: string; state: string;
+  name: string; category: PlaceCategory; description: string; postalCode: string; street: string; number: string; complement: string; district: string; city: string; state: string;
 }, point: LatLng) {
-  const dto = await request<DetailDto>('POST', '/places', { ...input, latitude: point.latitude, longitude: point.longitude });
+  const dto = await request<DetailDto>('POST', '/places', { ...input, complement: input.complement.trim() || null, latitude: point.latitude, longitude: point.longitude });
   const db = getDatabase();
   const place = upsertPlace(db, dto);
   commitChanges();
   return place;
+}
+
+/** RF09: converte o endereço em coordenadas; a usuária confirma ou ajusta o pino depois. */
+export async function apiGeocode(address: { street: string; number: string; district: string; city: string; state: string; postalCode: string }): Promise<LatLng> {
+  const query = Object.entries(address)
+    .filter(([, value]) => value.trim())
+    .map(([key, value]) => `${key}=${encodeURIComponent(value.trim())}`)
+    .join('&');
+  const { latitude, longitude } = await request<LatLng>('GET', `/geo/geocode?${query}`);
+  return { latitude, longitude };
 }
 
 const reviewBody = (review: ReviewInput | null) =>
@@ -417,6 +436,10 @@ export async function apiCreateComment(noticeId: string, input: { body: string; 
   await syncNotice(noticeId);
   const placeId = getDatabase().notices[noticeId]?.placeId;
   if (placeId) await syncPlace(placeId).catch(() => undefined);
+}
+
+export async function apiCreateReport(targetType: ReportTarget, targetId: string, reason: string) {
+  await request('POST', '/reports', { targetType, targetId, reason: reason.trim() });
 }
 
 export async function apiRemoveComment(commentId: string) {

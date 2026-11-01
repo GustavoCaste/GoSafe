@@ -34,7 +34,7 @@ public interface PlaceRepository extends JpaRepository<Place, UUID>, JpaSpecific
     @Query(value = """
             SELECT p.* FROM places p
             WHERE p.active = TRUE
-              AND (CAST(:q AS TEXT) IS NULL OR lower(p.name) LIKE lower(concat('%', CAST(:q AS TEXT), '%')))
+              AND (CAST(:q AS TEXT) IS NULL OR lower(concat(p.name, ' ', p.district, ' ', p.city)) LIKE lower(concat('%', CAST(:q AS TEXT), '%')))
               AND (CAST(:category AS TEXT) IS NULL OR p.category = CAST(:category AS TEXT))
               AND (CAST(:district AS TEXT) IS NULL OR lower(p.district) = lower(CAST(:district AS TEXT)))
               AND (CAST(:city AS TEXT) IS NULL OR lower(p.city) = lower(CAST(:city AS TEXT)))
@@ -43,7 +43,7 @@ public interface PlaceRepository extends JpaRepository<Place, UUID>, JpaSpecific
             countQuery = """
             SELECT count(*) FROM places p
             WHERE p.active = TRUE
-              AND (CAST(:q AS TEXT) IS NULL OR lower(p.name) LIKE lower(concat('%', CAST(:q AS TEXT), '%')))
+              AND (CAST(:q AS TEXT) IS NULL OR lower(concat(p.name, ' ', p.district, ' ', p.city)) LIKE lower(concat('%', CAST(:q AS TEXT), '%')))
               AND (CAST(:category AS TEXT) IS NULL OR p.category = CAST(:category AS TEXT))
               AND (CAST(:district AS TEXT) IS NULL OR lower(p.district) = lower(CAST(:district AS TEXT)))
               AND (CAST(:city AS TEXT) IS NULL OR lower(p.city) = lower(CAST(:city AS TEXT)))

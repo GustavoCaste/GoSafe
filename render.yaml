@@ -1,0 +1,17 @@
+# API do GoSafe no plano gratuito do Render. A senha e o endereço do Neon são informados no painel.
+services:
+  - type: web
+    name: gosafe-api
+    runtime: docker
+    plan: free
+    rootDir: gosafe-backend
+    healthCheckPath: /places?size=1
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: GOSAFE_JWT_SECRET
+        generateValue: true

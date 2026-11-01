@@ -10,13 +10,14 @@ import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 import { PlaceThumb } from '../components/PlaceRow';
 import { AlertBanner, Avatar, Button, RatingBadge, styles as ui } from '../components/ui';
 import { logout, setFavorite } from '../data/actions';
-import { syncMap } from '../data/api';
+import { syncMap, syncPlace } from '../data/api';
 import { isFavorite } from '../data/repository';
 import { currentUser, errorMessage, getDatabase, useDatabase } from '../data/store';
-import { CATEGORY_LABEL } from '../domain/labels';
+import { CATEGORY_LABEL, REVIEW_PARAMS } from '../domain/labels';
 import { distanceMeters, formatDistance, formatRating, insideBounds, ratingTone } from '../domain/rules';
 import type { Bounds, LatLng, Place, PlaceCategory } from '../domain/types';
 import { currentFix, useLastKnownPosition } from '../hooks/location';
+import { PLACE_DETAILS_LOGIN, useRequireLogin } from '../hooks/useRequireLogin';
 import { mapHtml } from '../map/mapHtml';
 import type { RootStackParamList, TabParamList } from '../navigation/types';
 import { colors, radius, toneColor } from '../theme';
@@ -50,6 +51,7 @@ export function MapScreen({ navigation }: Props) {
   const [sheetHeight, setSheetHeight] = useState(0);
   const position = useLastKnownPosition();
   const user = currentUser();
+  const requireLogin = useRequireLogin();
 
   const html = useMemo(() => mapHtml(getDatabase().center, 14), []);
   const inject = (script: string) => webRef.current?.injectJavaScript(`${script};true;`);
@@ -78,6 +80,12 @@ export function MapScreen({ navigation }: Props) {
   useEffect(() => {
     if (ready) inject(`window.gosafe && window.gosafe.select(${JSON.stringify(selectedId)})`);
   }, [ready, selectedId]);
+
+  // os pins não trazem as notas por parâmetro; elas vêm do detalhe do local
+  useEffect(() => {
+    if (selectedId && user) syncPlace(selectedId, position).catch(() => undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId]);
 
   useEffect(() => {
     if (ready && position) inject(`window.gosafe && window.gosafe.setUser(${position.latitude}, ${position.longitude})`);
@@ -136,7 +144,7 @@ export function MapScreen({ navigation }: Props) {
               Para onde você vai?
             </Text>
           </Pressable>
-          <Pressable accessibilityRole="button" accessibilityLabel="Menu da usuária" onPress={() => setMenu('user')} style={styles.avatarButton}>
+          <Pressable accessibilityRole="button" accessibilityLabel="Menu da usuária" onPress={() => (user ? setMenu('user') : navigation.navigate('Login'))} style={styles.avatarButton}>
             <Avatar name={user?.name ?? '?'} size={46} />
           </Pressable>
         </View>
@@ -207,8 +215,17 @@ export function MapScreen({ navigation }: Props) {
               </Pressable>
             ) : null}
           </View>
+          {user && selected.stats ? (
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 14, rowGap: 4 }}>
+              {REVIEW_PARAMS.map((param) => (
+                <Text key={param.key} style={{ fontSize: 13, color: colors.muted }}>
+                  {param.label} <Text style={{ fontWeight: '700', color: colors.ink }}>{formatRating(selected.stats?.[param.key] ?? null)}</Text>
+                </Text>
+              ))}
+            </View>
+          ) : null}
           {selected.notRecommended ? <AlertBanner /> : null}
-          <Button label="Ver local e avisos" onPress={() => navigation.navigate('Place', { placeId: selected.id })} />
+          <Button label="Ver local e avisos" onPress={() => { if (requireLogin(PLACE_DETAILS_LOGIN)) navigation.navigate('Place', { placeId: selected.id }); }} />
         </View>
       ) : null}
 
@@ -216,9 +233,9 @@ export function MapScreen({ navigation }: Props) {
         <Pressable style={styles.backdrop} onPress={() => setMenu('none')} accessibilityLabel="Fechar menu" />
         {menu === 'plus' ? (
           <View style={[styles.menu, { bottom: insets.bottom + 24 }]}>
-            <MenuItem icon="location" title="Cadastrar local" subtitle="Marca no centro do mapa que você está vendo" onPress={() => { setMenu('none'); navigation.navigate('CreatePlace', { point: view?.center }); }} />
+            <MenuItem icon="location" title="Cadastrar local" subtitle="Marca no centro do mapa que você está vendo" onPress={() => { setMenu('none'); if (requireLogin('Para cadastrar um local, entre na sua conta.')) navigation.navigate('CreatePlace', { point: view?.center }); }} />
             <MenuItem icon="search" title="Buscar local" subtitle="Por nome, categoria ou bairro" onPress={() => { setMenu('none'); navigation.navigate('Search'); }} />
-            <MenuItem icon="megaphone" title="Novo aviso" subtitle="Primeiro escolha o local" onPress={() => { setMenu('none'); navigation.navigate('Search', { mode: 'notice' }); }} />
+            <MenuItem icon="megaphone" title="Novo aviso" subtitle="Primeiro escolha o local" onPress={() => { setMenu('none'); if (requireLogin('Para publicar um aviso, entre na sua conta.')) navigation.navigate('Search', { mode: 'notice' }); }} />
           </View>
         ) : null}
         {menu === 'user' && user ? (
@@ -228,9 +245,6 @@ export function MapScreen({ navigation }: Props) {
               <View style={{ flex: 1 }}>
                 <Text style={{ fontWeight: '700', fontSize: 16, color: colors.ink }}>{user.name}</Text>
                 <Text style={ui.muted}>@{user.username}</Text>
-                <Text style={{ fontSize: 12, fontWeight: '700', color: user.verified ? colors.good : colors.muted, marginTop: 2 }}>
-                  {user.verified ? 'Identidade verificada' : 'Não verificada'}
-                </Text>
               </View>
             </View>
             <MenuItem icon="person" title="Meus dados" onPress={() => { setMenu('none'); navigation.navigate('Profile'); }} />

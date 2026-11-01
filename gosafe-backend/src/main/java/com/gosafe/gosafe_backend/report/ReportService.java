@@ -12,6 +12,7 @@ import com.gosafe.gosafe_backend.notice.NoticeRepository;
 import com.gosafe.gosafe_backend.place.Place;
 import com.gosafe.gosafe_backend.place.PlaceRepository;
 import com.gosafe.gosafe_backend.report.dto.CreateReportRequest;
+import com.gosafe.gosafe_backend.report.dto.ModerationReportDto;
 import com.gosafe.gosafe_backend.report.dto.ReportDto;
 import com.gosafe.gosafe_backend.reputation.ReputationService;
 import com.gosafe.gosafe_backend.review.PlaceRatingService;
@@ -85,14 +86,14 @@ public class ReportService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ReportDto> list(ReportStatus status, int page, int size) {
+    public PageResponse<ModerationReportDto> list(ReportStatus status, int page, int size) {
         return PageResponse.of(
-                reportRepository.findByStatusOrderByCreatedAtAsc(status, Pages.of(page, size)).map(this::toDto)
+                reportRepository.findByStatusOrderByCreatedAtAsc(status, Pages.of(page, size)).map(this::toModerationDto)
         );
     }
 
     @Transactional
-    public ReportDto resolve(UUID id, boolean upheld, AuthUser moderator) {
+    public ModerationReportDto resolve(UUID id, boolean upheld, AuthUser moderator) {
         Report report = reportRepository.findById(id)
                 .orElseThrow(() -> Errors.notFound("Denúncia não encontrada"));
 
@@ -112,7 +113,7 @@ public class ReportService {
         report.setResolvedAt(Instant.now());
         report.setResolvedBy(userService.getActive(moderator.id()));
 
-        return toDto(report);
+        return toModerationDto(report);
     }
 
     private void hideTarget(Report report) {
@@ -151,6 +152,24 @@ public class ReportService {
                 report.getId(),
                 report.getTargetType(),
                 report.getTargetId(),
+                report.getReason(),
+                report.getStatus(),
+                report.getOrigin(),
+                report.getCreatedAt(),
+                report.getResolvedAt()
+        );
+    }
+
+    private ModerationReportDto toModerationDto(Report report) {
+        User author = report.getTargetAuthor();
+
+        return new ModerationReportDto(
+                report.getId(),
+                report.getTargetType(),
+                report.getTargetId(),
+                author == null
+                        ? null
+                        : new ModerationReportDto.TargetAuthorDto(author.getId(), author.getName(), author.getUsername()),
                 report.getReason(),
                 report.getStatus(),
                 report.getOrigin(),

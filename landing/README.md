@@ -1,6 +1,6 @@
 # GoSafe — landing page (proposta para discussão)
 
-Página de apresentação do GoSafe para a banca e para quem for testar o app. Ainda **não foi publicada**: está nesta branch para o grupo avaliar.
+Página de apresentação do GoSafe para a banca e para quem for testar o app. Ainda **não foi publicada**: falta o endereço da API no Render para gerar o APK final.
 
 ## Como abrir
 
@@ -18,8 +18,10 @@ A seção **Experimente** baixa o app conectado à API em `downloads/GoSafe.apk`
 6. Arquitetura, tecnologias e números de testes
 7. Experimente: download do app e aviso sobre as imagens de exemplo
 
-## Antes de publicar (se o grupo decidir)
+## Publicação
 
-- Preencher os nomes dos autores no rodapé (`[NOMES DOS AUTORES]`). Curso e instituição já estão: Engenharia de Software, UCSal.
-- A tela do mapa (`assets/tela-mapa.png`) vem do protótipo; as demais são prints do app rodando em emulador Android.
-- Na Vercel: Root Directory `landing`, Framework `Other`, sem comando de build.
+Os prints vêm do app rodando em emulador Android. O APK fica na própria Vercel: como `downloads/` não entra no Git, publique pela linha de comando, a partir desta pasta, depois de gerar o APK final:
+
+```bash
+npx vercel deploy --prod
+```

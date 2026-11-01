@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AlertBanner, Avatar, Button, Card, Chip, Field, RatingBadge, Screen, styles as ui, type IconName } from '../components/ui';
 import { appAlert } from '../components/AppDialog';
 import { DEFAULT_CENTER, SHOW_SERVER_SETTINGS } from '../config';
-import { login as loginAction, register, verifyIdentity } from '../data/actions';
+import { enterAsGuest, login as loginAction, register } from '../data/actions';
 import { apiUrl, testConnection } from '../data/api';
 import { commitChanges, createEmptyDatabase, currentUser, errorMessage, getDatabase } from '../data/store';
 import { SEX_LABEL } from '../domain/labels';
@@ -31,7 +31,7 @@ export function WelcomeScreen({ navigation }: ScreenProps<'Welcome'>) {
         {[
           ['location', 'Mapa com a nota de segurança dos locais'],
           ['chatbubbles', 'Avisos e relatos de outras usuárias'],
-          ['shield-checkmark', 'Contas com identidade verificada'],
+          ['eye-off', 'Opção de publicar como anônima'],
         ].map(([icon, text]) => (
           <View key={text} style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
             <Ionicons name={icon as 'location'} size={20} color={colors.coral} />
@@ -112,7 +112,7 @@ export function BenefitsScreen({ navigation }: ScreenProps<'Benefits'>) {
         </View>
       </Benefit>
 
-      <Benefit icon="location" title="Notas mais confiáveis" text="Quem está no local (check-in) e contas antigas, ativas e verificadas pesam mais na nota. Perfis recém-criados pesam menos.">
+      <Benefit icon="location" title="Notas mais confiáveis" text="Quem está no local (check-in) e contas antigas e ativas pesam mais na nota. Perfis recém-criados pesam menos.">
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
           <Text style={pill(colors.goodSoft, '#155E50')}>Check-in confirmado · 40 m</Text>
           <Text style={pill(colors.primarySoft, colors.primary)}>Peso do voto 0,25</Text>
@@ -124,14 +124,9 @@ export function BenefitsScreen({ navigation }: ScreenProps<'Benefits'>) {
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
           <Avatar name="?" size={34} color="#DCD5CC" />
           <Text style={{ flex: 1, fontSize: 13, color: colors.muted }}>
-            <Text style={{ fontWeight: '700', color: colors.ink }}>Anônima</Text>
-            <Text style={{ color: colors.good, fontWeight: '700' }}> · verificada</Text> · há 2 h
+            <Text style={{ fontWeight: '700', color: colors.ink }}>Anônima</Text> · há 2 h
           </Text>
         </View>
-      </Benefit>
-
-      <Benefit icon="shield-checkmark" title="Contas reais" text="A verificação facial (opcional, simulada nesta versão) confirma que existe uma pessoa real por trás do perfil, sem guardar a imagem.">
-        <Text style={pill(colors.goodSoft, '#155E50')}>Identidade verificada</Text>
       </Benefit>
 
     </Screen>
@@ -185,7 +180,7 @@ export function PermissionScreen() {
       ) : (
         <View style={{ gap: 8 }}>
           <Button label="Permitir localização" icon="location" onPress={() => prepare(true)} />
-          <Button label="Agora não (usar São Paulo)" variant="ghost" onPress={() => prepare(false)} />
+          <Button label="Agora não (usar Salvador)" variant="ghost" onPress={() => prepare(false)} />
         </View>
       )}
     </Screen>
@@ -210,11 +205,12 @@ export function LoginScreen({ navigation }: ScreenProps<'Login'>) {
 
   return (
     <Screen
-      back={false}
+      back={getDatabase().guest === true}
       footer={
         <View style={{ gap: 6 }}>
           <Button label="Entrar" loading={sending} onPress={() => submit()} />
           <Button label="Criar conta" variant="ghost" onPress={() => navigation.navigate('Register')} />
+          {getDatabase().guest ? null : <Button label="Explorar sem conta" variant="ghost" onPress={enterAsGuest} />}
         </View>
       }
     >
@@ -258,7 +254,6 @@ export function RegisterScreen({ navigation }: ScreenProps<'Register'>) {
 
   return (
     <Screen title="Criar conta" footer={<Button label="Continuar" loading={sending} onPress={submit} />}>
-      <Text style={ui.muted}>Passo 1 de 2 · depois você pode verificar sua identidade (opcional).</Text>
       <Field label="Nome completo" value={name} onChangeText={setName} autoComplete="name" />
       <Field label="Nome de usuária" value={username} onChangeText={setUsername} autoCapitalize="none" placeholder="ex.: maria.silva" />
       <Field label="E-mail" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" autoComplete="email" />
@@ -271,83 +266,19 @@ export function RegisterScreen({ navigation }: ScreenProps<'Register'>) {
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 48 }}>
         <Switch value={terms} onValueChange={setTerms} trackColor={{ true: colors.primary }} />
-        <Text style={[ui.muted, { flex: 1 }]}>Li e aceito os Termos de uso e a Política de privacidade.</Text>
-      </View>
-      <Button label="Já tenho conta" variant="ghost" onPress={() => navigation.goBack()} />
-    </Screen>
-  );
-}
-
-/** Verificação facial OPCIONAL e SIMULADA (sem custo, sem guardar imagem). */
-export function VerificationScreen({ navigation }: ScreenProps<'Verification'>) {
-  const [consent, setConsent] = useState(false);
-  const [running, setRunning] = useState(false);
-  const user = currentUser();
-  if (!user) return null;
-
-  const start = () => {
-    if (!consent) {
-      appAlert('Consentimento', 'É necessário autorizar o uso da imagem para a verificação.');
-      return;
-    }
-    setRunning(true);
-    setTimeout(() => {
-      const score = 0.85 + Math.floor(Math.random() * 15) / 100;
-      verifyIdentity()
-        .then(() =>
-          appAlert('Identidade verificada', `Prova de vida aprovada · facematch ${score.toFixed(2)} (simulado).`, [
-            { text: 'Ok', onPress: () => navigation.goBack() },
-          ]),
-        )
-        .catch((error) => appAlert('Não foi possível verificar', errorMessage(error)))
-        .finally(() => setRunning(false));
-    }, 1800);
-  };
-
-  if (user.verified) {
-    return (
-      <Screen title="Verificação facial">
-        <Card style={{ alignItems: 'center', gap: 10 }}>
-          <Ionicons name="shield-checkmark" size={48} color={colors.good} />
-          <Text style={{ fontSize: 18, fontWeight: '700', color: colors.ink }}>Identidade já verificada</Text>
-        </Card>
-      </Screen>
-    );
-  }
-
-  return (
-    <Screen
-      title="Verificação facial"
-      footer={
-        <View style={{ gap: 6 }}>
-          <Button label="Iniciar verificação" loading={running} onPress={start} />
-          <Button label="Pular por enquanto" variant="ghost" onPress={() => navigation.goBack()} />
-        </View>
-      }
-    >
-      <Text style={ui.muted}>
-        Opcional. Confirma que existe uma pessoa real por trás do perfil e reduz contas falsas. Perfis verificados começam com peso maior nas avaliações.
-      </Text>
-      <View style={{ aspectRatio: 4 / 3, maxHeight: 280, borderRadius: 20, backgroundColor: colors.primaryDark, alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-        {running ? <ActivityIndicator color={colors.coral} size="large" /> : <View style={{ width: 130, height: 170, borderRadius: 80, borderWidth: 3, borderStyle: 'dashed', borderColor: colors.coral }} />}
-        <Text style={{ color: '#E9DFF5' }}>{running ? 'Verificando (simulação)…' : 'Câmera simulada nesta versão de teste'}</Text>
-      </View>
-      <Card style={{ gap: 6 }}>
-        <Text style={{ fontWeight: '700' }}>1. Vídeo-selfie com prova de vida</Text>
-        <Text style={ui.muted}>Garante que é uma pessoa ao vivo, não uma foto.</Text>
-        <Text style={{ fontWeight: '700', marginTop: 6 }}>2. Comparação com o documento</Text>
-        <Text style={ui.muted}>Foto do RG ou CNH comparada ao vídeo (facematch).</Text>
-      </Card>
-      <View style={{ backgroundColor: colors.primarySoft, borderRadius: 14, padding: 12, flexDirection: 'row', gap: 10 }}>
-        <Ionicons name="lock-closed" size={20} color={colors.primary} />
-        <Text style={{ flex: 1, color: colors.primaryDark, lineHeight: 20 }}>
-          Biometria é dado sensível (LGPD, art. 11). As imagens são usadas só nesta validação e apagadas em seguida; guardamos apenas o resultado e a data.
+        <Text style={[ui.muted, { flex: 1 }]}>
+          Li e aceito os{' '}
+          <Text accessibilityRole="link" style={{ color: colors.primary, fontWeight: '700' }} onPress={() => navigation.navigate('Legal', { document: 'terms' })}>
+            Termos de uso
+          </Text>{' '}
+          e a{' '}
+          <Text accessibilityRole="link" style={{ color: colors.primary, fontWeight: '700' }} onPress={() => navigation.navigate('Legal', { document: 'privacy' })}>
+            Política de privacidade
+          </Text>
+          .
         </Text>
       </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 48 }}>
-        <Switch value={consent} onValueChange={setConsent} trackColor={{ true: colors.primary }} />
-        <Text style={{ flex: 1, color: colors.ink }}>Autorizo o uso da minha imagem apenas para esta verificação.</Text>
-      </View>
+      <Button label="Já tenho conta" variant="ghost" onPress={() => navigation.goBack()} />
     </Screen>
   );
 }

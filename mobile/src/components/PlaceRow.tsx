@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 
 import { CATEGORY_LABEL } from '../domain/labels';
 import { formatDistance } from '../domain/rules';
@@ -24,8 +24,9 @@ export function PlaceThumb({ place, size = 60 }: { place: Place; size?: number }
     .toUpperCase();
 
   return (
-    <View style={{ width: size, height: size, borderRadius: 16, backgroundColor: placeThumbColor(place), alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ width: size, height: size, borderRadius: 16, backgroundColor: placeThumbColor(place), alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
       <Text style={{ fontWeight: '800', fontSize: size * 0.33, color: '#3B2A1E' }}>{initials}</Text>
+      {place.photoUrl ? <Image source={{ uri: place.photoUrl }} style={{ position: 'absolute', width: size, height: size }} resizeMode="cover" /> : null}
     </View>
   );
 }

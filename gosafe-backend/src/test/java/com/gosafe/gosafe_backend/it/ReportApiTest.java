@@ -4,8 +4,10 @@ import com.gosafe.gosafe_backend.user.Role;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,6 +50,30 @@ class ReportApiTest extends PostgisIntegrationTest {
 
         report(reporter, "NOTICE", noticeId);
         call(post("/reports"), reporter, reportJson("NOTICE", noticeId)).andExpect(status().isConflict());
+    }
+
+    @Test
+    void realAuthorOfAnonymousContentIsVisibleOnlyToModeration() throws Exception {
+        Account author = register();
+        Account reporter = register();
+        Account moderator = register(Role.MODERATOR);
+        String placeId = createPlace(author, "Autoria " + unique("p"), nextOrigin());
+        String noticeId = JsonPath.read(body(call(post("/places/" + placeId + "/notices"), author,
+                "{\"title\":\"Aviso anônimo\",\"type\":\"GENERAL\",\"body\":\"Relato anônimo\",\"anonymous\":true}")
+                .andExpect(status().isCreated())), "$.notice.id");
+
+        String reportId = JsonPath.read(body(call(post("/reports"), reporter, reportJson("NOTICE", noticeId))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.targetAuthor").doesNotExist())), "$.id");
+
+        call(get("/notices/" + noticeId), reporter)
+                .andExpect(jsonPath("$.notice.author.name").value("Anônima"))
+                .andExpect(jsonPath("$.notice.author.id").doesNotExist());
+
+        String queue = body(call(get("/admin/reports").param("size", "50"), moderator).andExpect(status().isOk()));
+        List<String> usernames = JsonPath.read(queue,
+                "$.content[?(@.id == '" + reportId + "')].targetAuthor.username");
+        assertEquals(List.of(author.username()), usernames);
     }
 
     @Test

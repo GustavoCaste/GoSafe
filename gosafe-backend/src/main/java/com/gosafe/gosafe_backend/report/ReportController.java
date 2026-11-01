@@ -2,6 +2,7 @@ package com.gosafe.gosafe_backend.report;
 
 import com.gosafe.gosafe_backend.common.PageResponse;
 import com.gosafe.gosafe_backend.report.dto.CreateReportRequest;
+import com.gosafe.gosafe_backend.report.dto.ModerationReportDto;
 import com.gosafe.gosafe_backend.report.dto.ReportDto;
 import com.gosafe.gosafe_backend.report.dto.ResolveReportRequest;
 import com.gosafe.gosafe_backend.security.AuthUser;
@@ -31,7 +32,7 @@ public class ReportController {
     }
 
     @GetMapping("/admin/reports")
-    public PageResponse<ReportDto> list(
+    public PageResponse<ModerationReportDto> list(
             @RequestParam(defaultValue = "PENDING") ReportStatus status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
@@ -40,7 +41,7 @@ public class ReportController {
     }
 
     @PatchMapping("/admin/reports/{id}")
-    public ReportDto resolve(
+    public ModerationReportDto resolve(
             @PathVariable UUID id,
             @Valid @RequestBody ResolveReportRequest request,
             @AuthenticationPrincipal AuthUser authUser

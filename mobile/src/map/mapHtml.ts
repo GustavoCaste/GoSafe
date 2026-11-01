@@ -62,6 +62,11 @@ export function mapHtml(center: LatLng, zoom: number): string {
 
     map.on('load', function () { post({ type: 'ready' }); emitBounds(); });
     map.on('moveend', emitBounds);
+    // Na WebView do Android a primeira imagem do mapa pode ficar transparente: recriá-la com outro tamanho resolve
+    map.once('idle', function () {
+      map.setPixelRatio(window.devicePixelRatio - 0.01);
+      requestAnimationFrame(function () { map.setPixelRatio(window.devicePixelRatio); });
+    });
     map.on('click', function () { post({ type: 'mapclick' }); });
 
     window.gosafe = {

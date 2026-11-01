@@ -257,6 +257,17 @@ class PlaceApiTest extends PostgisIntegrationTest {
     }
 
     @Test
+    void searchFindsPlaceByDistrict() throws Exception {
+        Account account = register();
+        String district = unique("Bairro");
+        String placeId = createPlace(account, unique("Local"), "BAR", district, nextOrigin());
+
+        call(get("/places").param("q", district.toLowerCase()), null)
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.content[0].id").value(placeId));
+    }
+
+    @Test
     void searchByNameRatingAndFilters() throws Exception {
         Account account = register();
         Point origin = nextOrigin();

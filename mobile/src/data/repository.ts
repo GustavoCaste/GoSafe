@@ -34,7 +34,7 @@ import type {
 
 export class DomainError extends Error {}
 
-export const DB_SCHEMA = 1;
+export const DB_SCHEMA = 2;
 
 export function emptyDatabase(center: LatLng): Database {
   return {

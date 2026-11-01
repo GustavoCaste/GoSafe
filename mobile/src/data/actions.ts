@@ -4,6 +4,9 @@ export {
   apiCreateComment as addComment,
   apiCreateNotice as addNotice,
   apiCreatePlace as addPlace,
+  apiCreateReport as addReport,
+  apiEnterAsGuest as enterAsGuest,
+  apiGeocode as geocodeAddress,
   apiLogin as login,
   apiLogout as logout,
   apiRegister as register,
@@ -11,5 +14,4 @@ export {
   apiRemoveNotice as deleteNotice,
   apiToggleFavorite as setFavorite,
   apiUpdateName as updateName,
-  apiVerify as verifyIdentity,
 } from './api';

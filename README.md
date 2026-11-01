@@ -12,14 +12,14 @@ Projeto de Trabalho de Conclusão de Curso (TCC) — 🚧 em desenvolvimento.
 
 | | Situação |
 |---|---|
-| **Backend** | ✅ Implementado e testado — 73 testes contra PostgreSQL + PostGIS real |
+| **Backend** | ✅ Implementado e testado — 76 testes, a maioria contra PostgreSQL + PostGIS real |
 | **App mobile** | ✅ Conversa com a API; validado em emulador Android |
 | **Protótipo de telas** | ✅ 24 quadros: todas as telas, regras, modelo de dados e marca |
-| **Publicação** (Neon, Render e Vercel) | ⏳ Próximo passo |
+| **Publicação** (Neon, Render e Vercel) | ⏳ Configuração pronta; falta criar as contas e publicar |
 
 ## Como o app funciona
 
-1. **Primeiro acesso:** permissão de localização → login ou cadastro (nome, usuária, e-mail, senha, sexo) → verificação de identidade **opcional**.
+1. **Primeiro acesso:** permissão de localização → login ou cadastro (nome, usuária, e-mail, senha, sexo) → uso do app. Sem conta, a visitante vê o mapa, a lista e a nota geral; para abrir o local, com as notas por tópico e os avisos, entra na conta.
 2. **Mapa** (tela principal, estilo Waze/Uber): os locais da área visível carregam conforme o mapa se move. O pin mostra a nota e fica vermelho com **!** quando o local é **não aconselhado**.
 3. **Locais:** lista estilo iFood (foto, nome, categoria, distância, nota), busca, filtros e favoritos.
 4. **Página do local:** nota geral e por parâmetro, check-in e o **fórum de avisos** (mais recentes primeiro). Cada aviso tem comentários, e cada comentário pode trazer uma avaliação.
@@ -27,7 +27,7 @@ Projeto de Trabalho de Conclusão de Curso (TCC) — 🚧 em desenvolvimento.
 ### Como a nota é calculada
 
 - Cada avaliação tem **5 parâmetros** de 1 a 5: segurança, iluminação, movimento, acolhimento e **banheiro** (que aceita "não há").
-- A nota do local é uma **média ponderada pelo peso de quem votou**. O peso (0,1 a 1,0) cresce com tempo de conta, contribuições válidas e verificação, e cai com denúncias procedentes.
+- A nota do local é uma **média ponderada pelo peso de quem votou**. O peso (0,1 a 1,0) cresce com tempo de conta e contribuições válidas, e cai com denúncias procedentes.
 - Quem avalia **estando no local** (check-in a até 100 m) ganha bônus de peso.
 - Vale só a avaliação mais recente de cada usuária.
 - **Local não aconselhado:** a partir de 100 usuárias avaliando e nota ponderada até 1,5, o local recebe alerta no mapa, na lista e na página.
@@ -38,8 +38,8 @@ Pré-requisitos: **Java 21** e **Docker** em execução.
 
 ```bash
 cd gosafe-backend
-./mvnw test                                              # 73 testes (sobe PostGIS via Testcontainers)
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev    # API local (banco começa vazio)
+./mvnw test                                              # 76 testes (sobe PostGIS via Testcontainers)
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev    # API local (o banco sobe com a carga inicial de Salvador)
 ```
 
 Fora do computador local, `GOSAFE_JWT_SECRET` é obrigatório.
@@ -63,13 +63,13 @@ O código e as instruções de build estão em [`mobile/`](mobile/README.md). A 
 ### Backend (Java 21 · Spring Boot 4 · PostgreSQL + PostGIS)
 
 - **Contas e segurança:** cadastro, login por e-mail ou usuária, JWT, papéis (usuária, moderadora, admin). A autora de qualquer conteúdo vem sempre do token, nunca da requisição.
-- **Verificação de identidade** opcional e **simulada** (sem custo); nunca guarda imagem (LGPD art. 11).
+- **Verificação facial:** estará em modo funcional em versões futuras. Havia só uma versão simulada, desligada em produção, porque o serviço real tem custo e o projeto é construído sem custos.
 - **Locais** com endereço estruturado (CEP, logradouro, número, bairro, cidade, UF), CEP pelo ViaCEP e coordenadas pelo OpenStreetMap; bloqueio de duplicado a menos de 50 m.
 - **Mapa por área visível**, busca por distância e check-in com consultas geográficas do PostGIS.
 - **Avisos, comentários, avaliações, favoritos, fotos, denúncias e moderação**, com anonimato opcional e exclusão lógica.
 - **Reputação ponderada** e alerta de **local não aconselhado**.
 - **Migrações Flyway** e erros padronizados.
-- **73 testes** de todos os endpoints contra banco real; os testes encontraram e corrigiram 2 bugs.
+- **76 testes** dos endpoints e das regras, a maioria contra banco real; os testes encontraram e corrigiram 2 bugs.
 
 ### App mobile
 
@@ -97,7 +97,7 @@ Protótipo navegável com todas as telas, regras de negócio, modelo de dados, r
 | 5. App de teste | Primeira versão do app em Expo/React Native, sem servidor, com dados de demonstração. Serviu para avaliar telas e fluxos e depois foi substituída pela versão conectada à API. |
 | 6. Testes no celular | Roteiros automatizados num Android real (via USB/adb) cobrindo cadastro, login, mapa, busca, cadastro de local, check-in, avisos, comentários, alerta, perfil e casos de erro (campos vazios, duplicados, toque duplo). |
 | 7. Correções | Bugs encontrados no aparelho e corrigidos: locais na água, botões do Android ilegíveis, **+** escondido atrás do cartão, menu sobre a barra do Android, ícone padrão na abertura, alertas sem a identidade do app e campos sem rótulo para leitor de tela. |
-| 8. Integração | App conectado à API, sem carga automática de dados: o banco começa vazio e os registros vêm do uso real. Publicação em Neon, Render e Vercel em andamento. |
+| 8. Integração | App conectado à API. O banco sobe com uma carga inicial de Salvador, com notas estimadas e identificadas como tal; os demais registros vêm do uso real. Publicação em Neon, Render e Vercel em andamento. |
 
 ### O que das correções vale para o backend
 

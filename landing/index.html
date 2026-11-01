@@ -200,8 +200,8 @@
         </div>
       </div>
       <div class="vitrine">
-        <div class="tela"><img src="assets/tela-mapa.png" alt="Tela inicial do GoSafe: mapa com pins coloridos pela nota de cada local e um pin vermelho de alerta."></div>
-        <div class="tela"><img src="assets/tela-local.png" alt="Detalhe do Café Aurora com nota ponderada 5,0 e notas por parâmetro."></div>
+        <div class="tela"><img src="assets/tela-mapa.png" alt="Tela inicial do GoSafe: mapa de Salvador com pins coloridos pela nota de cada local."></div>
+        <div class="tela"><img src="assets/tela-local.png" alt="Detalhe de um local com nota ponderada e notas por parâmetro."></div>
       </div>
     </div>
   </section>
@@ -232,7 +232,7 @@
           <div class="passo-texto">
             <span class="passo-num">1</span>
             <h3>Encontre locais perto de você</h3>
-            <p>O mapa é a tela inicial, como em aplicativos de mobilidade. Ele carrega só os locais da área visível, e cada pin mostra a nota do lugar. Na lista, dá para buscar por nome, categoria ou bairro e ordenar por distância ou nota.</p>
+            <p>O mapa é a tela inicial, como em aplicativos de mobilidade. Ele carrega só os locais da área visível, e cada pin mostra a nota do lugar. Na lista, dá para buscar por nome, categoria, bairro ou cidade e ordenar por distância, nota ou nome. Sem conta, você já vê o mapa, a lista e a nota geral; para abrir o local, com as notas por tópico e os avisos, basta entrar.</p>
           </div>
           <div class="passo-telas">
             <div class="tela"><img src="assets/tela-mapa.png" alt="Mapa com os locais da área visível."></div>
@@ -277,8 +277,8 @@
             <p>Quando um local reúne muitas avaliações com nota muito baixa, ele passa a aparecer com alerta no mapa, na lista e na página do local. Na versão final, o alerta exige ao menos 100 avaliadoras e nota ponderada de até 1,5, um limite que protege contra campanhas de difamação.</p>
           </div>
           <div class="passo-telas">
-            <div class="tela"><img src="assets/tela-lista-alerta.png" alt="Lista filtrada com locais não aconselhados."></div>
-            <div class="tela"><img src="assets/tela-alerta.png" alt="Página do Terminal Leste com faixa de alerta de local não aconselhado."></div>
+            <div class="tela"><img src="assets/tela-lista-alerta.png" alt="Lista filtrada com um local fictício não aconselhado."></div>
+            <div class="tela"><img src="assets/tela-alerta.png" alt="Página de um local fictício de demonstração com faixa de alerta de local não aconselhado."></div>
           </div>
         </article>
 
@@ -291,7 +291,7 @@
       <div style="display: grid; gap: 18px">
         <p class="eyebrow">Notas confiáveis</p>
         <h2>Nem todo voto pesa igual.</h2>
-        <p class="lead">Cada avaliação recebe um peso de 0,1 a 1,0, que cresce com o tempo de conta, as contribuições válidas e a verificação de identidade, e cai com denúncias procedentes. Quem avalia estando no local ganha um bônus.</p>
+        <p class="lead">Cada avaliação recebe um peso de 0,1 a 1,0, que cresce com o tempo de conta e as contribuições válidas, e cai com denúncias procedentes. Quem avalia estando no local ganha um bônus.</p>
         <p class="lead">Assim, uma conta recém-criada, que poderia ser um perfil falso, influencia menos do que quem comprovadamente esteve lá.</p>
       </div>
       <div>
@@ -330,8 +330,8 @@
         </div>
         <div class="cartao">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"></path><path d="m9 12 2 2 4-4"></path></svg>
-          <h3>Verificação opcional</h3>
-          <p>A verificação de identidade é opcional, exige consentimento e não guarda imagens, só o resultado.</p>
+          <h3>Verificação facial</h3>
+          <p>Esta funcionalidade estará em modo funcional em versões futuras. Hoje ela não existe no app, não coleta imagens e não altera o peso do voto.</p>
         </div>
         <div class="cartao">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V4h11l-1.5 4L15 12H4"></path></svg>
@@ -345,7 +345,7 @@
   <section class="tecnologia" id="tecnologia">
     <div class="wrap">
       <p class="eyebrow">Por dentro</p>
-      <h2 style="margin-top: 10px">Arquitetura e verificação.</h2>
+      <h2 style="margin-top: 10px">Arquitetura e testes.</h2>
       <p class="lead" style="margin-top: 16px">Cliente-servidor com banco geoespacial: o mapa consulta só a área visível, e o check-in e a busca por proximidade usam consultas geográficas.</p>
       <div class="pilha">
         <div><h3>Aplicativo</h3><p>React Native com Expo e TypeScript; mapa com MapLibre e OpenStreetMap.</p></div>
@@ -354,7 +354,7 @@
       </div>
       <div class="metricas">
         <div><b>34</b><span>requisitos funcionais na primeira versão</span></div>
-        <div><b>73</b><span>testes automatizados no back-end, com PostGIS real</span></div>
+        <div><b>76</b><span>testes automatizados no back-end, com PostGIS real</span></div>
         <div><b>8</b><span>testes das regras no aplicativo</span></div>
         <div><b>5</b><span>parâmetros de avaliação por local</span></div>
       </div>
@@ -369,7 +369,7 @@
           <h2>Teste o GoSafe.</h2>
           <div class="opcao">
             <h3>GoSafe — conectado à API</h3>
-            <p>O aplicativo completo: login, mapa, check-in validado pelo servidor, avisos, comentários, favoritos e a nota ponderada calculada no back-end.</p>
+            <p>O aplicativo completo: mapa aberto para visitantes, login, check-in validado pelo servidor, avisos, comentários, denúncias, favoritos e a nota ponderada calculada no back-end.</p>
             <a class="botao cheio" href="downloads/GoSafe.apk" download>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
               Baixar GoSafe para Android (APK)
@@ -377,7 +377,7 @@
           </div>
         </div>
         <div style="display: grid; gap: 16px">
-          <p class="aviso-ia" style="margin-top: 0">Os dados que aparecem nas imagens desta página — locais, usuárias, notas e comentários — foram criados por IA para exemplificar um cenário real. Não representam pessoas nem estabelecimentos reais.</p>
+          <p class="aviso-ia" style="margin-top: 0">As imagens mostram o app com a carga inicial de Salvador: os locais são reais, mas as notas e os comentários são estimados pela equipe e não vêm de avaliações de usuárias. As telas de alerta usam um local fictício de demonstração, porque nenhum local real tem esse alerta.</p>
           <p class="fonte">Instalação: abra o arquivo no celular e permita instalar apps desta fonte quando o Android pedir. O primeiro acesso pode levar até 1 minuto, enquanto o servidor inicia. Disponível apenas para Android nesta fase.</p>
         </div>
       </div>
@@ -390,7 +390,7 @@
   <div class="wrap">
     <div>
       <b>GoSafe</b> · Trabalho de Conclusão de Curso, 2026<br>
-      [NOMES DOS AUTORES] · Engenharia de Software · Universidade Católica do Salvador (UCSal)
+      Arthur Felipe Santana Neris, Gustavo Castellucio da Costa Lima, Lucca Barbosa Nygaard, Maria Eduarda Candeias Miranda e Thársyla Jones Luz de Andrade<br>Engenharia de Software · Universidade Católica do Salvador (UCSal)
     </div>
     <div>Projeto acadêmico, sem fins comerciais.</div>
   </div>

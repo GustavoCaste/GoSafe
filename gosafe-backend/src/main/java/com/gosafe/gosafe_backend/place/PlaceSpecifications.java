@@ -19,7 +19,11 @@ final class PlaceSpecifications {
 
         if (q != null) {
             String pattern = "%" + q.toLowerCase(Locale.ROOT) + "%";
-            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("name")), pattern));
+            spec = spec.and((root, query, cb) -> cb.or(
+                    cb.like(cb.lower(root.get("name")), pattern),
+                    cb.like(cb.lower(root.get("district")), pattern),
+                    cb.like(cb.lower(root.get("city")), pattern)
+            ));
         }
         if (category != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("category"), category));

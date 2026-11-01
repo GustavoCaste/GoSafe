@@ -10,12 +10,13 @@ import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DialogHost } from './src/components/AppDialog';
-import { currentUser, hasDatabase, loadDatabase, useDatabase } from './src/data/store';
+import { currentUser, getDatabase, hasDatabase, loadDatabase, useDatabase } from './src/data/store';
 import type { RootStackParamList, TabParamList } from './src/navigation/types';
-import { BenefitsScreen, LoginScreen, PermissionScreen, RegisterScreen, VerificationScreen, WelcomeScreen } from './src/screens/AuthScreens';
+import { BenefitsScreen, LoginScreen, PermissionScreen, RegisterScreen, WelcomeScreen } from './src/screens/AuthScreens';
+import { LegalScreen } from './src/screens/LegalScreens';
 import { CreatePlaceScreen, FavoritesScreen, PlacesScreen, ProfileScreen, SearchScreen } from './src/screens/ListScreens';
 import { MapScreen } from './src/screens/MapScreen';
-import { CommentScreen, NewNoticeScreen, NoticeScreen, PlaceScreen } from './src/screens/PlaceScreens';
+import { CommentScreen, NewNoticeScreen, NoticeScreen, PlaceScreen, ReportScreen } from './src/screens/PlaceScreens';
 import { colors } from './src/theme';
 
 // a abertura com a marca fica na tela até o banco local terminar de carregar
@@ -83,6 +84,7 @@ export default function App() {
 
   const started = hasDatabase();
   const signedIn = started && currentUser() !== null;
+  const guest = started && !signedIn && getDatabase().guest === true;
 
   return (
     <SafeAreaProvider>
@@ -95,10 +97,11 @@ export default function App() {
               <Stack.Screen name="Benefits" component={BenefitsScreen} />
               <Stack.Screen name="Permission" component={PermissionScreen} />
             </>
-          ) : !signedIn ? (
+          ) : !signedIn && !guest ? (
             <>
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="Register" component={RegisterScreen} />
+              <Stack.Screen name="Legal" component={LegalScreen} />
             </>
           ) : (
             <>
@@ -110,8 +113,16 @@ export default function App() {
               <Stack.Screen name="Search" component={SearchScreen} />
               <Stack.Screen name="CreatePlace" component={CreatePlaceScreen} />
               <Stack.Screen name="Profile" component={ProfileScreen} />
-              <Stack.Screen name="Verification" component={VerificationScreen} />
+              <Stack.Screen name="Report" component={ReportScreen} />
+              <Stack.Screen name="Legal" component={LegalScreen} />
               <Stack.Screen name="Benefits" component={BenefitsScreen} />
+              {/* a chave nova tira da pilha o Login de onde a visitante saiu, senão a tela não muda */}
+              {guest ? (
+                <>
+                  <Stack.Screen name="Login" navigationKey="guest" component={LoginScreen} />
+                  <Stack.Screen name="Register" navigationKey="guest" component={RegisterScreen} />
+                </>
+              ) : null}
             </>
           )}
         </Stack.Navigator>

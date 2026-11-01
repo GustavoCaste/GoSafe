@@ -10,7 +10,7 @@ Pré-requisitos: Java 21 e Docker em execução.
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-O `compose.yaml` sobe um `postgis/postgis:16-3.4` automaticamente (suporte a Docker Compose do Spring Boot) e o Flyway cria o schema (`src/main/resources/db/migration`). O banco começa vazio: não há carga automática de dados.
+O `compose.yaml` sobe um `postgis/postgis:16-3.4` automaticamente (suporte a Docker Compose do Spring Boot) e o Flyway cria o schema (`src/main/resources/db/migration`). Na primeira subida, o Flyway também insere a carga inicial de Salvador (`src/main/resources/db/seed`), descrita em [`carga-inicial/README.md`](carga-inicial/README.md). Para subir sem ela, defina `SPRING_FLYWAY_LOCATIONS=classpath:db/migration`.
 
 Variáveis úteis:
 
@@ -32,7 +32,22 @@ O `Dockerfile` desta pasta gera a imagem da API. No Render, crie um **Web Servic
 | `SPRING_DATASOURCE_PASSWORD` | senha do Neon |
 | `GOSAFE_JWT_SECRET` | texto aleatório com 32 caracteres ou mais |
 
-Não defina `SPRING_PROFILES_ACTIVE=dev` nesse ambiente. O Flyway cria o schema e a extensão PostGIS na primeira inicialização.
+Não defina `SPRING_PROFILES_ACTIVE=dev` nesse ambiente. O Flyway cria o schema, a extensão PostGIS e a carga inicial na primeira inicialização. Todos os serviços usam o plano gratuito.
+
+Passo a passo:
+
+1. No Neon, crie o projeto e copie o host, a usuária e a senha da conexão direta.
+2. No Render, crie um **Blueprint** a partir deste repositório, na branch publicada: ele lê o `render.yaml` da raiz e pede as três variáveis do Neon. O `GOSAFE_JWT_SECRET` é gerado pelo Render.
+3. Quando `https://SUA-API.onrender.com/places?size=1` responder, rode `scripts/contas-iniciais.sql` no SQL Editor do Neon, trocando antes as senhas de exemplo; não salve o arquivo com as senhas reais.
+4. Gere o APK apontando para a API e publique a landing:
+
+```powershell
+.\mobile\scripts\gerar-apk.ps1 -ApiUrl https://SUA-API.onrender.com
+```
+
+```bash
+cd landing && npx vercel deploy --prod
+```
 
 ## Testes
 
@@ -40,13 +55,13 @@ Não defina `SPRING_PROFILES_ACTIVE=dev` nesse ambiente. O Flyway cria o schema 
 ./mvnw test
 ```
 
-O código tem **73 métodos de teste implementados**:
+O código tem **76 métodos de teste implementados**:
 
 - 10 unitários (fórmula de reputação e cálculo de distância);
-- 61 de integração da API, que cobrem todos os grupos de endpoints contra um PostgreSQL + PostGIS reais via Testcontainers (a imagem `postgis/postgis:16-3.4`; o Flyway aplica as migrações e o Hibernate valida o schema contra as entidades);
-- 2 de contexto e fluxo completo, que usam H2 em memória.
+- 63 de integração da API, que cobrem todos os grupos de endpoints contra um PostgreSQL + PostGIS reais via Testcontainers (a imagem `postgis/postgis:16-3.4`; o Flyway aplica as migrações e o Hibernate valida o schema contra as entidades);
+- 3 de contexto, fluxo completo e verificação desligada, que usam H2 em memória.
 
-**Estado da execução:** os 73 testes foram executados e aprovados em 31/10/2026, com Docker em execução.
+**Estado da execução:** os 76 testes foram executados e aprovados em 01/11/2026, com Docker em execução.
 
 Os testes de integração precisam de Docker em execução. As consultas espaciais (mapa, busca por distância, check-in e duplicidade) usam PostGIS e só podem ser exercitadas no PostgreSQL. Os testes cobrem sucesso, validação, permissão e regras de negócio.
 
@@ -71,7 +86,7 @@ Um pacote por funcionalidade (`controller → service → repository`):
 |---|---|
 | `auth`, `security` | Cadastro, login e JWT. A autora de qualquer conteúdo vem do token (`@AuthenticationPrincipal`), nunca do corpo da requisição. |
 | `user` | Perfil (`/me`) e listagem para admin. |
-| `verification` | Verificação facial **opcional** e **simulada** (`SimulatedVerificationProvider`); guarda só resultado e data, nunca imagem. |
+| `verification` | Verificação facial **simulada** (`SimulatedVerificationProvider`), para desenvolvimento e testes. As rotas só existem com `gosafe.verification.simulated-enabled=true`, ligado no perfil `dev` e nos testes; em produção ficam desligadas até haver um provedor real (RF06). |
 | `geo` | ViaCEP (CEP → endereço) e Nominatim/OpenStreetMap (endereço → coordenadas), com cache e limite de 1 req/s. |
 | `place` | Locais com endereço estruturado, mapa por área visível, busca, fotos e o alerta de local não aconselhado (RN18). |
 | `checkin` | Check-in a até 100 m (descontada a precisão do GPS), 1 por local a cada 4 h; guarda só a distância. |
@@ -91,7 +106,7 @@ Públicos: `POST /auth/*` e `GET` em `/places/**` e `/notices/**`. O resto exige
 | POST | `/auth/login` | Login por e-mail ou username → token |
 | GET / PUT / DELETE | `/me` | Ver, editar e desativar o próprio perfil |
 | PUT | `/me/password` | Trocar senha |
-| POST / GET | `/me/verification` | Verificação facial simulada (exige `consent: true`) |
+| POST / GET | `/me/verification` | Verificação facial simulada (exige `consent: true`; só no perfil `dev` e nos testes) |
 | GET | `/me/checkins` | Meus check-ins |
 | GET | `/me/favorites` | Meus favoritos |
 | GET | `/geo/postal-code/{cep}` | Endereço a partir do CEP |

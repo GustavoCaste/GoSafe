@@ -55,6 +55,8 @@ export interface Place {
   createdAt: number;
   /** Notas por parâmetro calculadas pelo servidor. */
   stats?: PlaceStats;
+  photoUrl?: string | null;
+  photos?: string[];
 }
 
 export interface Notice {
@@ -140,6 +142,8 @@ export interface PlaceStats {
   restroom: number | null;
 }
 
+export type ReportTarget = 'NOTICE' | 'COMMENT' | 'PLACE';
+
 export interface Database {
   schema: number;
   center: LatLng;
@@ -156,4 +160,6 @@ export interface Database {
   /** Endereço do servidor e token da sessão. */
   apiUrl?: string;
   token?: string | null;
+  /** Entrou como visitante: navega sem conta e faz login só ao interagir. */
+  guest?: boolean;
 }

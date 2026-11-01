@@ -1,6 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import type { LatLng } from '../domain/types';
+import type { LegalDocument } from '../domain/legal';
+import type { LatLng, ReportTarget } from '../domain/types';
 
 export type RootStackParamList = {
   Welcome: undefined;
@@ -9,11 +10,12 @@ export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   Tabs: undefined;
-  Verification: { afterRegister?: boolean } | undefined;
   Place: { placeId: string };
   Notice: { noticeId: string };
   NewNotice: { placeId: string };
   Comment: { noticeId: string };
+  Report: { targetType: ReportTarget; targetId: string; label: string };
+  Legal: { document: LegalDocument };
   Search: { mode?: 'notice' } | undefined;
   CreatePlace: { point?: LatLng } | undefined;
   Profile: undefined;

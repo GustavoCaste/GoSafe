@@ -14,6 +14,7 @@ INSERT INTO contas_iniciais (name, username, email, senha, role) VALUES
     ('Conta Inicial',    'inicial',       'inicial@gosafe.example',       'TROQUE-SENHA-INICIAL', 'USER'),
     ('Visualização 1',   'visualizacao1', 'visualizacao1@gosafe.example', 'TROQUE-SENHA-VISUAL1', 'USER'),
     ('Visualização 2',   'visualizacao2', 'visualizacao2@gosafe.example', 'TROQUE-SENHA-VISUAL2', 'USER'),
+    ('Moderação',        'moderacao',     'moderacao@gosafe.example',     'TROQUE-SENHA-MODERA',  'MODERATOR'),
     ('Administração',    'admin',         'admin@gosafe.example',         'TROQUE-SENHA-ADMIN',   'ADMIN');
 
 DO $$
