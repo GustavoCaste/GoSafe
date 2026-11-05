@@ -14,7 +14,7 @@ import { apiUrl, testConnection } from '../data/api';
 import { commitChanges, createEmptyDatabase, currentUser, errorMessage, getDatabase } from '../data/store';
 import { SEX_LABEL } from '../domain/labels';
 import type { Sex } from '../domain/types';
-import { currentFix, requestLocationPermission } from '../hooks/location';
+import { currentFix, declineLocationPrompt, requestLocationPermission } from '../hooks/location';
 import { useSubmitOnce } from '../hooks/useSubmitOnce';
 import type { ScreenProps } from '../navigation/types';
 import { colors } from '../theme';
@@ -152,6 +152,7 @@ export function PermissionScreen() {
         }
       }
 
+      if (!askPermission) declineLocationPrompt();
       createEmptyDatabase(center);
     } catch (error) {
       setBusy(null);

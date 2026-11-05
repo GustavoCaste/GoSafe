@@ -3,20 +3,21 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 
+import { appAlert } from '../components/AppDialog';
 import { PlaceThumb } from '../components/PlaceRow';
 import { AlertBanner, Avatar, Button, RatingBadge, styles as ui } from '../components/ui';
 import { logout, setFavorite } from '../data/actions';
 import { syncMap, syncPlace } from '../data/api';
 import { isFavorite } from '../data/repository';
-import { currentUser, errorMessage, getDatabase, useDatabase } from '../data/store';
+import { commitChanges, currentUser, errorMessage, getDatabase, useDatabase } from '../data/store';
 import { CATEGORY_LABEL, REVIEW_PARAMS } from '../domain/labels';
 import { distanceMeters, formatDistance, formatRating, insideBounds, ratingTone } from '../domain/rules';
 import type { Bounds, LatLng, Place, PlaceCategory } from '../domain/types';
-import { currentFix, useLastKnownPosition } from '../hooks/location';
+import { askLocationIfUndecided, locateOnRequest, useLastKnownPosition } from '../hooks/location';
 import { PLACE_DETAILS_LOGIN, useRequireLogin } from '../hooks/useRequireLogin';
 import { mapHtml } from '../map/mapHtml';
 import type { RootStackParamList, TabParamList } from '../navigation/types';
@@ -52,6 +53,7 @@ export function MapScreen({ navigation }: Props) {
   const position = useLastKnownPosition();
   const user = currentUser();
   const requireLogin = useRequireLogin();
+  const centeredOnUser = useRef(false);
 
   const html = useMemo(() => mapHtml(getDatabase().center, 14), []);
   const inject = (script: string) => webRef.current?.injectJavaScript(`${script};true;`);
@@ -91,6 +93,20 @@ export function MapScreen({ navigation }: Props) {
     if (ready && position) inject(`window.gosafe && window.gosafe.setUser(${position.latitude}, ${position.longitude})`);
   }, [ready, position]);
 
+  useEffect(() => {
+    askLocationIfUndecided().catch(() => undefined);
+  }, []);
+
+  // leva o mapa até a usuária uma vez por abertura e guarda o ponto para a próxima abertura já começar perto
+  useEffect(() => {
+    if (!ready || !position || centeredOnUser.current) return;
+    centeredOnUser.current = true;
+    if (!selectedId) inject(`window.gosafe && window.gosafe.flyTo(${position.latitude}, ${position.longitude}, 15)`);
+    getDatabase().center = { latitude: position.latitude, longitude: position.longitude };
+    commitChanges();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready, position]);
+
   const onMessage = (event: WebViewMessageEvent) => {
     const message = JSON.parse(event.nativeEvent.data);
 
@@ -118,8 +134,18 @@ export function MapScreen({ navigation }: Props) {
   };
 
   const centerOnMe = async () => {
-    const fix = position ?? (await currentFix().catch(() => null));
-    if (fix) inject(`window.gosafe && window.gosafe.flyTo(${fix.latitude}, ${fix.longitude}, 15)`);
+    const { fix, blocked } = await locateOnRequest().catch(() => ({ fix: position, blocked: false }));
+    const target = fix ?? position;
+    if (target) {
+      inject(`window.gosafe && window.gosafe.flyTo(${target.latitude}, ${target.longitude}, 15)`);
+    } else if (blocked) {
+      appAlert('Localização desativada', 'Para ver os locais perto de você, permita a localização nas configurações do aparelho.', [
+        { text: 'Agora não', style: 'cancel' },
+        { text: 'Abrir configurações', onPress: () => { Linking.openSettings().catch(() => undefined); } },
+      ]);
+    } else {
+      appAlert('Localização indisponível', 'Permita a localização e confira se o GPS do aparelho está ligado.');
+    }
   };
 
   const selected = selectedId && db ? db.places[selectedId] : null;

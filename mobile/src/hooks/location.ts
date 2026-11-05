@@ -11,10 +11,31 @@ export interface Fix extends LatLng {
   accuracy: number;
 }
 
+let promptDeclined = false;
+
 /** Pede permissão de localização (primeiro acesso). */
 export async function requestLocationPermission(): Promise<boolean> {
   const { status } = await Location.requestForegroundPermissionsAsync();
   return status === 'granted';
+}
+
+/** "Agora não" no primeiro acesso: o mapa não pergunta de novo até o app ser reaberto. */
+export function declineLocationPrompt() {
+  promptDeclined = true;
+}
+
+/** Ao abrir o mapa, pergunta só a quem ainda não respondeu; quem já negou é perguntado pelo botão de centralizar. */
+export async function askLocationIfUndecided(): Promise<void> {
+  if (promptDeclined) return;
+  const { status } = await Location.getForegroundPermissionsAsync();
+  if (status === 'undetermined' && (await requestLocationPermission())) await currentFix();
+}
+
+/** Botão de centralizar: pede a permissão de novo. `blocked` indica que o Android só libera nas configurações. */
+export async function locateOnRequest(): Promise<{ fix: Fix | null; blocked: boolean }> {
+  const { status, canAskAgain } = await Location.requestForegroundPermissionsAsync();
+  if (status !== 'granted') return { fix: null, blocked: !canAskAgain };
+  return { fix: await currentFix(), blocked: false };
 }
 
 function timeout<T>(ms: number): Promise<T | null> {
