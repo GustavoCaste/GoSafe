@@ -17,6 +17,9 @@ $abis = if ($Emulador) { 'arm64-v8a,x86_64' } else { 'arm64-v8a' }
 subst W: "$repo"
 try {
   Remove-Item 'W:\mobile\android\app\.cxx' -Recurse -Force -ErrorAction SilentlyContinue
+  # o Gradle não vê a troca de EXPO_PUBLIC_API_URL e reaproveitaria o bundle com o endereço antigo
+  Remove-Item 'W:\mobile\android\app\build\generated\assets\react' -Recurse -Force -ErrorAction SilentlyContinue
+  Remove-Item "$env:TEMP\metro-cache" -Recurse -Force -ErrorAction SilentlyContinue
   Push-Location 'W:\mobile\android'
   .\gradlew.bat assembleRelease "-PreactNativeArchitectures=$abis" --console=plain
   if ($LASTEXITCODE -ne 0) { throw "gradle terminou com código $LASTEXITCODE" }

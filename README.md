@@ -15,7 +15,7 @@ Projeto de Trabalho de Conclusão de Curso (TCC) — 🚧 em desenvolvimento.
 | **Backend** | ✅ Implementado e testado — 76 testes, a maioria contra PostgreSQL + PostGIS real |
 | **App mobile** | ✅ Conversa com a API; validado em emulador Android |
 | **Protótipo de telas** | ✅ 24 quadros: todas as telas, regras, modelo de dados e marca |
-| **Publicação** (Neon, Render e Vercel) | ⏳ Configuração pronta; falta criar as contas e publicar |
+| **Publicação** (Neon, Render e Vercel) | ✅ API no Render (`https://gosafe-api.onrender.com`), banco no Neon e landing na Vercel |
 
 ## Como o app funciona
 
@@ -97,7 +97,7 @@ Protótipo navegável com todas as telas, regras de negócio, modelo de dados, r
 | 5. App de teste | Primeira versão do app em Expo/React Native, sem servidor, com dados de demonstração. Serviu para avaliar telas e fluxos e depois foi substituída pela versão conectada à API. |
 | 6. Testes no celular | Roteiros automatizados num Android real (via USB/adb) cobrindo cadastro, login, mapa, busca, cadastro de local, check-in, avisos, comentários, alerta, perfil e casos de erro (campos vazios, duplicados, toque duplo). |
 | 7. Correções | Bugs encontrados no aparelho e corrigidos: locais na água, botões do Android ilegíveis, **+** escondido atrás do cartão, menu sobre a barra do Android, ícone padrão na abertura, alertas sem a identidade do app e campos sem rótulo para leitor de tela. |
-| 8. Integração | App conectado à API. O banco sobe com uma carga inicial de Salvador, com notas estimadas e identificadas como tal; os demais registros vêm do uso real. Publicação em Neon, Render e Vercel em andamento. |
+| 8. Integração | App conectado à API. O banco sobe com uma carga inicial de Salvador, com notas estimadas e identificadas como tal; os demais registros vêm do uso real. Publicado em Neon, Render e Vercel. |
 
 ### O que das correções vale para o backend
 
@@ -136,7 +136,7 @@ As correções da etapa 7 são de **interface do app** (mapa, barra do Android, 
 
 ## Próximos passos
 
-1. Publicar a API e a landing page e testar o app em celulares.
+1. Testar o app em celulares.
 2. Armazenamento de fotos (MinIO/S3/Cloudinary).
 3. Documentação OpenAPI da API.
 4. Notificações push e moderação assistida por NLP.

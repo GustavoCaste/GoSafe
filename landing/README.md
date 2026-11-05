@@ -1,12 +1,12 @@
-# GoSafe — landing page (proposta para discussão)
+# GoSafe — landing page
 
-Página de apresentação do GoSafe para a banca e para quem for testar o app. Ainda **não foi publicada**: falta o endereço da API no Render para gerar o APK final.
+Página de apresentação do GoSafe para a banca e para quem for testar o app. Publicada na Vercel a partir desta pasta.
 
 ## Como abrir
 
 Dê dois cliques em `index.html`. A página funciona direto do disco, sem servidor. Com internet, carrega as fontes da marca (Google Fonts); sem internet, usa as fontes do sistema.
 
-A seção **Experimente** baixa o app conectado à API em `downloads/GoSafe.apk`. Esse arquivo entra na pasta quando o APK final for gerado com o endereço da API no Render.
+A seção **Experimente** baixa o app em `downloads/GoSafe.apk`, gerado apontando para a API no Render (`https://gosafe-api.onrender.com`).
 
 ## O que tem
 
@@ -20,8 +20,11 @@ A seção **Experimente** baixa o app conectado à API em `downloads/GoSafe.apk`
 
 ## Publicação
 
-Os prints vêm do app rodando em emulador Android. O APK fica na própria Vercel: como `downloads/` não entra no Git, publique pela linha de comando, a partir desta pasta, depois de gerar o APK final:
+Os prints vêm do app rodando em emulador Android. O APK fica versionado em `downloads/GoSafe.apk`, então a Vercel o publica junto com a página. Se ele faltar no Git, a Vercel devolve uma página de erro no lugar do arquivo, e o celular baixa algo que não instala.
 
-```bash
-npx vercel deploy --prod
+Para trocar o APK, gere de novo e faça o commit do arquivo:
+
+```powershell
+.\mobile\scripts\gerar-apk.ps1 -ApiUrl https://gosafe-api.onrender.com
+git add -f landing/downloads/GoSafe.apk
 ```
