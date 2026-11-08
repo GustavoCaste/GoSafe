@@ -1,0 +1,101 @@
+# Fontes da carga inicial GoSafe – Salvador (consulta em 31/10/2026)
+
+Total: 353 locais de entretenimento urbano (bares, restaurantes, cafés, shoppings, arenas, casas de show, praias, parques, praças, cultura e esporte). Serviços, transporte e locais religiosos foram retirados (ver removidos.csv).
+
+Notas das avaliações: estimadas a partir do perfil do bairro e do tipo de local; não vêm de avaliações publicadas por pessoas. Registrar no TCC que a base inicial é estimada.
+
+## Fontes de endereço (URL → locais apoiados)
+
+- Sem fonte web única: endereço de referência pública conhecida – conferir — 69 local(is): Mercado do Peixe – Rio Vermelho, Acarajé da Cira, Paraíso Tropical, Tempero da Dadá, Trapiche Adelaide, Camafeu de Oxóssi, Parque da Cidade Joventino Silva, Parque Costa Azul, Jardim de Alah, Parque Metropolitano de Pituaçu, Parque Lagoa dos Dinossauros, Parque Metropolitano da Lagoa do Abaeté, Jardim Zoológico de Salvador, Parque São Bartolomeu, Parque Solar Boa Vista, Parque dos Ventos, Praça da Sé, Praça Tomé de Sousa, Largo do Pelourinho, Largo Tereza Batista, Largo Quincas Berro d'Água, Largo de Santo Antônio Além do Carmo, Praça Castro Alves, Praça Dois de Julho (Campo Grande), Largo Dois de Julho, Praça da Piedade, Largo do Campo da Pólvora, Largo da Mariquita, Largo de Santana, Praça Ana Lúcia Magalhães, Praça Nossa Senhora da Luz, Praça Wilson Lins, Praça da Inglaterra, Praça Marechal Deodoro, Largo de Roma, Praça Irmã Dulce, Largo do Bonfim, Praça Dorival Caymmi, Praça Conselheiro Almeida Couto, Smart Fit Shopping Barra, Smart Fit Shopping Bela Vista, Smart Fit Shopping Paralela, Smart Fit Salvador Norte Shopping, Bodytech Salvador Shopping, Shopping Bela Vista, Salvador Norte Shopping, Shopping Piedade, Shopping Lapa, Shopping Paseo Itaigara, Mercado Modelo, Feira de São Joaquim, Porto da Barra, Cristo da Barra, Praia de Ondina, Praia de Amaralina, Praia de Jaguaribe, Praia de Piatã, Praia de Stella Maris, Farol de Itapuã, Teatro Castro Alves, Arena Fonte Nova, MAM-BA – Solar do Unhão, Museu de Arte da Bahia, Forte de Monte Serrat, Ponta de Humaitá, Museu Afro-Brasileiro, Fundação Casa de Jorge Amado, Praia de Itapuã, Concha Acústica do TCA
+- https://salvadordabahia.com/?p=32683 — 40 local(is): Pier 7 Bar, Baía Sunset Bar, Dendê Praia Bar, Pietro's Bar, Bar Recanto da Lua Cheia, Blue Praia Bar, Bar da Bacia, Lôro – Bahia Marina, Lôro – Pedra do Sal, Lôro – Stella Maris, Lôro – Praia do Flamengo, Barraca da Helenita, Boteco do Caranguejo – Pituba, Poró, Zanzibar, La Pasta Gialla, Re-restaurante Dona Suzana, Così Pizzeria Napoletana, Mahi Mahi Bar e Restaurante, Caranguejo do Baiano, Capitania do Camarão, Boca de Galinha, Recanto da Tia Maria, Soho Bahia Marina, Larri Bistrô – Aliança Francesa, Egeu Restaurante, Mirante Bistrô – Forte São Diogo, Mirante Bistrô – Forte de Santa Maria, Mistura Contorno, Chez Bernard, Pedra da Sereia, Restaurante Veleiro, Encantos da Maré, Ki-Mukeka – Itapuã, Direct Pituba, Sette Restaurante, Vila Caramuru, Vila Jardim dos Namorados, Largo dos Aflitos, Largo do Cruzeiro de São Francisco
+- https://www.salvadordabahia.com/?p=34124 — 20 local(is): Casa da Música da Bahia, Espaço Cultural Rumo do Vento, Barraca do Galego, Bar do Mamão, Mistura Itapuã, Casa di Vina, O Picuí, Posto 12 Churrascaria e Pizzaria, Churrascaria Laço Gaúcho, Villa Bahiana, Siri Cascudo, Caranguejo do Pascoal, Acarajé da Cira – Itapuã, Mercado Municipal de Itapuã, Kaleopapa Canoe Club, Ho'ohui Canoe Club, Parque das Dunas, Bloco Afro Malê Debalê, Quiosque Dona Flor, Acarajé da Cira – Piatã
+- https://www.ba.gov.br/esporte/sites/site-sudesb/files/2024-10/NUCLEOS%20ATIVOS%20EPTP%20EM%20SALVADOR.pdf.pdf — 20 local(is): Centro Cultural Desportivo ACM Brasil, Estádio Roberto Santos (Pituaçu), Centro de Treinamento Damasceno, Associação Oriental Karatê, Forte do Barbalho, Campo de Marão – Liga de Futebol da Boca do Rio, Campo de Futebol de Campinas de Brotas, Ginásio Poliesportivo de Cajazeiras, Quadra do Calabar, Clips Academia – Arena Cultural, Academia Impacto Training, New Black Fitness, Centro de Treinamento Amorim Fight, Complexo Esportivo e Educacional CEFE – UFBA, Sport Center Recrear, Arena Pela Porco de Paripe, Quadra Poliesportiva Profilurb, IECIS – Instituto de Esporte, Cidadania e Inclusão Social, Quadra do Matadouro – COOPESBA, Espaço Mulheres que Treinam
+- https://www.salvadordabahia.com/?p=26876 — 18 local(is): Bahia Marina, Pietro's Bar, Bar Recanto da Lua Cheia, Salvador Dali Bar, Lôro – Bahia Marina, Mahi Mahi Bar e Restaurante, Recanto da Tia Maria, Soho Bahia Marina, Larri Bistrô – Aliança Francesa, Egeu Restaurante, Mirante Bistrô – Forte São Diogo, Mistura Contorno, Chez Bernard, Pedra da Sereia, Restaurante Veleiro, Encantos da Maré, Restaurante Manga, Pedra Furada
+- https://salvadordabahia.com/?p=34039 — 17 local(is): Oliveiras Bar, Museu do Mar Aleixo Belov, Zumví Arquivo Afro Fotográfico, ABOCA Centro de Artes, Yolo Coffee Bar, Bistrô das Artes, Café e Cana, Poró, Raiz Restaurante, FERA Restaurante e Petiscaria, Casa de Farinha, Rango Vegan, Casa La Frida, Agá Artes, Rei do Mosaico, Ateliê Dani Cunha, Almazen
+- https://www.quintoandar.com.br/guias/?p=2474522 — 10 local(is): Sêmola Café & Brunch – Pituba, Solange Café, Cafélier, Café Gateiro, Padoca do Carmo, Dona Xícara Café, Casa Castanho – Barra, De Além Mar, Tropicália Gelato e Caffé, Coffeetown Salvador
+- https://www.quintoandar.com.br/guias/?p=2470894 — 10 local(is): O Cravinho, Bar Ulisses, Boteco do França, Velho Espanha Bar e Cultura, Petiscaria Quintal de Casa, Cuco Bistrô, Rooftop 180°, Bar Cruz do Pascoal, Bar e Restaurante Caxixi, Bar Quintal Raso da Catarina
+- https://www.salvadordabahia.com/?p=30011 — 10 local(is): Dona Mariquita, Re-restaurante Dona Suzana, Ki-Mukeka – Itapuã, Ki-Mukeka – Boca do Rio, Ki-Mukeka – Armação, Ki-Mukeka – Pituba, Dendê Gastronomia, Jô da Bahia, Restaurante Bombordo, Restaurante da Preta
+- https://www.quintoandar.com.br/guias/?p=499117 — 10 local(is): Muncab – Museu Nacional da Cultura Afro-Brasileira, Museu de Arte Sacra da UFBA, Museu Tempostal, Museu da Gastronomia Baiana, Museu Geológico da Bahia, Museu do Mar Aleixo Belov, Museu da Misericórdia, Museu Udo Knoff de Azulejaria e Cerâmica, Museu Carlos Costa Pinto, Museu de Energia
+- https://muitainformacao.com.br/cidades/academia-salvador-projeto-gratuito-beneficia-quase-20-mil-pessoas/ — 10 local(is): Academia Salvador – Amaralina, Academia Salvador – Boca do Rio, Academia Salvador – Bonfim, Academia Salvador – Cajazeiras, Academia Salvador – Calabar, Academia Salvador – Dique do Tororó, Academia Salvador – Imbuí, Academia Salvador – Itapuã, Largo das Baianas, Praça do Imbuí
+- https://salvadordabahia.com/?p=32649 — 9 local(is): Casa Castanho – Rio Vermelho, Mafê Café, Restaurante Manga, Espaço Pierre Verger da Fotografia Baiana, Espaço Carybé de Artes, Museu Náutico da Bahia, Praia da Sereia, Praça das Gordinhas, Largo Camarão
+- https://salvadordabahia.com/?p=28635 — 9 local(is): Praia da Paciência, Praia do Buracão, Casa do Rio Vermelho, Casa de Iemanjá, Acarajé da Regina, Colaboraê Espaço Cultural, San Boate, Gin Bar, El Pancho Taqueria
+- https://www.salvadordabahia.com/?p=19164 — 9 local(is): Muncab – Museu Nacional da Cultura Afro-Brasileira, Museu Tempostal, Museu da Gastronomia Baiana, Museu da Misericórdia, Museu Udo Knoff de Azulejaria e Cerâmica, Memorial das Baianas de Acarajé, Solar Ferrão, Casa do Benin, Casa do Carnaval da Bahia
+- https://www.correio24horas.com.br/minha-bahia/confira-um-guia-de-10-cafeterias-bombadas-em-salvador-0424 — 7 local(is): Sêmola Café & Brunch – Vitória, Latitude 13 – Barra, A Cafeteria Botânica, Santa Clara – Farol da Barra, Lar Café Bistrô, Empório Coisas de Minas, Latitude 13 – Rio Vermelho
+- https://www.petitfute.com/v40541-salvador/c1165-restaurants/c1031-cuisines-du-monde/c1034-cuisine-ameriques-caraibes — 7 local(is): Boteco do Pelourinho, Cantina da Lua, Uauá Restaurante, Restaurante Yemanjá, Confraria do França, Acarajé da Dinha, Largo do Cruzeiro de São Francisco
+- https://www.salvadordabahia.com/?p=31221 — 7 local(is): Café e Cana, Malembe Food & Drinks, Travessa's Snack Bar, Cadê Q' Chama, Raiz Restaurante, Antique Bistrô, Zanzibar
+- https://www.salvadordabahia.com/?p=19166 — 6 local(is): Farol da Barra, Farol Café & Wine Bar, Coffeetown Salvador, Latitude 13 – Rio Vermelho, Pasta em Casa, Museu Náutico da Bahia
+- https://www.salvadordabahia.com/?p=30187 — 6 local(is): Sorveteria da Ribeira, Solar Amado Bahia – Museu do Sorvete, Boca de Galinha, Largo da Ribeira, Orla da Ribeira, Praia da Penha
+- https://www.salvadordabahia.com/?p=19202 — 4 local(is): Casa da Música da Bahia, Bar do Mamão, Casa di Vina, Orla de Itapuã
+- https://www.quintoandar.com.br/guias/?p=463076 — 4 local(is): Park Salvador, Parque das Dunas, Estação Turma da Mônica, Playland Shopping da Bahia
+- https://redirect.foursquare.com/carlosapp4/list/padarias — 4 local(is): Bola Verde, Indopan Delicatessen, Panificadora Neipan, Oliva Gourmet – Shopping Barra
+- https://www.correio24horas.com.br/colunistas/vanessa-brunt/conheca-cinco-restaurantes-com-descontos-e-novidades-constantes-em-salvador-0324 — 4 local(is): Restaurante Manga, Pizzas Supreme, B Vegan – Pituba, Villa do Caranguejo
+- https://www.bahianoticias.com.br/bnhall/travelling/483-um-dia-no-rio-vermelho-confira-roteiro-para-curtir-o-bairro-mais-boemio-de-salvador — 4 local(is): Casa Rosa, Vini Figueira Gastronomia, Crema Gelato Italiano, Praça Colombo
+- https://atarde.com.br/gastronomia/5-lugares-para-tomar-um-cafe-diferenciado-em-salvador-1386292 — 3 local(is): Padó Padaria, Little England Café, DCAE Cafeteria
+- https://redirect.foursquare.com/rpmartins/list/restaurantes-de-ssa--top-10 — 3 local(is): Ocho Ceviche e Bar, DOC Casual Dining, Tijuana Mexican Bar
+- https://www.bahianoticias.com.br/bnhall/noticia/522-aplicativo-de-relacionamento-divulga-roteiro-especial-ao-ar-livre-em-salvador — 3 local(is): Mercado do Rio Vermelho (Ceasinha), Blue Praia Bar, Lôro – Pedra do Sal
+- https://egbi2012.icmc.usp.br/pdfs/salvador-turisticguide.pdf — 3 local(is): Palacete das Artes, Largo da Ribeira, A Borracharia
+- https://www.ba.gov.br/justica/node/84 — 3 local(is): Shopping Liberdade, Shopping Center Periperi, Shopping Bahia Outlet Center
+- https://www.salvadordabahia.com/?p=27522 — 2 local(is): Bar da Mônica, Passeio Público
+- https://quantocustaviajar.com/blog/restaurantes-em-salvador — 2 local(is): Odoyá, Larriquerrí Bistrô
+- https://redirect.foursquare.com/voseis/list/teatro — 2 local(is): Teatro Vila Velha, Teatro Sesc Casa do Comércio
+- https://www.sympla.com.br/produtor/teatrogamboaonline — 2 local(is): Teatro Gamboa, Largo dos Aflitos
+- https://redirect.foursquare.com/ghrg/list/ssa — 2 local(is): Sesc Nazaré, Teatro Jorge Amado
+- https://theculturetrip.com/south-america/brazil/articles/a-bohemian-guide-to-rio-vermelho-salvador — 2 local(is): LáLá Rio Vermelho, San Sebastian
+- https://atarde.com.br/muito/essas-sao-as-melhores-pizzarias-de-salvador-segundo-chefs-1332962 — 2 local(is): Deskolado Bar, Futebol e Pizza, Pizzaria da Chapada
+- https://www.correio24horas.com.br/salvador/o-segredo-dos-melhores-hamburguers-de-salvador-0525 — 2 local(is): Boutique Texana – Pituba, Boutique Texana – Barra
+- https://www.ba.gov.br/administracao/noticia/2024-06/8148/rede-sac-realiza-mais-de-1-milhao-de-atendimentos-na-capital-baiana — 2 local(is): Shopping Liberdade, Shopping Bahia Outlet Center
+- https://www.quintoandar.com.br/guias/?p=2470782 — 2 local(is): Praça Vinícius de Moraes, Orla de Itapuã
+- https://www.bahianoticias.com.br/bnhall/noticia/3318-salvado-meu-amo-confira-espacos-culturais-para-comemorar-o-aniversario-da-capital-baiana — 2 local(is): Cidade da Música da Bahia, Cine Metha Glauber Rocha
+- https://www.bahianoticias.com.br/holofote/noticia/76824-apos-esgotar-duas-datas-liniker-explica-decisao-de-manter-show-de-salvador-na-concha-ainda-nao-e-o-momento-da-fonte — 2 local(is): Centro de Convenções Salvador, Parque de Exposições de Salvador
+- https://www.bnews.com.br/noticias/cultura/245680-prefeitura-estuda-potencializar-eventos-na-arena-daniela-mercury-com-entrega-do-novo-centro-de-convencoes.html — 2 local(is): Centro de Convenções Salvador, Arena Daniela Mercury
+- https://www.correio24horas.com.br/somsalvador/onde-acontecem-as-festas-nao-obvias-em-salvador-o-ano-inteiro-0324 — 2 local(is): Varanda do Sesi, A Borracharia
+- https://www.bahianoticias.com.br/noticia/294036-alto-de-ondina-em-salvador-ganha-nova-praca-com-lazer-esporte-e-estrutura-completa — 2 local(is): Praça do Alto de Ondina, Feira do Japão
+- https://www.benditoguia.com.br/empresa/absoluto-bar-rio-vermelho-salvador-ba — 1 local(is): Absoluto Bar
+- https://www.guiadasemana.com.br/bares/noticia/botecos-autenticos — 1 local(is): Bar do Piauí
+- https://www.correio24horas.com.br/salvador/rodizio-de-petiscos-em-salvador-e-rm-veja-bares-com-comida-liberada-0126 — 1 local(is): O Marreco
+- https://www.salvadordabahia.com/?p=18743 — 1 local(is): Casa de Tereza
+- https://quantocustaviajar.com/blog/?p=60541 — 1 local(is): Amado
+- https://quantocustaviajar.com/brasil/salvador/alimentacao — 1 local(is): Lafayette Restaurante
+- https://www.correio24horas.com.br/colunistas/silva-cozinha-deixa-o-rio-vermelho-e-abre-restaurante-na-rua-chile-0526 — 1 local(is): Silva Cozinha
+- https://www.buser.com.br/destinos/pontos-turisticos/ba/salvador/parque-jardim-dos-namorados — 1 local(is): Parque Jardim dos Namorados
+- https://www.guiadasemana.com.br/salvador/turismo/estabelecimento/dique-do-tororo — 1 local(is): Dique do Tororó
+- https://www.solutudo.com.br/empresas/ba/salvador/academias/smartfit-escola-de-ginastica-e-danca-s-a-23611135 — 1 local(is): Smart Fit Ribeira
+- https://www.correio24horas.com.br/salvador/saiba-o-que-vai-funcionar-no-antigo-predio-da-ucsal-na-federacao-em-salvador-0825 — 1 local(is): Smart Fit Federação
+- https://www.qualocep.com/cep/ba/salvador/caminho-das-arvores/ — 1 local(is): Shopping da Bahia
+- https://cepbrasil.org/bahia/salvador/caminho-das-arvores/41820975 — 1 local(is): Shopping da Bahia
+- https://www.buser.com.br/destinos/pontos-turisticos/ba/salvador/salvador-shopping — 1 local(is): Salvador Shopping
+- https://redirect.foursquare.com/etnavasconcelos/list/20-favorite-restaurants — 1 local(is): Shopping Barra
+- https://www.falandodeviagem.com.br/viewtopic.php?p=58595 — 1 local(is): Shopping Paralela
+- https://www.ruacep.com.br/ba/salvador/logradouros/736/ — 1 local(is): Shopping Baixa dos Sapateiros
+- https://salvadordabahia.com/en/category-experiences/restaurants — 1 local(is): Casa da Mãe
+- https://www.guiadasemana.com.br/salvador/arte/estabelecimento/museu-de-arqueologia-e-etnologia — 1 local(is): Museu de Arqueologia e Etnologia da UFBA
+- https://www.wikipedia.org/wiki/Vila_Velha_Theater — 1 local(is): Teatro Vila Velha
+- https://www.buser.com.br/destinos/pontos-turisticos/ba/salvador/praia-da-ribeira — 1 local(is): Praia da Ribeira
+- https://www.solutudo.com.br/empresas/ba/salvador/panificadoras-e-padarias/a-g-p-padaria-e-confeitaria-ltda-26038686 — 1 local(is): Padaria Mil Pães
+- https://www.correio24horas.com.br/asteriscao/cinco-razoes-para-sair-de-casa-neste-fim-de-semana-em-salvador-0726 — 1 local(is): Chupito
+- https://www.salvadordabahia.com/en/experiences/the-bohemian-youth-has-its-place — 1 local(is): Chupito
+- https://www.bnews.com.br/noticias/salvador/bnews-gastro-varandas-boteco-surpreende-com-hamburguer-de-rabada-na-estreia-do-salvador-burger-gourmet.html — 1 local(is): Happy Hambúrguer
+- https://www.benditoguia.com.br/empresa/batatiman-batataria-e-hamburgueria-itapua-salvador-ba — 1 local(is): Batatiman Batataria e Hamburgueria
+- https://99app.com/99food/salvador/diris/5764613759566613965/ — 1 local(is): Burger King – Cabula
+- https://www.bahianoticias.com.br/bnhall/noticia/3309-dia-mundial-do-teatro-confira-lista-de-teatros-para-visitar-em-salvador — 1 local(is): Teatro Gregório de Mattos
+- https://www.gayout.com/pt/south-america/brazil/salvador/bars/san — 1 local(is): San Boate
+- https://www.imovelweb.com.br/comerciais-venda-rio-vermelho-salvador-perto-de-iw-oriente-fast-rua-borges-dos-reis-46.html — 1 local(is): Shopping Boulevard Rio Vermelho
+- https://www.salvadordabahia.com/?p=26402 — 1 local(is): Largo do Papagaio
+- https://www.correio24horas.com.br/minha-bahia/pre-carnaval-do-santo-antonio-alem-do-carmo-comeca-nesta-quinta-20-confira-programacao-0225 — 1 local(is): Largo da Quitandinha
+- https://www.correio24horas.com.br/em-alta/afinal-onde-acontece-o-festival-de-verao-2026-entenda-a-confusao-sobre-o-local-0126 — 1 local(is): WET Eventos
+- https://www.guiadasemana.com.br/salvador/turismo/estabelecimento/wetn-wild — 1 local(is): WET Eventos
+- https://atarde.com.br/verao/conheca-as-opcoes-de-curticao-no-verao-de-salvador-1256251 — 1 local(is): Boteco do Caranguejo – Barra
+- https://www.correio24horas.com.br/salvador/praca-historica-em-piraja-e-entregue-reformada-as-vesperas-do-2-de-julho-0726 — 1 local(is): Praça General Labatut (Panteão de Pirajá)
+- https://www.bahianoticias.com.br/noticia/293459-prefeitura-entrega-rua-e-praca-no-aquarius-totalmente-requalificadas-com-areas-para-lazer-e-pratica-esportiva — 1 local(is): Praça do Aquarius
+- https://www.bahianoticias.com.br/noticia/316229-prefeitura-inaugura-novos-equipamentos-e-praca-requalificada-no-suburbio-de-salvador — 1 local(is): Praça Natal
+- https://www.bahianoticias.com.br/noticia/314972-prefeitura-entrega-praca-requalificada-na-liberdade-e-amplia-opcoes-de-lazer-na-regiao — 1 local(is): Praça Major Salvador Aragão
+- https://www.bahianoticias.com.br/noticia/305374-prefeitura-entrega-praca-requalificada-no-conjunto-dos-bancarios-em-stiep — 1 local(is): Praça Luiz Virgílio
+- https://www.bahianoticias.com.br/noticia/281365-prefeitura-de-salvador-entregou-370-pracas-nos-ultimos-dois-anos — 1 local(is): Praça São José
+- https://www.bahianoticias.com.br/noticia/314151-prefeitura-entrega-praca-requalificada-com-novos-equipamentos-no-bairro-do-marback-em-salvador — 1 local(is): Praça Alfredo Syrkis
+- https://www.bahianoticias.com.br/noticia/289799-prefeitura-de-salvador-inaugura-praca-requalificada-no-bairro-da-pituba — 1 local(is): Praça Marcelo Caribé de Carvalho
+- https://www.bahianoticias.com.br/noticia/318677-prefeitura-entrega-novos-equipamentos-e-praca-requalificada-no-bairro-da-pituba — 1 local(is): Praça Santos Dumont
+- https://www.bahianoticias.com.br/noticia/306730-prefeitura-de-salvador-entrega-equipamentos-e-nova-praca-no-bairro-de-jardim-santo-inacio — 1 local(is): Praça Paulo César dos Santos Cerqueira
+
+## Ferramentas de conferência sugeridas
+- ViaCEP (https://viacep.com.br) para CEP por logradouro
+- Nominatim/OpenStreetMap (https://nominatim.openstreetmap.org) para coordenadas – use conferir_enderecos.py

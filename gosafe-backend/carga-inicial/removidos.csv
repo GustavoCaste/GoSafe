@@ -1,0 +1,455 @@
+﻿nome;categoria;bairro;motivo
+Restaurante-Escola Senac Pelourinho;Restaurante;Centro Histórico;serviço / fora do escopo de entretenimento
+Estação Metrô Lapa;Transporte;Nazaré;transporte
+Estação Metrô Campo da Pólvora;Transporte;Nazaré;transporte
+Estação Metrô Brotas;Transporte;Matatu;transporte
+Estação Metrô Bonocô;Transporte;Brotas;transporte
+Estação Metrô Acesso Norte;Transporte;Pernambués;transporte
+Estação Metrô Retiro;Transporte;Retiro;transporte
+Estação Metrô Bom Juá;Transporte;Bom Juá;transporte
+Estação Metrô Pirajá;Transporte;Granjas Rurais Presidente Vargas;transporte
+Estação Metrô Campinas;Transporte;Granjas Rurais Presidente Vargas;transporte
+Estação Metrô Águas Claras;Transporte;Águas Claras;transporte
+Estação Metrô Detran;Transporte;Pernambués;transporte
+Estação Metrô Rodoviária;Transporte;Caminho das Árvores;transporte
+Estação Metrô Pernambués;Transporte;Caminho das Árvores;transporte
+Estação Metrô Imbuí;Transporte;Imbuí;transporte
+Estação Metrô CAB;Transporte;Centro Administrativo da Bahia;transporte
+Estação Metrô Pituaçu;Transporte;Pituaçu;transporte
+Estação Metrô Flamboyant;Transporte;Trobogy;transporte
+Estação Metrô Tamburugy;Transporte;Patamares;transporte
+Estação Metrô Bairro da Paz;Transporte;Patamares;transporte
+Estação Metrô Mussurunga;Transporte;São Cristóvão;transporte
+Estação BRT Barris;Transporte;Barris;transporte
+Estação BRT Vasco da Gama;Transporte;Federação;transporte
+Estação BRT Ogunjá;Transporte;Acupe de Brotas;transporte
+Estação BRT HGE;Transporte;Brotas;transporte
+Estação BRT Rio Vermelho;Transporte;Rio Vermelho;transporte
+Estação BRT Pedrinhas;Transporte;Vale das Pedrinhas;transporte
+Estação BRT Cidade Jardim;Transporte;Cidade Jardim;transporte
+Estação BRT Cidadela;Transporte;Cidadela;transporte
+Estação BRT Hiper;Transporte;Itaigara;transporte
+Estação BRT Itaigara;Transporte;Itaigara;transporte
+Estação BRT Parque da Cidade;Transporte;Itaigara;transporte
+Estação BRT Pituba;Transporte;Pituba;transporte
+Estação da Lapa (terminal de ônibus);Transporte;Nazaré;transporte
+Rodoviária de Salvador;Transporte;Águas Claras;transporte
+Elevador Lacerda;Transporte;Centro Histórico;transporte
+Plano Inclinado Gonçalves;Transporte;Centro Histórico;transporte
+Terminal Ferry-Boat São Joaquim;Transporte;Água de Meninos;transporte
+Terminal Náutico da Bahia;Transporte;Comércio;transporte
+Terreiro de Jesus;Praça / parque;Centro Histórico;religioso
+Atakarejo Armação;Comércio;Costa Azul;serviço / fora do escopo de entretenimento
+DEAM – Delegacia da Mulher Brotas;Serviço;Engenho Velho de Brotas;serviço / fora do escopo de entretenimento
+DEAM – Delegacia da Mulher Periperi;Serviço;Periperi;serviço / fora do escopo de entretenimento
+Centro de Referência Loreta Valadares;Serviço;Barris;serviço / fora do escopo de entretenimento
+Hospital Geral do Estado (HGE);Serviço;Brotas;serviço / fora do escopo de entretenimento
+Hospital Português;Serviço;Barra;serviço / fora do escopo de entretenimento
+Hospital Aliança;Serviço;Rio Vermelho;serviço / fora do escopo de entretenimento
+Hospital São Rafael;Serviço;São Marcos;serviço / fora do escopo de entretenimento
+Hospital Roberto Santos;Serviço;Cabula;serviço / fora do escopo de entretenimento
+Maternidade Climério de Oliveira;Serviço;Nazaré;serviço / fora do escopo de entretenimento
+Hospital Santa Izabel;Serviço;Nazaré;serviço / fora do escopo de entretenimento
+Hospital da Bahia;Serviço;Pituba;serviço / fora do escopo de entretenimento
+Hospital Universitário Professor Edgard Santos;Serviço;Canela;serviço / fora do escopo de entretenimento
+UFBA – Campus Ondina;Serviço;Ondina;serviço / fora do escopo de entretenimento
+UNEB – Campus Cabula;Serviço;Cabula;serviço / fora do escopo de entretenimento
+UCSal – Campus Pituaçu;Serviço;Pituaçu;serviço / fora do escopo de entretenimento
+Biblioteca Pública do Estado da Bahia;Serviço;Barris;serviço / fora do escopo de entretenimento
+SAC Shopping Barra;Serviço;Chame-Chame;serviço / fora do escopo de entretenimento
+SAC Shopping Bela Vista;Serviço;Horto Bela Vista;serviço / fora do escopo de entretenimento
+Igreja do Senhor do Bonfim;Outro;Bonfim;religioso
+Igreja e Convento de São Francisco;Outro;Centro Histórico;religioso
+Igreja de Santo Antônio Além do Carmo;Outro;Santo Antônio;religioso
+Igreja da Ordem Terceira do Carmo;Outro;Santo Antônio;religioso
+Igreja de Nossa Senhora da Penha;Outro;Ribeira;religioso
+Igreja de Nossa Senhora da Conceição de Itapuã;Outro;Itapuã;religioso
+Igreja de Santana do Rio Vermelho;Outro;Rio Vermelho;religioso
+Perini Vasco da Gama;Comércio;Engenho Velho de Brotas;serviço / fora do escopo de entretenimento
+SAC Shopping da Bahia;Serviço;Caminho das Árvores;serviço / fora do escopo de entretenimento
+SAC Salvador Shopping;Serviço;Caminho das Árvores;serviço / fora do escopo de entretenimento
+SAC Cajazeiras;Serviço;Fazenda Grande III;serviço / fora do escopo de entretenimento
+SAC Comércio;Serviço;Comércio;serviço / fora do escopo de entretenimento
+SAC Liberdade;Serviço;Liberdade;serviço / fora do escopo de entretenimento
+SAC Pau da Lima;Serviço;Pau da Lima;serviço / fora do escopo de entretenimento
+SAC Periperi;Serviço;Periperi;serviço / fora do escopo de entretenimento
+SAC Pituaçu;Serviço;São Marcos;serviço / fora do escopo de entretenimento
+SAC Uruguai;Serviço;Uruguai;serviço / fora do escopo de entretenimento
+Procon Central;Serviço;Centro;serviço / fora do escopo de entretenimento
+UPA Hélio Machado;Serviço;Itapuã;serviço / fora do escopo de entretenimento
+Estácio – Campus Itapuã;Serviço;Itapuã;serviço / fora do escopo de entretenimento
+Estácio – Campus Parque Bela Vista;Serviço;Brotas;serviço / fora do escopo de entretenimento
+Estácio – Campus Paralela;Serviço;Patamares;serviço / fora do escopo de entretenimento
+Estácio – Campus Jardim Placaford;Serviço;Jardim Placaford;serviço / fora do escopo de entretenimento
+Colégio Estadual Nelson Mandela;Serviço;Periperi;serviço / fora do escopo de entretenimento
+Escola Meu Segundo Lar;Serviço;Engenho Velho de Brotas;serviço / fora do escopo de entretenimento
+CPM Lobato;Serviço;Lobato;serviço / fora do escopo de entretenimento
+1ª Delegacia Territorial – Barris;Serviço;Barris;serviço / fora do escopo de entretenimento
+2ª Delegacia Territorial – Liberdade;Serviço;Liberdade;serviço / fora do escopo de entretenimento
+3ª Delegacia Territorial – Bonfim;Serviço;Bonfim;serviço / fora do escopo de entretenimento
+4ª Delegacia Territorial – São Caetano;Serviço;São Caetano;serviço / fora do escopo de entretenimento
+5ª Delegacia Territorial – Periperi;Serviço;Periperi;serviço / fora do escopo de entretenimento
+7ª Delegacia Territorial – Rio Vermelho;Serviço;Rio Vermelho;serviço / fora do escopo de entretenimento
+9ª Delegacia Territorial – Boca do Rio;Serviço;Boca do Rio;serviço / fora do escopo de entretenimento
+10ª Delegacia Territorial – Pau da Lima;Serviço;Pau da Lima;serviço / fora do escopo de entretenimento
+11ª Delegacia Territorial – Tancredo Neves;Serviço;Arenoso;serviço / fora do escopo de entretenimento
+12ª Delegacia Territorial – Itapuã;Serviço;Itapuã;serviço / fora do escopo de entretenimento
+13ª Delegacia Territorial – Cajazeiras;Serviço;Cajazeiras;serviço / fora do escopo de entretenimento
+14ª Delegacia Territorial – Barra;Serviço;Barra;serviço / fora do escopo de entretenimento
+16ª Delegacia Territorial – Pituba;Serviço;Pituba;serviço / fora do escopo de entretenimento
+28ª Delegacia Territorial – Nordeste de Amaralina;Serviço;Santa Cruz;serviço / fora do escopo de entretenimento
+29ª Delegacia Territorial – Plataforma;Serviço;Escada;serviço / fora do escopo de entretenimento
+Posto Policial – Hospital Ernesto Simões;Serviço;Pau Miúdo;serviço / fora do escopo de entretenimento
+Sede da Polícia Civil da Bahia;Serviço;Centro;serviço / fora do escopo de entretenimento
+Colégio Estadual Isaías Alves (ICEIA);Serviço;Barbalho;serviço / fora do escopo de entretenimento
+Colégio Estadual Paulo Américo de Oliveira;Serviço;Bonfim;serviço / fora do escopo de entretenimento
+Colégio Estadual Raphael Serravalle;Serviço;Pituba;serviço / fora do escopo de entretenimento
+Colégio Estadual Cesare Casali;Serviço;Pirajá;serviço / fora do escopo de entretenimento
+Colégio Estadual Presciliano Silva;Serviço;Ribeira;serviço / fora do escopo de entretenimento
+Colégio Estadual Eduardo Bahiana;Serviço;Fazenda Grande II;serviço / fora do escopo de entretenimento
+Colégio Estadual Edgar Santos;Serviço;Garcia;serviço / fora do escopo de entretenimento
+Escola Estadual Vila Canária;Serviço;Vila Canária;serviço / fora do escopo de entretenimento
+Colégio Estadual Professor Carlos Barros;Serviço;Paripe;serviço / fora do escopo de entretenimento
+Colégio Estadual Alípio Franca;Serviço;Bonfim;serviço / fora do escopo de entretenimento
+Colégio Estadual Dona Mora Guimarães;Serviço;Cajazeiras X;serviço / fora do escopo de entretenimento
+Colégio Estadual Bento Gonçalves;Serviço;Fazenda Grande do Retiro;serviço / fora do escopo de entretenimento
+Colégio Estadual Edvaldo Brandão Correia;Serviço;Cajazeiras IV;serviço / fora do escopo de entretenimento
+Colégio Estadual Góes Calmon;Serviço;Brotas;serviço / fora do escopo de entretenimento
+Colégio Estadual Helena Magalhães;Serviço;Tancredo Neves;serviço / fora do escopo de entretenimento
+Colégio Estadual Mário Augusto Teixeira de Freitas;Serviço;Nazaré;serviço / fora do escopo de entretenimento
+Colégio Estadual Governador Roberto Santos;Serviço;Cabula;serviço / fora do escopo de entretenimento
+Colégio Estadual Pedro Paulo Marques e Marques;Serviço;São Cristóvão;serviço / fora do escopo de entretenimento
+Colégio Estadual Professor Rômulo Almeida;Serviço;Imbuí;serviço / fora do escopo de entretenimento
+Colégio Estadual de Aplicação Anísio Teixeira;Serviço;São Marcos;serviço / fora do escopo de entretenimento
+Colégio Estadual da Bahia – Central;Serviço;Nazaré;serviço / fora do escopo de entretenimento
+Escola do Olodum;Serviço;Centro Histórico;serviço / fora do escopo de entretenimento
+Colégio Estadual Paulo dos Anjos;Serviço;Bairro da Paz;serviço / fora do escopo de entretenimento
+Base Comunitária de Segurança Fazenda Coutos;Serviço;Fazenda Coutos;serviço / fora do escopo de entretenimento
+Conselho de Moradores do Bairro da Paz;Serviço;Bairro da Paz;serviço / fora do escopo de entretenimento
+Base Comunitária de Segurança Águas Claras;Serviço;Águas Claras;serviço / fora do escopo de entretenimento
+Quadra do Colégio Georgina Ramos;Academia;Boca do Rio;serviço / fora do escopo de entretenimento
+Ginásio do Colégio Luís Viana;Academia;Brotas;serviço / fora do escopo de entretenimento
+Base Comunitária de Segurança do Calabar;Serviço;Calabar;serviço / fora do escopo de entretenimento
+Associação de Moradores Parque Centenário do Calabetão;Serviço;Calabetão;serviço / fora do escopo de entretenimento
+Centro Social Urbano de Castelo Branco;Serviço;Castelo Branco;serviço / fora do escopo de entretenimento
+Organização Direito de Viver;Serviço;Castelo Branco;serviço / fora do escopo de entretenimento
+Base Comunitária de Segurança da Chapada do Rio Vermelho;Serviço;Nordeste de Amaralina;serviço / fora do escopo de entretenimento
+Escola Estadual Dom Avelar Brandão Vilela;Serviço;Fazenda Grande do Retiro;serviço / fora do escopo de entretenimento
+Centro Sociocultural Hilário Muniz;Serviço;Itapuã;serviço / fora do escopo de entretenimento
+ABEAC – Associação Beneficente Educação Arte e Cidadania;Serviço;Ribeira;serviço / fora do escopo de entretenimento
+Base Comunitária de Segurança de Santa Cruz;Serviço;Santa Cruz;serviço / fora do escopo de entretenimento
+Colégio Estadual Professora Marilene da Silva;Serviço;Mata Escura;serviço / fora do escopo de entretenimento
+Escola Estadual Pinto de Aguiar;Serviço;Mussurunga;serviço / fora do escopo de entretenimento
+Centro Social Urbano de Mussurunga;Serviço;Mussurunga;serviço / fora do escopo de entretenimento
+Centro Social Urbano de Narandiba;Serviço;Narandiba;serviço / fora do escopo de entretenimento
+Base Comunitária de Segurança Narandiba;Serviço;Saboeiro;serviço / fora do escopo de entretenimento
+Centro Social Urbano do Nordeste de Amaralina;Serviço;Nordeste de Amaralina;serviço / fora do escopo de entretenimento
+Associação Comunitária Nossa Senhora Medianeira;Serviço;Paripe;serviço / fora do escopo de entretenimento
+Associação de Moradores de Plataforma;Serviço;Plataforma;serviço / fora do escopo de entretenimento
+Base Comunitária de Segurança do Rio Sena;Serviço;Rio Sena;serviço / fora do escopo de entretenimento
+Quadra do Colégio Estadual Carlos Alberto Cerqueira;Academia;São Caetano;serviço / fora do escopo de entretenimento
+Base Comunitária de Segurança São Caetano;Serviço;São Caetano;serviço / fora do escopo de entretenimento
+Escola Luiza Mahin;Serviço;Uruguai;serviço / fora do escopo de entretenimento
+Espaço Sociocultural da Vila Ruy Barbosa;Serviço;Vila Ruy Barbosa;serviço / fora do escopo de entretenimento
+APAE Salvador;Serviço;Pituba;serviço / fora do escopo de entretenimento
+CEPRED – Centro de Prevenção e Reabilitação;Serviço;Parque Bela Vista;serviço / fora do escopo de entretenimento
+CEDEBA – Centro de Diabetes e Endocrinologia;Serviço;Parque Bela Vista;serviço / fora do escopo de entretenimento
+CREASI – Centro de Saúde do Idoso;Serviço;Parque Bela Vista;serviço / fora do escopo de entretenimento
+CIMEB – Centro de Infusões e Medicamentos;Serviço;Engenho Velho de Brotas;serviço / fora do escopo de entretenimento
+HEMOBA – Fundação de Hematologia e Hemoterapia;Serviço;Brotas;serviço / fora do escopo de entretenimento
+Hospital Ana Nery;Serviço;Caixa D'Água;serviço / fora do escopo de entretenimento
+Hospital Especializado Mário Leal;Serviço;IAPI;serviço / fora do escopo de entretenimento
+Hospital Especializado Octávio Mangabeira;Serviço;Pau Miúdo;serviço / fora do escopo de entretenimento
+Hospital Juliano Moreira;Serviço;Narandiba;serviço / fora do escopo de entretenimento
+Hospital Martagão Gesteira;Serviço;Tororó;serviço / fora do escopo de entretenimento
+IPERBA – Instituto de Perinatologia da Bahia;Serviço;Brotas;serviço / fora do escopo de entretenimento
+Instituto Couto Maia;Serviço;Águas Claras;serviço / fora do escopo de entretenimento
+Maternidade Albert Sabin;Serviço;Cajazeiras;serviço / fora do escopo de entretenimento
+Atakadão Atakarejo – São Caetano;Comércio;São Caetano;serviço / fora do escopo de entretenimento
+Atakadão Atakarejo – Sete de Abril;Comércio;Sete de Abril;serviço / fora do escopo de entretenimento
+Atakarejo – Baixa do Fiscal;Comércio;Baixa do Fiscal;serviço / fora do escopo de entretenimento
+Terreiro do Gantois – Ilê Axé Iyá Omin Iyamassê;Outro;Federação;religioso
+Terreiro da Casa Branca – Ilê Axé Iyá Nassô Oká;Outro;Engenho Velho da Federação;religioso
+Biblioteca Pública Thales de Azevedo;Serviço;Costa Azul;serviço / fora do escopo de entretenimento
+Biblioteca Anísio Teixeira;Serviço;Centro;serviço / fora do escopo de entretenimento
+Biblioteca Infantil Monteiro Lobato;Serviço;Nazaré;serviço / fora do escopo de entretenimento
+Biblioteca Juracy Magalhães Júnior;Serviço;Rio Vermelho;serviço / fora do escopo de entretenimento
+Arquivo Público do Estado da Bahia;Serviço;Baixa de Quintas;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Abdias Nascimento;Serviço;Nova Brasília de Valéria;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Abrigo do Salvador;Serviço;Brotas;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Almir Oliveira;Serviço;Mussurunga;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Álvaro Bahia;Serviço;Paripe;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Álvaro da Franca Rocha;Serviço;Narandiba;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Angelina Rocha de Assis;Serviço;Lobato;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Anival Razoni Figueiredo;Serviço;Dom Avelar;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Arlete Magalhães;Serviço;Roma;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Associação Cristã Feminina;Serviço;Boca do Rio;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Baronesa de Sauípe;Serviço;Ribeira;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Calabar;Serviço;Alto das Pombas;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Cantinho das Crianças;Serviço;Águas Claras;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Casa da Criança do Bom Juá;Serviço;Fazenda Grande do Retiro;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Castro Alves;Serviço;Boca do Rio;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Cecy Andrade;Serviço;Sussuarana;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Creche Vovó Zezinho;Serviço;Arenoso;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil CSU de Pernambués;Serviço;Pernambués;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil CSU João Paulo I;Serviço;Valéria;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil CSU Major Cosme de Farias;Serviço;Luiz Anselmo;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil da Santa Mônica;Serviço;Santa Mônica;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Dália de Menezes;Serviço;Nordeste de Amaralina;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil de Amaralina;Serviço;Amaralina;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Deputado Lourival Evangelista Costa;Serviço;Plataforma;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Dr. Augusto Lopes Pontes;Serviço;Boa Viagem;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Dr. Eliezer Audiface;Serviço;Luiz Anselmo;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Edivaldo Machado Boaventura;Serviço;Cajazeiras X;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Eduardo Freitas;Serviço;São Marcos;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Educar e Viver;Serviço;Coutos;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Epifânia Silva;Serviço;IAPI;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Fruto do Amanhã;Serviço;Fazenda Grande do Retiro;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Geórgia Maria Barradas Carneiro;Serviço;Alto do Coqueirinho;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Hélcio Trigueiro;Serviço;Sete de Abril;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Hélio Vianna;Serviço;Coutos;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Hosannah de Oliveira;Serviço;Pau Miúdo;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Iacy Vaz Fagundes;Serviço;Acupe de Brotas;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Ieda Barradas Carneiro;Serviço;Parque Bela Vista;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Irmã Sheila;Serviço;Boca do Rio;serviço / fora do escopo de entretenimento
+Centro Municipal de Educação Infantil Jardim Brasília;Serviço;Pernambués;serviço / fora do escopo de entretenimento
+Creche e Pré-Escola Primeiro Passo Cassange;Serviço;Cassange;serviço / fora do escopo de entretenimento
+Creche e Pré-Escola Primeiro Passo Fazenda Grande III;Serviço;Fazenda Grande III;serviço / fora do escopo de entretenimento
+Creche e Pré-Escola Primeiro Passo Ilha Amarela;Serviço;Ilha Amarela;serviço / fora do escopo de entretenimento
+Creche e Pré-Escola Primeiro Passo Itapuã Malê Debalê;Serviço;Itapuã;serviço / fora do escopo de entretenimento
+Creche e Pré-Escola Primeiro Passo Mata Escura;Serviço;Mata Escura;serviço / fora do escopo de entretenimento
+Creche e Pré-Escola Primeiro Passo Nova Brasília;Serviço;Nova Brasília;serviço / fora do escopo de entretenimento
+Creche e Pré-Escola Primeiro Passo Parque São Cristóvão;Serviço;Parque São Cristóvão;serviço / fora do escopo de entretenimento
+Creche e Pré-Escola Primeiro Passo Periperi;Serviço;Periperi;serviço / fora do escopo de entretenimento
+Creche e Pré-Escola Primeiro Passo São Cristóvão;Serviço;São Cristóvão;serviço / fora do escopo de entretenimento
+Escola Municipal 25 de Julho;Serviço;São Cristóvão;serviço / fora do escopo de entretenimento
+Escola Municipal Abrigo Filhos do Povo;Serviço;Liberdade;serviço / fora do escopo de entretenimento
+Escola Municipal Acelino Maximiano da Encarnação;Serviço;Sussuarana;serviço / fora do escopo de entretenimento
+Escola Municipal Adauto Pereira de Souza;Serviço;Nova Brasília;serviço / fora do escopo de entretenimento
+Escola Municipal Adilson de Souza Gallo;Serviço;Pirajá;serviço / fora do escopo de entretenimento
+Escola Municipal Adroaldo Ribeiro Costa;Serviço;Resgate;serviço / fora do escopo de entretenimento
+Escola Municipal Afrânio Peixoto;Serviço;Sete de Abril;serviço / fora do escopo de entretenimento
+Escola Municipal Agnelo de Brito;Serviço;Boca do Rio;serviço / fora do escopo de entretenimento
+Escola Municipal Agripiniano Barros;Serviço;Praia Grande;serviço / fora do escopo de entretenimento
+Escola Municipal Alfredo Amorim;Serviço;Uruguai;serviço / fora do escopo de entretenimento
+Escola Municipal Allan Kardec;Serviço;Patamares;serviço / fora do escopo de entretenimento
+Escola Municipal Allan Kardec de Pirajá;Serviço;Pau da Lima;serviço / fora do escopo de entretenimento
+Escola Municipal Almerinda Costa;Serviço;Uruguai;serviço / fora do escopo de entretenimento
+Escola Municipal Almirante Ernesto de Mourão Sá;Serviço;Paripe;serviço / fora do escopo de entretenimento
+Escola Municipal Alto de Coutos;Serviço;Coutos;serviço / fora do escopo de entretenimento
+Escola Municipal Álvaro da Franca Rocha;Serviço;Engomadeira;serviço / fora do escopo de entretenimento
+Escola Municipal Álvaro Vasconcelos da Rocha;Serviço;Coutos;serviço / fora do escopo de entretenimento
+Escola Municipal Amai Pró;Serviço;Campinas de Pirajá;serviço / fora do escopo de entretenimento
+Escola Municipal Amélia Rodrigues;Serviço;Tororó;serviço / fora do escopo de entretenimento
+Escola Municipal Ana Nery;Serviço;Rio Vermelho;serviço / fora do escopo de entretenimento
+Escola Municipal André Rebouças;Serviço;Plataforma;serviço / fora do escopo de entretenimento
+Escola Municipal Anfilófio de Carvalho;Serviço;Periperi;serviço / fora do escopo de entretenimento
+Escola Municipal Anjos de Rua;Serviço;Jardim Placaford;serviço / fora do escopo de entretenimento
+Escola Municipal Antônio Carlos Magalhães;Serviço;São Caetano;serviço / fora do escopo de entretenimento
+Escola Municipal Antônio Euzébio;Serviço;Cabula;serviço / fora do escopo de entretenimento
+Escola Municipal Antônio Martins Damasceno;Serviço;Castelo Branco;serviço / fora do escopo de entretenimento
+Escola Municipal Armando Carneiro da Rocha;Serviço;Praia Grande;serviço / fora do escopo de entretenimento
+Escola Municipal Arte e Alegria;Serviço;Novo Marotinho;serviço / fora do escopo de entretenimento
+Escola Municipal Artur de Sales;Serviço;Santa Cruz;serviço / fora do escopo de entretenimento
+Escola Municipal Assistência Social São José;Serviço;São Caetano;serviço / fora do escopo de entretenimento
+Escola Municipal Assistencial Nossa Senhora de Guadalupe;Serviço;São Caetano;serviço / fora do escopo de entretenimento
+Escola Municipal Austricliano de Carvalho;Serviço;Fazenda Grande do Retiro;serviço / fora do escopo de entretenimento
+Escola Municipal Barão do Rio Branco;Serviço;Pero Vaz;serviço / fora do escopo de entretenimento
+Escola Municipal Barbosa Rodrigues;Serviço;São Caetano;serviço / fora do escopo de entretenimento
+Escola Municipal Barbosa Romeo;Serviço;São Cristóvão;serviço / fora do escopo de entretenimento
+Escola Municipal Batista de San Martin;Serviço;Fazenda Grande do Retiro;serviço / fora do escopo de entretenimento
+Escola Municipal Batista de São Caetano;Serviço;São Caetano;serviço / fora do escopo de entretenimento
+Escola Municipal Batista de Valéria;Serviço;Valéria;serviço / fora do escopo de entretenimento
+Escola Municipal Beatriz Farias;Serviço;Fazenda Grande I;serviço / fora do escopo de entretenimento
+Escola Municipal Bela Vista do Lobato;Serviço;Alto do Cabrito;serviço / fora do escopo de entretenimento
+Escola Municipal Bernadina Lima Lisboa;Serviço;Paripe;serviço / fora do escopo de entretenimento
+Ambulatorio de Atenção Especializada em Saúde LGBT;Serviço;Dois de Julho;serviço / fora do escopo de entretenimento
+CAPS – Maria Célia da Rocha;Serviço;Itacaranha;serviço / fora do escopo de entretenimento
+CAPS AD III – Gey Espinheira;Serviço;Campinas de Pirajá;serviço / fora do escopo de entretenimento
+CAPS AD Pernambués;Serviço;Pernambués;serviço / fora do escopo de entretenimento
+CAPS Águas Claras;Serviço;Cajazeiras II;serviço / fora do escopo de entretenimento
+CAPS Eduardo Saback Dias de Moraes;Serviço;Pernambués;serviço / fora do escopo de entretenimento
+CAPS IA Areal;Serviço;Ribeira;serviço / fora do escopo de entretenimento
+CAPS II – Franco Basaglia;Serviço;Piatã;serviço / fora do escopo de entretenimento
+CAPS II – Nise da Silveira;Serviço;Cajazeiras;serviço / fora do escopo de entretenimento
+CAPS II Antônio Roberto Pellegrino – Jardim Baiano;Serviço;Nazaré;serviço / fora do escopo de entretenimento
+CAPS II Aristides Novis;Serviço;Engenho Velho de Brotas;serviço / fora do escopo de entretenimento
+CAPS II Liberdade;Serviço;IAPI;serviço / fora do escopo de entretenimento
+CAPS II Oswaldo Camargo;Serviço;Rio Vermelho;serviço / fora do escopo de entretenimento
+CAPS II Pau da Lima;Serviço;Vale dos Lagos;serviço / fora do escopo de entretenimento
+CAPS II São Caetano Valéria;Serviço;São Caetano;serviço / fora do escopo de entretenimento
+CAPS III Rosa Garcia – Jardim Armacao;Serviço;Jardim Armacao;serviço / fora do escopo de entretenimento
+CAPS Professor Adilson Peixoto Sampaio;Serviço;Caminho de Areia;serviço / fora do escopo de entretenimento
+CAPSIA Liberdade;Serviço;IAPI;serviço / fora do escopo de entretenimento
+CEMADI;Serviço;Brotas;serviço / fora do escopo de entretenimento
+CEMOL – Centro Municipal Odontológico da Liberdade;Serviço;Liberdade;serviço / fora do escopo de entretenimento
+CAPS I Prof. Luiz Meira Lessa;Serviço;Jaguaribe;serviço / fora do escopo de entretenimento
+CEREST – Centro de Referência em Saúde do Trabalhador;Serviço;Garcia;serviço / fora do escopo de entretenimento
+Centro de Saúde Mental Álvaro Rubim de Pinho;Serviço;Dendezeiros;serviço / fora do escopo de entretenimento
+CER Cajazeiras – Centro Especializado em Reabilitação;Serviço;Cajazeiras XI;serviço / fora do escopo de entretenimento
+CER II Bairro da Paz;Serviço;Bairro da Paz;serviço / fora do escopo de entretenimento
+CER II APAE Coutos;Serviço;Coutos;serviço / fora do escopo de entretenimento
+CEO Alto da Cachoeirinha;Serviço;Cabula VI;serviço / fora do escopo de entretenimento
+CEO Cajazeiras;Serviço;Cajazeiras V;serviço / fora do escopo de entretenimento
+CEO Federação;Serviço;Federação;serviço / fora do escopo de entretenimento
+CEO Mussurunga;Serviço;Mussurunga I;serviço / fora do escopo de entretenimento
+CEO Periperi;Serviço;Periperi;serviço / fora do escopo de entretenimento
+Hospital Municipal de Salvador;Serviço;Boca da Mata;serviço / fora do escopo de entretenimento
+Hospital Municipal do Homem;Serviço;Monte Serrat;serviço / fora do escopo de entretenimento
+Multicentro de Saúde Amaralina Dr. Adriano Pondé;Serviço;Amaralina;serviço / fora do escopo de entretenimento
+Multicentro de Saúde AME Pirajá;Serviço;Pirajá;serviço / fora do escopo de entretenimento
+Multicentro de Saúde Carlos Gomes;Serviço;Centro;serviço / fora do escopo de entretenimento
+Multicentro de Saúde Liberdade Prof. Bezerra Lopes;Serviço;Liberdade;serviço / fora do escopo de entretenimento
+Multicentro de Saúde Vale das Pedrinhas;Serviço;Vale das Pedrinhas;serviço / fora do escopo de entretenimento
+PA Alfredo Bureau;Serviço;Boca do Rio;serviço / fora do escopo de entretenimento
+PA Maria da Conceição Santiago Imbassay;Serviço;Pau Miudo;serviço / fora do escopo de entretenimento
+PA Pernambués Edson Teixeira Barbosa;Serviço;Pernambués;serviço / fora do escopo de entretenimento
+PA Rodrigo Argolo;Serviço;Tancredo Neves;serviço / fora do escopo de entretenimento
+Pronto Atendimento Psiquiátrico PAP;Serviço;Garcia;serviço / fora do escopo de entretenimento
+SAE Liberdade – Servico de Atenção Especializada;Serviço;Liberdade;serviço / fora do escopo de entretenimento
+SAE Marymar Novaes;Serviço;Dendezeiros;serviço / fora do escopo de entretenimento
+SAE São Francisco;Serviço;Nazaré;serviço / fora do escopo de entretenimento
+UBS 19º Centro de Saúde Pelourinho;Serviço;Baixa dos Sapateiros;serviço / fora do escopo de entretenimento
+UBS Arenoso;Serviço;Arenoso;serviço / fora do escopo de entretenimento
+UBS Barreiras;Serviço;Cabula;serviço / fora do escopo de entretenimento
+UBS Canabrava;Serviço;Canabrava;serviço / fora do escopo de entretenimento
+UBS Castelo Branco;Serviço;Castelo Branco;serviço / fora do escopo de entretenimento
+UBS Clementino Fraga;Serviço;Garcia;serviço / fora do escopo de entretenimento
+UBS de Calabetão;Serviço;Calabetão;serviço / fora do escopo de entretenimento
+UBS de Engomadeira;Serviço;Engomadeira;serviço / fora do escopo de entretenimento
+UBS de Mata Escura;Serviço;Mata Escura;serviço / fora do escopo de entretenimento
+UBS de Paripe;Serviço;Paripe;serviço / fora do escopo de entretenimento
+UBS do Bariri;Serviço;Bariri;serviço / fora do escopo de entretenimento
+UBS do CSU Pernambués;Serviço;Pernambués;serviço / fora do escopo de entretenimento
+UBS Dr. César de Araújo;Serviço;Boca do Rio;serviço / fora do escopo de entretenimento
+UBS Dr. Orlando Imbassahy;Serviço;Bairro da Paz;serviço / fora do escopo de entretenimento
+UBS Dr. Péricles Esteves Cardoso – Barbalho;Serviço;Barbalho;serviço / fora do escopo de entretenimento
+UBS Dr. Péricles Laranjeiras;Serviço;Fazenda Grande do Retiro;serviço / fora do escopo de entretenimento
+UBS Dra. Cecy de Andrade;Serviço;Castelo Branco;serviço / fora do escopo de entretenimento
+UBS Engenho Velho da Federação;Serviço;Engenho Velho da Federação;serviço / fora do escopo de entretenimento
+UBS Eunísio Coelho Teixeira;Serviço;Saboeiro;serviço / fora do escopo de entretenimento
+UBS Frei Benjamim Valéria;Serviço;Valéria;serviço / fora do escopo de entretenimento
+UBS Major Cosme de Farias;Serviço;Cosme de Farias;serviço / fora do escopo de entretenimento
+UBS Manoel Vitorino;Serviço;Brotas;serviço / fora do escopo de entretenimento
+UBS Marechal Rondon;Serviço;Marechal Rondon;serviço / fora do escopo de entretenimento
+UBS Maria da Conceição Santiago Imbassay;Serviço;Pau Miudo;serviço / fora do escopo de entretenimento
+UBS Ministro Alkimin;Serviço;Massaranduba;serviço / fora do escopo de entretenimento
+UBS Nelson Piauhy Dourado;Serviço;Águas Claras;serviço / fora do escopo de entretenimento
+UBS Osvaldo Caldas Campos – Santa Cruz;Serviço;Santa Cruz;serviço / fora do escopo de entretenimento
+UBS Periperi;Serviço;Periperi;serviço / fora do escopo de entretenimento
+UBS Pernambués Edson T Barbosa;Serviço;Pernambués;serviço / fora do escopo de entretenimento
+UBS Pires da Veiga;Serviço;Pau da Lima;serviço / fora do escopo de entretenimento
+UBS Prof. Eduardo Araújo;Serviço;Vale das Pedrinhas;serviço / fora do escopo de entretenimento
+UBS Prof. José Mariane;Serviço;Itapuã;serviço / fora do escopo de entretenimento
+UBS Prof. Mário Andrea;Serviço;Sete Portas;serviço / fora do escopo de entretenimento
+UBS Ramiro de Azevedo;Serviço;Nazaré;serviço / fora do escopo de entretenimento
+UBS Santo Antônio;Serviço;Santo Antônio;serviço / fora do escopo de entretenimento
+UBS Santo Inácio;Serviço;Santo Inácio;serviço / fora do escopo de entretenimento
+UBS São Cristóvão;Serviço;São Cristóvão;serviço / fora do escopo de entretenimento
+UBS São Gonçalo;Serviço;Federação;serviço / fora do escopo de entretenimento
+UBS São Judas Tadeu;Serviço;Pau Miudo;serviço / fora do escopo de entretenimento
+UBS Sérgio Arouca – Paripe;Serviço;Paripe;serviço / fora do escopo de entretenimento
+UBS Sete de Abril;Serviço;Sete de Abril;serviço / fora do escopo de entretenimento
+UBS Vale dos Lagos;Serviço;Vale dos Lagos;serviço / fora do escopo de entretenimento
+UBS Vila Matos;Serviço;Rio Vermelho;serviço / fora do escopo de entretenimento
+UBS Virgílio de Carvalho;Serviço;Bonfim;serviço / fora do escopo de entretenimento
+Unidade de Emergência de São Marcos;Serviço;São Marcos;serviço / fora do escopo de entretenimento
+USF Terreiro de Jesus;Serviço;Centro Historico;serviço / fora do escopo de entretenimento
+UPA 24H Brotas;Serviço;Brotas;serviço / fora do escopo de entretenimento
+UPA 24H Cidade Baixa – Santo Antônio;Serviço;Roma;serviço / fora do escopo de entretenimento
+UPA 24H Paripe;Serviço;Paripe;serviço / fora do escopo de entretenimento
+UPA 24H Parque São Cristóvão;Serviço;Parque São Cristóvão;serviço / fora do escopo de entretenimento
+UPA 24H Pirajá – Santo Inácio;Serviço;Santo Inácio;serviço / fora do escopo de entretenimento
+UPA 24H Prof. Adroaldo Albergaria;Serviço;Periperi;serviço / fora do escopo de entretenimento
+UPA 24H San Martin;Serviço;San Martin;serviço / fora do escopo de entretenimento
+UPA 24H Vale dos Barris;Serviço;Barris;serviço / fora do escopo de entretenimento
+UPA 24H Valéria;Serviço;Valéria;serviço / fora do escopo de entretenimento
+USF Alto da Terezinha;Serviço;Alto da Terezinha;serviço / fora do escopo de entretenimento
+USF Alto de Coutos II;Serviço;Alto de Coutos;serviço / fora do escopo de entretenimento
+USF Alto de Coutos;Serviço;Alto de Coutos;serviço / fora do escopo de entretenimento
+USF Alto do Cabrito;Serviço;Alto do Cabrito;serviço / fora do escopo de entretenimento
+USF Alto do Congo;Serviço;Coutos;serviço / fora do escopo de entretenimento
+USF Alto do Coqueirinho;Serviço;Alto do Coqueirinho;serviço / fora do escopo de entretenimento
+USF Alto do Cruzeiro;Serviço;Alto do Cruzeiro;serviço / fora do escopo de entretenimento
+USF Antônio Lazzarotto;Serviço;Plataforma;serviço / fora do escopo de entretenimento
+USF Antônio Ribeiro Neiva – Arraial do Retiro;Serviço;Arraial do Retiro;serviço / fora do escopo de entretenimento
+USF Areal;Serviço;Ribeira;serviço / fora do escopo de entretenimento
+USF Aristides Pereira Maltez;Serviço;São Cristóvão;serviço / fora do escopo de entretenimento
+USF Avenida Gal Costa;Serviço;São Marcos;serviço / fora do escopo de entretenimento
+USF Bate Coração;Serviço;Paripe;serviço / fora do escopo de entretenimento
+USF Boa Vista de São Caetano;Serviço;Boa Vista de São Caetano;serviço / fora do escopo de entretenimento
+USF Boa Vista do Lobato;Serviço;Boa Vista do Lobato;serviço / fora do escopo de entretenimento
+USF Boca da Mata;Serviço;Boca da Mata;serviço / fora do escopo de entretenimento
+USF Bom Juá;Serviço;Fazenda Grande do Retiro;serviço / fora do escopo de entretenimento
+USF Cajazeiras Jaguaripe I;Serviço;Jaguaripe;serviço / fora do escopo de entretenimento
+USF Cajazeiras IV;Serviço;Cajazeiras;serviço / fora do escopo de entretenimento
+USF Cajazeiras V;Serviço;Cajazeiras;serviço / fora do escopo de entretenimento
+USF Cajazeiras X;Serviço;Cajazeiras X;serviço / fora do escopo de entretenimento
+USF Cajazeiras XI;Serviço;Cajazeiras XI;serviço / fora do escopo de entretenimento
+USF Calabetão;Serviço;Calabetão;serviço / fora do escopo de entretenimento
+USF Canabrava;Serviço;Canabrava;serviço / fora do escopo de entretenimento
+USF Capelinha de São Caetano;Serviço;Capelinha;serviço / fora do escopo de entretenimento
+USF Ceasa I e II;Serviço;Ceasa;serviço / fora do escopo de entretenimento
+USF Claudelino Miranda – Resgate;Serviço;Resgate;serviço / fora do escopo de entretenimento
+USF Colinas de Periperi;Serviço;Periperi;serviço / fora do escopo de entretenimento
+USF Coração de Maria;Serviço;Cassange;serviço / fora do escopo de entretenimento
+USF Curralinho;Serviço;Boca do Rio;serviço / fora do escopo de entretenimento
+USF da Federação;Serviço;Federação;serviço / fora do escopo de entretenimento
+USF de Barreiras;Serviço;Barreiras;serviço / fora do escopo de entretenimento
+USF de Beira Mangue;Serviço;São Bartolomeu;serviço / fora do escopo de entretenimento
+USF de Itacaranha;Serviço;Itacaranha;serviço / fora do escopo de entretenimento
+USF de Pituaçu;Serviço;Pituaçu;serviço / fora do escopo de entretenimento
+USF Dep Cristóvão Ferreira – Saramandaia;Serviço;Saramandaia;serviço / fora do escopo de entretenimento
+USF Deputado Luiz Braga;Serviço;Pirajá;serviço / fora do escopo de entretenimento
+USF do Alto das Pombas;Serviço;Alto das Pombas;serviço / fora do escopo de entretenimento
+USF do Candeal Pequeno;Serviço;Candeal;serviço / fora do escopo de entretenimento
+USF Dom Avelar;Serviço;Dom Avelar;serviço / fora do escopo de entretenimento
+USF Dona Iraci Isabel da Silva – Gamboa;Serviço;Dois de Julho;serviço / fora do escopo de entretenimento
+USF Estrada da Cocisa;Serviço;Paripe;serviço / fora do escopo de entretenimento
+USF Fazenda Coutos I;Serviço;Fazenda Coutos;serviço / fora do escopo de entretenimento
+USF Fazenda Coutos II;Serviço;Fazenda Coutos;serviço / fora do escopo de entretenimento
+USF Fazenda Coutos III;Serviço;Fazenda Coutos;serviço / fora do escopo de entretenimento
+USF Fazenda Grande III;Serviço;Cajazeiras;serviço / fora do escopo de entretenimento
+USF Fernando Filgueiras – Alto da Cachoeirinha;Serviço;Cabula VI;serviço / fora do escopo de entretenimento
+USF Fiais;Serviço;Lobato;serviço / fora do escopo de entretenimento
+USF IAPI;Serviço;Pau Miudo;serviço / fora do escopo de entretenimento
+USF Ilha Amarela;Serviço;Ilha Amarela;serviço / fora do escopo de entretenimento
+USF Imbuí;Serviço;Imbuí;serviço / fora do escopo de entretenimento
+USF Itapuã;Serviço;Itapuã;serviço / fora do escopo de entretenimento
+USF Ivone Silveira – Calabar;Serviço;Calabar;serviço / fora do escopo de entretenimento
+USF Jaqueira do Carneiro;Serviço;Fazenda Grande do Retiro;serviço / fora do escopo de entretenimento
+USF Jardim Campo Verde;Serviço;Barro Duro;serviço / fora do escopo de entretenimento
+USF Jardim das Mangabeiras – Cajazeiras VIII;Serviço;Cajazeiras VIII;serviço / fora do escopo de entretenimento
+USF Jardim das Margaridas;Serviço;Jardim das Margaridas;serviço / fora do escopo de entretenimento
+USF Joanes Centro Oeste;Serviço;Lobato;serviço / fora do escopo de entretenimento
+USF Joanes Leste;Serviço;Lobato;serviço / fora do escopo de entretenimento
+USF João Roma Filho;Serviço;Novo Marotinho;serviço / fora do escopo de entretenimento
+USF KM 17;Serviço;Itapuã;serviço / fora do escopo de entretenimento
+USF Lagoa da Paixão;Serviço;Valéria;serviço / fora do escopo de entretenimento
+USF Lealdina Barros – Vale da Muriçoca;Serviço;Engenho Velho da Federação;serviço / fora do escopo de entretenimento
+USF Liberdade;Serviço;Liberdade;serviço / fora do escopo de entretenimento
+USF Mata Escura;Serviço;Mata Escura;serviço / fora do escopo de entretenimento
+USF Menino Joel;Serviço;Nordeste de Amaralina;serviço / fora do escopo de entretenimento
+USF Mussurunga I;Serviço;Mussurunga;serviço / fora do escopo de entretenimento
+USF Nossa Senhora de Guadalupe – Alto do Peru;Serviço;Alto do Peru;serviço / fora do escopo de entretenimento
+USF Nova Brasilia;Serviço;Nova Brasilia;serviço / fora do escopo de entretenimento
+USF Nova Constituinte;Serviço;Nova Constituinte;serviço / fora do escopo de entretenimento
+USF Nova Esperanca;Serviço;Nova Esperanca;serviço / fora do escopo de entretenimento
+USF Nova Sussuarana;Serviço;Sussuarana;serviço / fora do escopo de entretenimento
+USF Olga de Alaketu – Vale do Matatu;Serviço;Matatu;serviço / fora do escopo de entretenimento
+USF Padre Maurício Abel – São Gonçalo;Serviço;São Gonçalo do Retiro;serviço / fora do escopo de entretenimento
+USF Palestina;Serviço;Palestina;serviço / fora do escopo de entretenimento
+USF Parque de Pituaçu;Serviço;Pituaçu;serviço / fora do escopo de entretenimento
+USF Parque São Cristóvão;Serviço;Parque São Cristóvão;serviço / fora do escopo de entretenimento
+USF Pirajá;Serviço;Pirajá;serviço / fora do escopo de entretenimento
+USF Plataforma;Serviço;Plataforma;serviço / fora do escopo de entretenimento
+USF Polêmica;Serviço;Brotas;serviço / fora do escopo de entretenimento
+USF Prof. Eduardo Mamede;Serviço;Mussurunga;serviço / fora do escopo de entretenimento
+USF Prof. Guilherme Rodrigues da Silva – Arenoso;Serviço;Arenoso;serviço / fora do escopo de entretenimento
+USF Prof. Humberto Castro Lima – Pernambuezinho;Serviço;Pernambués;serviço / fora do escopo de entretenimento
+USF Professor Sabino Silva;Serviço;Amaralina;serviço / fora do escopo de entretenimento
+USF Prof. Dr. Carlos Santana – Doron;Serviço;Doron;serviço / fora do escopo de entretenimento
+USF Raimundo Agripino – Sussuarana;Serviço;Sussuarana;serviço / fora do escopo de entretenimento
+USF Recanto da Lagoa;Serviço;Fazenda Coutos;serviço / fora do escopo de entretenimento
+USF Recanto da Lagoa II;Serviço;Fazenda Coutos;serviço / fora do escopo de entretenimento
+USF Rio Sena;Serviço;Rio Sena;serviço / fora do escopo de entretenimento

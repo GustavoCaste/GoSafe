@@ -1,254 +1,155 @@
 # GoSafe
-GoSafe é um aplicativo colaborativo voltado à segurança feminina, permitindo que mulheres avaliem locais, compartilhem relatos e consultem informações sobre a percepção de segurança de espaços públicos e privados.
 
-A proposta é criar uma rede colaborativa em que experiências individuais possam gerar informações úteis para outras mulheres antes de frequentarem determinados locais.
+**Aplicativo colaborativo de segurança feminina.** Mulheres avaliam locais (cafés, bares, pontos de ônibus, praças…), publicam avisos e consultam, antes de sair de casa, como outras mulheres se sentiram naquele lugar.
 
-Projeto acadêmico em desenvolvimento.
+> O GoSafe não diz se um local é objetivamente seguro: mostra a **percepção** da comunidade, ponderada pela confiabilidade de quem avaliou.
 
-Objetivo
+Projeto de Trabalho de Conclusão de Curso (TCC) — 🚧 em desenvolvimento.
 
-Desenvolver uma aplicação que permita às usuárias:
+---
 
-consultar avaliações de locais;
-avaliar a percepção de segurança de estabelecimentos e espaços;
-registrar relatos e experiências;
-visualizar informações georreferenciadas;
-buscar locais por nome, categoria ou localização;
-contribuir colaborativamente com informações para outras usuárias.
+## Em 1 minuto
 
-O GoSafe não pretende determinar se um local é objetivamente seguro ou inseguro. As informações apresentadas representam percepções e experiências compartilhadas pela comunidade.
+| | Situação |
+|---|---|
+| **Backend** | ✅ Implementado e testado — 76 testes, a maioria contra PostgreSQL + PostGIS real |
+| **App mobile** | ✅ Conversa com a API; validado em emulador Android |
+| **Protótipo de telas** | ✅ 24 quadros: todas as telas, regras, modelo de dados e marca |
+| **Publicação** (Neon, Render e Vercel) | ✅ API no Render (`https://gosafe-api.onrender.com`), banco no Neon e landing na Vercel |
 
-Funcionalidades previstas
-Avaliação de locais
+## Como o app funciona
 
-As usuárias poderão avaliar diferentes aspectos relacionados à percepção de segurança de um local, como:
+1. **Primeiro acesso:** permissão de localização → login ou cadastro (nome, usuária, e-mail, senha, sexo) → uso do app. Sem conta, a visitante vê o mapa, a lista e a nota geral; para abrir o local, com as notas por tópico e os avisos, entra na conta.
+2. **Mapa** (tela principal, estilo Waze/Uber): os locais da área visível carregam conforme o mapa se move. O pin mostra a nota e fica vermelho com **!** quando o local é **não aconselhado**.
+3. **Locais:** lista estilo iFood (foto, nome, categoria, distância, nota), busca, filtros e favoritos.
+4. **Página do local:** nota geral e por parâmetro, check-in e o **fórum de avisos** (mais recentes primeiro). Cada aviso tem comentários, e cada comentário pode trazer uma avaliação.
 
-segurança percebida;
-iluminação;
-visibilidade;
-movimentação de pessoas;
-atendimento;
-possibilidade de conseguir ajuda.
+### Como a nota é calculada
 
-Também será possível adicionar um comentário ou relato opcional sobre a experiência.
+- Cada avaliação tem **5 parâmetros** de 1 a 5: segurança, iluminação, movimento, acolhimento e **banheiro** (que aceita "não há").
+- A nota do local é uma **média ponderada pelo peso de quem votou**. O peso (0,1 a 1,0) cresce com tempo de conta e contribuições válidas, e cai com denúncias procedentes.
+- Quem avalia **estando no local** (check-in a até 100 m) ganha bônus de peso.
+- Vale só a avaliação mais recente de cada usuária.
+- **Local não aconselhado:** a partir de 100 usuárias avaliando e nota ponderada até 1,5, o local recebe alerta no mapa, na lista e na página.
 
-Relatos
+## Começo rápido (backend)
 
-O sistema permitirá registrar relatos associados a locais específicos.
+Pré-requisitos: **Java 21** e **Docker** em execução.
 
-Os relatos poderão ser classificados em categorias, como:
+```bash
+cd gosafe-backend
+./mvnw test                                              # 76 testes (sobe PostGIS via Testcontainers)
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev    # API local (o banco sobe com a carga inicial de Salvador)
+```
 
-assédio;
-discriminação;
-comportamento inadequado;
-falta de segurança;
-outras situações relevantes.
+Fora do computador local, `GOSAFE_JWT_SECRET` é obrigatório.
 
-A identidade pública da usuária poderá ser preservada.
+Detalhes da API, endpoints e configurações: [`gosafe-backend/README.md`](gosafe-backend/README.md).
 
-Mapa colaborativo
+## App
 
-Os locais e avaliações serão apresentados em um mapa, permitindo:
+O código e as instruções de build estão em [`mobile/`](mobile/README.md). A landing page está em [`landing/`](landing/README.md).
 
-visualizar estabelecimentos próximos;
-consultar avaliações;
-visualizar relatos associados aos locais;
-identificar regiões com maior concentração de avaliações;
-consultar indicadores de percepção de segurança.
-Busca e filtros
+## Branches
 
-Será possível buscar e filtrar locais por critérios como:
+| Branch | O que tem |
+|---|---|
+| `main` e `develop` | Bases do projeto |
+| `feature/backend-core` | Backend em commits organizados e um início de app |
+| **`feature/page`** | **Versão completa:** backend, app conectado à API e landing page |
 
-nome;
-categoria;
-localização;
-avaliação;
-distância.
-Sistema colaborativo
+## O que foi feito
 
-As informações disponíveis no GoSafe serão construídas a partir das contribuições das próprias usuárias.
+### Backend (Java 21 · Spring Boot 4 · PostgreSQL + PostGIS)
 
-Também poderão ser estudados mecanismos para:
+- **Contas e segurança:** cadastro, login por e-mail ou usuária, JWT, papéis (usuária, moderadora, admin). A autora de qualquer conteúdo vem sempre do token, nunca da requisição.
+- **Verificação facial:** estará em modo funcional em versões futuras. Havia só uma versão simulada, desligada em produção, porque o serviço real tem custo e o projeto é construído sem custos.
+- **Locais** com endereço estruturado (CEP, logradouro, número, bairro, cidade, UF), CEP pelo ViaCEP e coordenadas pelo OpenStreetMap; bloqueio de duplicado a menos de 50 m.
+- **Mapa por área visível**, busca por distância e check-in com consultas geográficas do PostGIS.
+- **Avisos, comentários, avaliações, favoritos, fotos, denúncias e moderação**, com anonimato opcional e exclusão lógica.
+- **Reputação ponderada** e alerta de **local não aconselhado**.
+- **Migrações Flyway** e erros padronizados.
+- **76 testes** dos endpoints e das regras, a maioria contra banco real; os testes encontraram e corrigiram 2 bugs.
 
-apoiar avaliações e relatos;
-denunciar conteúdos inadequados;
-reduzir avaliações falsas;
-aumentar a confiabilidade das informações.
-Modo de alerta
+### App mobile
 
-O projeto prevê o estudo de funcionalidades relacionadas a situações de emergência, como:
+Expo + React Native + TypeScript, com mapa MapLibre/OpenStreetMap. Começou como versão de teste sem servidor e hoje conversa com a API. A versão de teste foi validada num celular Android real com roteiros automatizados, que encontraram e corrigiram bugs como:
 
-compartilhamento de localização;
-contatos de confiança;
-acionamento rápido de um protocolo de alerta;
-envio de notificações.
+- locais gerados aparecendo **na água** → o mapa agora confere cada ponto contra a camada de água antes de mostrar o pin;
+- botões do Android ilegíveis → faixa roxa com ícones claros;
+- botão **+** escondido atrás do cartão do local; menu sobre a barra do Android;
+- ícone padrão do React Native na abertura → abertura com a marca;
+- alertas padrão do Android → diálogos com a identidade do app;
+- envio duplicado com toque duplo, GPS travando e limite de armazenamento.
 
-A implementação definitiva dependerá das permissões e limitações existentes nos sistemas Android e iOS.
+### Protótipo e marca
 
-Tecnologias
-Mobile
-React Native
-TypeScript
-Android
-iOS
-Backend
-Java
-Spring Boot
-API REST
+Protótipo navegável com todas as telas, regras de negócio, modelo de dados, relação com a fundamentação teórica e a marca: **escudo com o símbolo feminino sobre um mapa dobrado** (violeta `#5B2A86`, noite `#2B1446`, coral `#F2A28F`, lavanda `#E9DFF5`).
 
-O backend será responsável pelas regras de negócio, autenticação, avaliações, relatos e comunicação com o banco de dados.
+## Como foi feito
 
-Banco de dados
-PostgreSQL
-PostGIS
+| Etapa | O que aconteceu |
+|---|---|
+| 1. Análise | Levantamento das telas e das regras a partir da descrição do sistema e da fundamentação teórica; análise do backend inicial (`develop`) com as lacunas encontradas. |
+| 2. Protótipo | Todas as telas desenhadas e navegáveis (24 quadros), com responsividade, regras de negócio (RN01–RN19), modelo de dados e marca. Decisões tomadas junto com a equipe: check-in de 100 m, verificação facial simulada (sem custo), autoria pelo token, alerta de local não aconselhado. |
+| 3. Backend | Estrutura completa em Spring Boot por funcionalidade (`controller → service → repository`), PostGIS para as consultas geográficas e Flyway para o banco. |
+| 4. Testes da API | 73 testes de todos os endpoints contra um PostgreSQL + PostGIS real (Testcontainers). Encontraram 2 bugs reais (entre eles a busca com filtros vazios), já corrigidos. |
+| 5. App de teste | Primeira versão do app em Expo/React Native, sem servidor, com dados de demonstração. Serviu para avaliar telas e fluxos e depois foi substituída pela versão conectada à API. |
+| 6. Testes no celular | Roteiros automatizados num Android real (via USB/adb) cobrindo cadastro, login, mapa, busca, cadastro de local, check-in, avisos, comentários, alerta, perfil e casos de erro (campos vazios, duplicados, toque duplo). |
+| 7. Correções | Bugs encontrados no aparelho e corrigidos: locais na água, botões do Android ilegíveis, **+** escondido atrás do cartão, menu sobre a barra do Android, ícone padrão na abertura, alertas sem a identidade do app e campos sem rótulo para leitor de tela. |
+| 8. Integração | App conectado à API. O banco sobe com uma carga inicial de Salvador, com notas estimadas e identificadas como tal; os demais registros vêm do uso real. Publicado em Neon, Render e Vercel. |
 
-O PostgreSQL será utilizado como banco de dados principal.
+### O que das correções vale para o backend
 
-A extensão PostGIS será utilizada para trabalhar com informações geográficas, permitindo consultas de:
+As correções da etapa 7 são de **interface do app** (mapa, barra do Android, diálogos, acessibilidade), por isso o código delas está em `mobile/`. Para o backend ficam as regras e decisões:
 
-distância;
-proximidade;
-coordenadas;
-estabelecimentos próximos;
-regiões exibidas no mapa.
-Mapas
-MapLibre
-OpenStreetMap
+- **Toque duplo / envio repetido:** o backend já recusa local duplicado a menos de 50 m; o app também bloqueia o segundo envio.
+- **Sem carga automática:** nem o backend nem o app geram registros sozinhos.
 
-O MapLibre será utilizado para a visualização dos mapas, utilizando dados cartográficos baseados no OpenStreetMap.
+## Arquitetura
 
-Recursos futuros
+```
+┌──────────────────────┐        REST + JWT        ┌──────────────────────────┐
+│  App React Native    │ ───────────────────────► │  Java 21 + Spring Boot 4 │
+│  (Expo, Android/iOS) │                          │  regras, autenticação,   │
+│  MapLibre + OSM      │                          │  avaliações, avisos      │
+└──────────────────────┘                          └────────────┬─────────────┘
+                                                               │
+                                                  ┌────────────▼─────────────┐
+                                                  │  PostgreSQL + PostGIS    │
+                                                  └──────────────────────────┘
+```
 
-Também poderão ser estudadas tecnologias para:
+| Camada | Tecnologias |
+|---|---|
+| Mobile | React Native, Expo, TypeScript, MapLibre GL, OpenStreetMap |
+| Backend | Java 21, Spring Boot 4, Spring Security (JWT), JPA/Hibernate, Flyway |
+| Banco | PostgreSQL 16 + PostGIS (consultas por área, distância e proximidade) |
+| Testes | JUnit, MockMvc, Testcontainers |
 
-Processamento de Linguagem Natural (NLP);
-moderação automática de relatos;
-notificações push;
-análise de conteúdo;
-funcionalidades de emergência.
+## Privacidade
 
-Arquitetura inicial
+- Coleta mínima: do check-in guarda-se só a **distância**, nunca a posição da usuária.
+- Publicação **anônima** opcional (o vínculo fica guardado apenas para moderação).
+- Biometria só com consentimento e sem armazenar imagem.
+- Denúncia e moderação de conteúdo.
 
-                   ┌─────────────────────┐
-                   │    React Native     │
-                   │    Android / iOS    │
-                   └──────────┬──────────┘
-                              │
-                           REST API
-                              │
-                              ▼
-                   ┌─────────────────────┐
-                   │  Java + Spring Boot │
-                   │                     │
-                   │  Regras de negócio │
-                   │  Autenticação      │
-                   │  Avaliações        │
-                   │  Relatos           │
-                   │  Geolocalização    │
-                   └──────────┬──────────┘
-                              │
-                              ▼
-                   ┌─────────────────────┐
-                   │ PostgreSQL + PostGIS│
-                   └─────────────────────┘
+## Próximos passos
 
+1. Testar o app em celulares.
+2. Armazenamento de fotos (MinIO/S3/Cloudinary).
+3. Documentação OpenAPI da API.
+4. Notificações push e moderação assistida por NLP.
+5. Estudo do modo de alerta (contatos de confiança e compartilhamento de localização).
 
-React Native
-     │
-     └──────────────► MapLibre / OpenStreetMap
+## Contexto acadêmico
 
-Conceitos relacionados
+Conceitos estudados: segurança feminina, percepção de segurança, crowdsourcing, sistemas colaborativos, Informação Geográfica Voluntária (VGI), geolocalização, privacidade e anonimato. Trabalhos relacionados: **Safetipin**, **HarassMap** e **Safecity**.
 
-O desenvolvimento do GoSafe considera conceitos como:
+## Imagens de exemplo
 
-segurança feminina;
-percepção de segurança;
-crowdsourcing;
-sistemas colaborativos;
-geolocalização;
-Informação Geográfica Voluntária (VGI);
-privacidade;
-anonimato.
+Os dados que aparecem no protótipo e nos prints da landing page — locais, usuárias, notas e comentários — **foram criados por IA para exemplificar um cenário real**. Não representam pessoas nem estabelecimentos reais.
 
+## Licença
 
-Trabalhos relacionados
-
-O projeto possui relação com aplicações e pesquisas que utilizam tecnologia e participação colaborativa para abordar questões relacionadas à segurança feminina.
-
-Entre os principais trabalhos estudados estão:
-
-Safetipin — aplicação voltada à avaliação colaborativa da segurança urbana;
-HarassMap — plataforma de mapeamento colaborativo de relatos de assédio;
-Safecity — plataforma de relatos anônimos e georreferenciados relacionados a assédio e violência.
-
-O GoSafe busca combinar conceitos presentes nessas soluções, com foco na avaliação de locais públicos e privados e no compartilhamento de experiências entre mulheres.
-
-
-
-Privacidade e segurança
-
-Como a aplicação poderá lidar com informações sensíveis, privacidade e proteção de dados serão consideradas desde o desenvolvimento.
-
-Entre os princípios previstos estão:
-
-proteção da identidade das usuárias;
-coleta mínima de dados pessoais;
-proteção dos dados de localização;
-controle de acesso às informações;
-anonimato público em determinados relatos;
-prevenção da exposição indevida de dados de terceiros;
-mecanismos de denúncia e moderação.
-
-
-
-Estrutura inicial do projeto
-
-GoSafe/
-
-│
-
-├── mobile/
-
-│   └── Aplicação React Native
-
-│
-
-├── backend/
-
-│   └── API Java + Spring Boot
-
-│
-
-├── docs/
-
-│   └── Documentação do projeto
-
-│
-
-└── README.md
-
-
-
-Contexto acadêmico
-
-O GoSafe está sendo desenvolvido como parte de um Trabalho de Conclusão de Curso (TCC).
-
-Além do desenvolvimento da aplicação, o projeto envolve estudos sobre:
-
-segurança feminina;
-percepção de segurança;
-sistemas colaborativos;
-crowdsourcing;
-geolocalização;
-privacidade e proteção de dados;
-tecnologias aplicadas ao compartilhamento de informações.
-Status
-
-🚧 Em desenvolvimento
-
-Atualmente o projeto encontra-se em fase de pesquisa, definição de requisitos e planejamento da arquitetura.
-
-Licença
-
-A licença do projeto ainda será definida.
-     
+Ainda será definida.
