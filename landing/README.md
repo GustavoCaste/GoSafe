@@ -20,7 +20,7 @@ A seção **Experimente** baixa o app em `downloads/GoSafe.apk`, gerado apontand
 
 ## Publicação
 
-Os prints vêm do app rodando em emulador Android. O APK fica versionado em `downloads/GoSafe.apk`, então a Vercel o publica junto com a página. Se ele faltar no Git, a Vercel devolve uma página de erro no lugar do arquivo, e o celular baixa algo que não instala.
+Os prints vêm do app rodando em emulador Android. O APK fica versionado em `downloads/GoSafe.apk`, e o botão de download aponta para o arquivo bruto no GitHub (`raw.githubusercontent.com`, branch `feature/page`). Assim o download funciona mesmo com a proteção de deploy da Vercel ligada, que manda quem não tem conta no time para a tela de login.
 
 Para trocar o APK, gere de novo e faça o commit do arquivo:
 
